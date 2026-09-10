@@ -1,0 +1,60 @@
+import { useState, useEffect } from 'react'
+import PageHeader from 'components/common/PageHeader'
+import RUReady from 'components/common/RUReady'
+import styles from 'components/leaderboard/leaderboard.module.css'
+
+export default function Leaderboard() {
+	const [leaderboard, setLeaderboard] = useState([])
+	const [loading, setLoading] = useState(true)
+
+	useEffect(() => {
+		fetch('https://api.tathva.org/api/leaderboard')
+			.then((res) => res.json())
+			.then((data) => {
+				// Sort by points descending and take top 50
+				const sorted = data.sort((a, b) => b.count - a.count).slice(0, 50)
+				setLeaderboard(sorted)
+			})
+			.catch((err) => console.error('Error fetching leaderboard:', err))
+			.finally(() => setLoading(false))
+	}, [])
+
+	return (
+		<>
+			<PageHeader title='Leaderboard' icon='/images/leaderboard.png' />
+			<div className='container'>
+				<div className={styles['leaderboard']}>
+					{loading ? (
+						<div className={styles['empty']}>Loading...</div>
+					) : leaderboard.length ? (
+						<div className={styles['participants-wrapper']}>
+							<div className={styles['participants-header']}>
+								<span className={styles['p-rank']}>Rank</span>
+								<span className={styles['p-name']}>Name</span>
+								<span className={styles['p-points']}>Points</span>
+							</div>
+							{leaderboard.map((item, index) => (
+								<Participant key={index} rank={index + 1} name={item.name} points={item.count} />
+							))}
+						</div>
+					) : (
+						<div className={`${styles['empty']} ${styles['empty-leaderboard']}`}>
+							No data available
+						</div>
+					)}
+				</div>
+			</div>
+			<RUReady />
+		</>
+	)
+}
+
+function Participant({ rank, name, points }) {
+	return (
+		<div className={styles['participant']}>
+			<span className={styles['p-rank']}>{rank}</span>
+			<span className={styles['p-name']}>{name}</span>
+			<span className={styles['p-points']}>{points * 10}</span>
+		</div>
+	)
+}

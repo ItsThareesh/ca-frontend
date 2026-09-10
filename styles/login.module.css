@@ -1,0 +1,157 @@
+/* Container */
+.container {
+	min-height: 100vh;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: linear-gradient(135deg, #1f1f1f 0%, #121212 100%);
+	padding: 20px;
+}
+
+/* Login card */
+.loginBox {
+	background: #1a1a1a;
+	border-radius: 16px;
+	box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+	max-width: 450px;
+	width: 100%;
+	padding: 40px;
+	color: #e2e8f0;
+}
+
+/* Logo / Header */
+.logoSection {
+	text-align: center;
+	margin-bottom: 40px;
+}
+
+.logo {
+	width: 120px;
+	height: auto;
+	margin-bottom: 20px;
+	filter: brightness(0) invert(1); /* Makes logo visible on dark background */
+}
+
+.title {
+	font-size: 28px;
+	font-weight: 700;
+	color: #ffffff;
+	margin: 0 0 8px 0;
+}
+
+.subtitle {
+	font-size: 16px;
+	color: #a0aec0;
+	margin: 0;
+}
+
+/* Form */
+.form {
+	display: flex;
+	flex-direction: column;
+	gap: 24px;
+}
+
+.inputGroup {
+	display: flex;
+	flex-direction: column;
+	gap: 8px;
+}
+
+.label {
+	font-size: 14px;
+	font-weight: 600;
+	color: #e2e8f0;
+}
+
+.input {
+	width: 100%;
+	padding: 12px 16px;
+	border: 2px solid #2d3748;
+	border-radius: 8px;
+	font-size: 16px;
+	background-color: #121212;
+	color: #e2e8f0;
+	transition: all 0.2s;
+	outline: none;
+}
+
+.input:focus {
+	border-color: #667eea;
+	box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.3);
+}
+
+.input::placeholder {
+	color: #718096;
+}
+
+/* Forgot password */
+.forgotPassword {
+	text-align: right;
+	margin-top: -12px;
+}
+
+.link {
+	color: #667eea;
+	font-size: 14px;
+	font-weight: 600;
+	text-decoration: none;
+	transition: color 0.2s;
+}
+
+.link:hover {
+	color: #764ba2;
+	text-decoration: underline;
+}
+
+/* Submit button */
+.submitButton {
+	width: 100%;
+	padding: 14px;
+	background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+	color: white;
+	border: none;
+	border-radius: 8px;
+	font-size: 16px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.3s;
+	margin-top: 8px;
+}
+
+.submitButton:hover:not(:disabled) {
+	transform: translateY(-2px);
+	box-shadow: 0 10px 20px rgba(102, 126, 234, 0.5);
+}
+
+.submitButton:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+}
+
+/* Footer */
+.footer {
+	margin-top: 32px;
+	text-align: center;
+}
+
+.footerText {
+	color: #718096;
+	font-size: 14px;
+	margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+	.loginBox {
+		padding: 30px 20px;
+	}
+
+	.title {
+		font-size: 24px;
+	}
+
+	.subtitle {
+		font-size: 14px;
+	}
+}
