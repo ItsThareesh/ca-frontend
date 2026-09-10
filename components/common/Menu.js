@@ -11,7 +11,7 @@ export default function Menu({ show, onClose }) {
 				<div className={styles['logo-wrapper']}>
 					<IoMdClose className={styles['menu-icon']} onClick={onClose} />
 					<Link href='/'>
-						<img src='/images/logoNew.png' alt='Tathva 2025' className={styles['nav-logo']} />
+						<img src='/images/logoNew.png' alt='Tathva 2026' className={styles['nav-logo']} />
 					</Link>
 				</div>
 			</div>
