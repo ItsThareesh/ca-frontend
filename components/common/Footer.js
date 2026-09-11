@@ -11,7 +11,7 @@ export default function Footer() {
 			<div className='container'>
 				<div className={styles['footer-top']}>
 					<Link href='/'>
-						<img className={styles['footer-logo']} src='/images/logoNew.png' alt='Tathva 2026' />
+						<img className={styles['footer-logo']} src='/images/tathva26-gold.png' alt="Tathva '26" />
 					</Link>
 					<div className={styles['social-links']}>
 						<a
