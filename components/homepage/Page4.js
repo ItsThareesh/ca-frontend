@@ -35,8 +35,13 @@ export default function Page4() {
 					</header>
 
 					{/* Main Title Heading ABOVE Paragraph (with hover scale effect) */}
-					<h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight title-metallic-gradient leading-none transition-transform duration-300 hover:scale-105 origin-left inline-block cursor-pointer">
-						Eligibility
+					<h1 className="text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight leading-none transition-transform duration-300 hover:scale-105 origin-left inline-block cursor-pointer">
+						<span className="bg-[linear-gradient(180deg,#ffe599_0%,#e5b842_45%,#b58318_100%)] bg-clip-text text-transparent">
+							Eligi
+						</span>
+						<span className="bg-[linear-gradient(180deg,#ffffff_0%,#e2e8f0_40%,#94a3b8_100%)] bg-clip-text text-transparent">
+							bility
+						</span>
 					</h1>
 
 					{/* Primary Description */}
@@ -258,65 +263,6 @@ export default function Page4() {
 				{/* END: RightEmblemColumn */}
 			</div>
 
-			{/* Flowing Golden Waves (Full Width) */}
-			<div
-				aria-hidden="true"
-				className="absolute -bottom-2 left-0 right-0 h-28 sm:h-36 pointer-events-none overflow-hidden z-20"
-			>
-				<svg
-					className="w-full h-full"
-					fill="none"
-					preserveAspectRatio="none"
-					viewBox="0 0 1200 160"
-					xmlns="http://www.w3.org/2000/svg"
-				>
-					<defs>
-						<linearGradient id="waveGradPrimary" x1="0%" x2="100%" y1="0%" y2="0%">
-							<stop offset="0%" stopColor="#e5a93b" stopOpacity="0.85"></stop>
-							<stop offset="25%" stopColor="#fff3c2" stopOpacity="0.95"></stop>
-							<stop offset="42%" stopColor="#e5b842" stopOpacity="0.6"></stop>
-							<stop offset="68%" stopColor="#fff0aa" stopOpacity="0.8"></stop>
-							<stop offset="100%" stopColor="#8a5c10" stopOpacity="0.1"></stop>
-						</linearGradient>
-						<linearGradient id="waveGlowFill" x1="0%" x2="100%" y1="0%" y2="100%">
-							<stop offset="0%" stopColor="#d49a2a" stopOpacity="0.35"></stop>
-							<stop offset="35%" stopColor="#b87f17" stopOpacity="0.12"></stop>
-							<stop offset="70%" stopColor="#4d3205" stopOpacity="0.04"></stop>
-							<stop offset="100%" stopColor="#000000" stopOpacity="0"></stop>
-						</linearGradient>
-						{/* Wave Glow Filter */}
-						<filter height="180%" id="ribbonGlow" width="120%" x="-10%" y="-30%">
-							<feGaussianBlur result="blur" stdDeviation="3"></feGaussianBlur>
-							<feMerge>
-								<feMergeNode in="blur"></feMergeNode>
-								<feMergeNode in="SourceGraphic"></feMergeNode>
-							</feMerge>
-						</filter>
-					</defs>
-					{/* Wave Ambient Fill */}
-					<path
-						d="M0 160 C180 120 280 60 480 110 C680 160 840 120 1200 150 L1200 160 L0 160 Z"
-						fill="url(#waveGlowFill)"
-					></path>
-					{/* Crisp Golden Horizon Spine Lines */}
-					<path
-						d="M-50 148 C160 118 290 62 480 102 C670 142 850 128 1250 148"
-						filter="url(#ribbonGlow)"
-						stroke="url(#waveGradPrimary)"
-						strokeWidth="2.5"
-					></path>
-					<path
-						d="M-50 156 C180 126 310 76 510 112 C710 148 880 134 1250 156"
-						stroke="rgba(245, 211, 118, 0.45)"
-						strokeWidth="1.2"
-					></path>
-					<path
-						d="M-50 142 C140 112 260 55 450 96 C640 136 820 122 1250 142"
-						stroke="rgba(255, 245, 195, 0.3)"
-						strokeWidth="0.8"
-					></path>
-				</svg>
-			</div>
 		</div>
 	)
 }
