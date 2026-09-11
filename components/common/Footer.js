@@ -16,10 +16,10 @@ export default function Footer() {
 					<div className={styles['footer-links-wrapper']}>
 						<ul>
 							<li>
-								<p>Site</p>
+								<p></p>
 							</li>
 							<li>
-								<Link href='/'>Home</Link>
+								{/* <Link href='/'>Home</Link> */}
 							</li>
 							{/* <li>
 								<a href='https://marketing.tathva.org/' target='_blank' rel='noreferrer noopener'>
@@ -37,7 +37,7 @@ export default function Footer() {
 						</ul>
 						<ul>
 							<li>
-								<p>Social</p>
+								<p></p>
 							</li>
 							<li>
 								<a
@@ -47,7 +47,7 @@ export default function Footer() {
 									rel='noreferrer noopener'
 								>
 									<FaInstagram className={styles['social-icon']} />
-									Instagram
+									
 								</a>
 							</li>
 							<li>
@@ -58,7 +58,7 @@ export default function Footer() {
 									rel='noreferrer noopener'
 								>
 									<FaFacebook className={styles['social-icon']} />
-									Facebook
+									
 								</a>
 							</li>
 							<li>
@@ -68,7 +68,7 @@ export default function Footer() {
 									target='_blank'
 									rel='noreferrer noopener'
 								>
-									<FaTwitter className={styles['social-icon']} />X
+									<FaTwitter className={styles['social-icon']} />
 								</a>
 							</li>
 						</ul>

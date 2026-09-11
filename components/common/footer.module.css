@@ -6,13 +6,15 @@
 
 .footer-top {
 	display: flex;
+	align-items: center;
 	justify-content: space-between;
 	padding-top: 3rem;
 }
 
 .footer-logo {
-	height: 62px;
+	height: 80px;
 	width: fit-content;
+	
 }
 
 .footer-links-wrapper {
@@ -24,8 +26,20 @@
 .footer-links-wrapper ul {
 	margin-right: 6.5rem;
 }
+.footer-links-wrapper ul:nth-child(2) {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-right: 0;
+}
+.footer-links-wrapper ul:nth-child(2) li:first-child {
+	display: none;
+}
 .footer-links-wrapper ul li {
 	margin-bottom: 0.5rem;
+}
+.footer-links-wrapper ul:nth-child(2) li {
+	margin-bottom: 0;
 }
 .footer-links-wrapper ul li p {
 	color: #fff;
