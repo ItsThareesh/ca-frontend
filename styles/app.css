@@ -1,20 +1,22 @@
 :root {
 	--primary: linear-gradient(
-		298.74deg,
-		#e91dfb 7.67%,
-		#632dff 28.63%,
-		#359eff 61.36%,
-		#1bffe4 83.87%
+		110deg,
+		#9c741f 0%,
+		#d4af37 25%,
+		#fff2b2 45%,
+		#c0c0c0 65%,
+		#f5f5f5 82%,
+		#71717a 100%
 	);
-	--secondary: linear-gradient(277.9deg, #1f31d1 -5.62%, #2dc0ef 106.21%);
-	--circle-pri: linear-gradient(315deg, #cc01ff 0%, #7d3efe 44.79%, #37e7ff 100%);
+	--secondary: linear-gradient(110deg, #9c741f 0%, #d4af37 48%, #c0c0c0 100%);
+	--circle-pri: linear-gradient(315deg, #9c741f 0%, #d4af37 44.79%, #f5f5f5 100%);
 	--lines: linear-gradient(
 		90deg,
-		#ff68f9 0%,
-		#3f88ff 22.4%,
-		#52f5ff 53.12%,
-		#6486ff 76.04%,
-		#fd8bff 100%
+		#d4af37 0%,
+		#fff2b2 22.4%,
+		#c0c0c0 53.12%,
+		#f5f5f5 76.04%,
+		#9c741f 100%
 	);
 
 	--card-bg: #151515;
@@ -166,7 +168,7 @@ body {
 	width: 38%;
 }
 .other-info-page-3 {
-	background: linear-gradient(180deg, rgba(182, 103, 35, 0) 0%, #b89936 100%);
+	background: linear-gradient(180deg, rgba(212, 175, 55, 0) 0%, #d4af37 100%);
 	/* background-color: red; */
 	width: 100%;
 	min-height: 35vh;
@@ -728,7 +730,7 @@ body {
 	width: 60vw;
 }
 .other-info-page-4 {
-	background: linear-gradient(180deg, rgba(74, 244, 142, 0) 0%, #2bc9b6 100%);
+	background: linear-gradient(180deg, rgba(192, 192, 192, 0) 0%, #c0c0c0 100%);
 	width: 100%;
 	height: 35vh;
 	position: absolute;
@@ -820,7 +822,7 @@ body {
 	margin-left: 1rem;
 }
 .form-button {
-	background: linear-gradient(277.9deg, #1f31d1 -5.62%, #2dc0ef 106.21%);
+	background: var(--secondary);
 	border-radius: 3.18rem;
 	border: 0px;
 	color: white;
@@ -986,7 +988,7 @@ body {
 .field {
 }
 .form2-button {
-	background: linear-gradient(277.9deg, #1f31d1 -5.62%, #2dc0ef 106.21%);
+	background: var(--secondary);
 	border-radius: 3.188rem;
 	border: 0px;
 	color: white;
@@ -1379,10 +1381,12 @@ body {
 	align-content: center;
 	background: linear-gradient(
 		298.74deg,
-		#e91dfb 7.67%,
-		#632dff 28.63%,
-		#359eff 61.36%,
-		#1bffe4 83.87%
+		#9c741f 0%,
+		#d4af37 25%,
+		#fff2b2 45%,
+		#c0c0c0 65%,
+		#f5f5f5 82%,
+		#71717a 100%
 	);
 	border-radius: 12px;
 	width: 5rem;
