@@ -1,7 +1,7 @@
 import Link from 'next/link'
-import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa'
+import { FaFacebook, FaInstagram } from 'react-icons/fa'
+import { FaXTwitter } from 'react-icons/fa6'
 import { HiOutlineExternalLink } from 'react-icons/hi'
-import Image from 'next/image'
 
 import styles from './footer.module.css'
 
@@ -11,7 +11,7 @@ export default function Footer() {
 			<div className='container'>
 				<div className={styles['footer-top']}>
 					<Link href='/'>
-						<img className={styles['footer-logo']} src='/images/logoNew.png' alt='Tathva 2022' />
+						<img className={styles['footer-logo']} src='/images/tathva26-gold.png' alt="Tathva '26" />
 					</Link>
 					<div className={styles['footer-links-wrapper']}>
 						<ul>
@@ -74,6 +74,7 @@ export default function Footer() {
 						</ul>
 					</div>
 				</div>
+				<div className={styles['footer-divider']}></div>
 				<div className={styles['footer-bottom']}>
 					<p className={styles['footer-copy']}>&#169; Tathva {new Date().getFullYear()}</p>
 					<a
@@ -82,7 +83,8 @@ export default function Footer() {
 						target='_blank'
 						rel='noreferrer noopener'
 					>
-						Tathva <HiOutlineExternalLink className={styles['external-icon']} />
+						<span>Tathva</span>
+						<HiOutlineExternalLink className={styles['external-icon']} />
 					</a>
 				</div>
 			</div>

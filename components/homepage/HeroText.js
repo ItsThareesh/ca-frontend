@@ -57,7 +57,7 @@ const HeroText = () => {
 				Campus <br />
 				Ambassador
 			</h1>
-			<p className='hero-tagline'>Be the emissary of Tathva 2025</p>
+			<p className='hero-tagline'>Be the emissary of Tathva 2026</p>
 
 			{/* --- START: New countdown element --- */}
 			<div className='deadline-timer'>

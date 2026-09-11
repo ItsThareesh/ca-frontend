@@ -24,7 +24,7 @@ export default function Nav() {
 			<div className={styles['logo-wrapper']}>
 				<BiMenu className={styles['menu-icon']} onClick={() => setShowMenu(true)} />
 				<Link href='/'>
-					<img src='/images/logoNew.png' alt='Tathva 2025' className={styles['nav-logo']} />
+					<img src='/images/logoNew.png' alt='Tathva 2026' className={styles['nav-logo']} />
 				</Link>
 			</div>
 
