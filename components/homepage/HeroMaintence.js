@@ -24,7 +24,7 @@ const HeroText = () => {
         Campus <br />
         Ambassador
       </h1>
-      <p className='hero-tagline'>Be the emissary of Tathva 2025</p>
+      <p className='hero-tagline'>Be the emissary of Tathva 2026</p>
       <div className='hero-cta-wrapper'>
         <button onClick={handleSignUp} className='btn-primary'>
           {isLoggedIn ? 'Go to Dashboard' : 'Sign up'}

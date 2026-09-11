@@ -2,13 +2,29 @@
 module.exports = {
 	content: ['./pages/**/*.{js,ts,jsx,tsx}', './components/**/*.{js,ts,jsx,tsx}'],
 	theme: {
-		screens: {
-			'2xl': { max: '1535px' },
-			xl: { max: '1279px' },
-			lg: { max: '1023px' },
-			md: { max: '767px' },
-			sm: { max: '639px' },
+		extend: {
+			colors: {
+				gold: {
+					300: '#f6d365',
+					400: '#e5b842',
+					500: '#c59a27',
+					600: '#a37b19',
+				},
+				obsidian: '#070709',
+			},
+			fontFamily: {
+				sans: [
+					'Inter',
+					'system-ui',
+					'-apple-system',
+					'BlinkMacSystemFont',
+					'Segoe UI',
+					'Roboto',
+					'sans-serif',
+				],
+			},
 		},
 	},
 	plugins: [],
 }
+
