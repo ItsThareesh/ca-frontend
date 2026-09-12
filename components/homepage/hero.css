@@ -26,6 +26,7 @@
 	align-items: center;
 	width: 100%;
 	position: relative;
+	line-height: 1.25;
 }
 
 .hero-sponsors-wrapper {
@@ -106,8 +107,11 @@
 	.hero-text {
 		margin: 0;
 	}
+	.deadline-timer {
+		padding: 10px 20px;
+	}
 	.hero {
-		background-image: url('/images/hero-mobile.png');
+		background-image: url('/images/hero-desktop.png');
 		background-size: 500px auto;
 		background-position: right center;
 	}
@@ -118,6 +122,7 @@
 
 @media (max-width: 768px) {
 	.hero {
+		/* background-image: url('/images/hero-desktop.png'); */
 		background-image: none;
 	}
 	.hero-text {
@@ -125,15 +130,17 @@
 	}
 }
 
+
 @media (max-width: 550px) {
 	.hero {
-		background-image: url('/images/hero-mobile.png');
+		background-image: url('/images/hero-desktop.png');
 		background-size: 100% auto;
 		background-position: center 50px;
 		justify-content: flex-end;
+		line-height: 4;
 	}
-	.hero-text {
-		margin: 0;
+	.hero-text container {
+		line-height: 3;
 	}
 	.hero-tagline {
 		font-size: 1.1rem;
@@ -146,17 +153,24 @@
 	.hero-stats {
 		display: none;
 	}
+	.deadline-timer {
+		padding: 3px 6px;
+	}
 	.hero-arrow {
 		display: inline-block;
 		width: 40px;
 		margin: 0 auto;
-		margin-bottom: 3rem;
+		margin-bottom: 0 rem;
 	}
 }
-
+@media (max-width: 380px) {
+	.hero-text {
+		margin-bottom: 3.75rem;
+	}
+	
+}
 .deadline-timer {
   margin: 24px 0;
-  padding: 10px 20px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.05);
   border: 1px solid rgba(255, 255, 255, 0.1);
