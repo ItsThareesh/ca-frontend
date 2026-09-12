@@ -1,3 +1,4 @@
+import { useEffect, useRef, useState } from 'react'
 import { useUserContext } from 'context/UserContext'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
@@ -7,13 +8,38 @@ import styles from './r-u-ready.module.css'
 export default function RUReady() {
 	const { user, isLoggedIn } = useUserContext()
 	const router = useRouter()
+	const iconRef = useRef(null)
+	const [spinning, setSpinning] = useState(false)
+	const [hovering, setHovering] = useState(false)
+	const [hasAnimated, setHasAnimated] = useState(false)
 
-	const handleClick2 = () => {
-		if (isLoggedIn && user) {
-			toast.info('You are already logged in!')
-		} else {
-			router.push('/register')
+	useEffect(() => {
+		const el = iconRef.current
+		if (typeof window === 'undefined' || !el) return
+
+		const onScroll = () => {
+			if (hasAnimated) return
+			const rect = el.getBoundingClientRect()
+			if (rect.top <= window.innerHeight && rect.bottom >= 0) {
+				setHasAnimated(true)
+				setSpinning(true)
+				setTimeout(() => setSpinning(false), 1000)
+			}
 		}
+
+		onScroll()
+		window.addEventListener('scroll', onScroll, { passive: true })
+		return () => window.removeEventListener('scroll', onScroll)
+	}, [hasAnimated])
+
+	const handleHoverEnter = () => {
+		setHovering(true)
+		setSpinning(true)
+	}
+
+	const handleHoverLeave = () => {
+		setHovering(false)
+		setSpinning(false)
 	}
 
 	const handleClick = () => {
@@ -30,9 +56,19 @@ export default function RUReady() {
 			<div className='spacerv-sm'></div>
 			<div className={styles['r-u-ready']}>
 				<div className={styles['left']}>
-					<img src='/images/victory.png' alt='✌️' className={styles['vic-icon']} />
-					<div className='spacerh-xs'></div>
-					<div className='r-u-ready-text'>
+					{/* eslint-disable-next-line @next/next/no-img-element */}
+					<img
+						id='vic-icon'
+						ref={iconRef}
+						src='/images/simon.png'
+						alt='Tathva mascot'
+						className={`${styles['vic-icon']} ${spinning ? styles['spin-once'] : ''} ${
+							hovering ? styles['spin-hover'] : ''
+						}`}
+						onMouseEnter={handleHoverEnter}
+						onMouseLeave={handleHoverLeave}
+					/>
+					<div className={styles['r-u-ready-text']}>
 						<h3>Are you ready?</h3>
 						<p>
 							To be a part of the biggest tech
