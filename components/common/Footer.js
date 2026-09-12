@@ -11,67 +11,43 @@ export default function Footer() {
 			<div className='container'>
 				<div className={styles['footer-top']}>
 					<Link href='/'>
-						<img className={styles['footer-logo']} src='/images/tathva26-gold.png' alt="Tathva '26" />
+						<img
+							className={styles['footer-logo']}
+							src='/images/tathva26-gold.png'
+							alt="Tathva '26"
+						/>
 					</Link>
-					<div className={styles['footer-links-wrapper']}>
-						<ul>
-							<li>
-								<p></p>
-							</li>
-							<li>
-								{/* <Link href='/'>Home</Link> */}
-							</li>
-							{/* <li>
-								<a href='https://marketing.tathva.org/' target='_blank' rel='noreferrer noopener'>
-									Marketing <HiOutlineExternalLink className={styles['external-icon']} />
-								</a>
-							</li> */}
-							{/* <li>
-								<a href='https://reg.tathva.org/' target='_blank' rel='noreferrer noopener'>
-									Registrations <HiOutlineExternalLink className={styles['external-icon']} />
-								</a>
-							</li> */}
-							{/* <li>
-								<Link href='/team'>Team</Link>
-							</li> */}
-						</ul>
-						<ul>
-							<li>
-								<p></p>
-							</li>
-							<li>
-								<a
-									className={styles['social-link']}
-									href='https://www.instagram.com/tathva_nitcalicut/'
-									target='_blank'
-									rel='noreferrer noopener'
-								>
-									<FaInstagram className={styles['social-icon']} />
-									
-								</a>
-							</li>
-							<li>
-								<a
-									className={styles['social-link']}
-									href='https://www.facebook.com/tathva'
-									target='_blank'
-									rel='noreferrer noopener'
-								>
-									<FaFacebook className={styles['social-icon']} />
-									
-								</a>
-							</li>
-							<li>
-								<a
-									className={styles['social-link']}
-									href='https://twitter.com/tathva'
-									target='_blank'
-									rel='noreferrer noopener'
-								>
-									<FaTwitter className={styles['social-icon']} />
-								</a>
-							</li>
-						</ul>
+					<div className={styles['social-links']}>
+						<a
+							className={styles['social-btn']}
+							href='https://www.instagram.com/tathva_nitcalicut/'
+							target='_blank'
+							rel='noreferrer noopener'
+							aria-label='Instagram'
+							title='Instagram'
+						>
+							<FaInstagram className={styles['social-icon']} />
+						</a>
+						<a
+							className={styles['social-btn']}
+							href='https://www.facebook.com/tathva'
+							target='_blank'
+							rel='noreferrer noopener'
+							aria-label='Facebook'
+							title='Facebook'
+						>
+							<FaFacebook className={styles['social-icon']} />
+						</a>
+						<a
+							className={styles['social-btn']}
+							href='https://twitter.com/tathva'
+							target='_blank'
+							rel='noreferrer noopener'
+							aria-label='X (formerly Twitter)'
+							title='X'
+						>
+							<FaXTwitter className={styles['social-icon']} />
+						</a>
 					</div>
 				</div>
 				<div className={styles['footer-divider']}></div>
