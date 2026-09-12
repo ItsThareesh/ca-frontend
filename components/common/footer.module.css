@@ -7,8 +7,6 @@
 	box-shadow: 0px 0px 16px -6px #e6bf40;
 }
 
-
-
 .footer-top {
 	display: flex;
 	align-items: center;
@@ -26,7 +24,6 @@
 }
 
 .footer-logo:hover {
-
 	opacity: 0.95;
 }
 
@@ -85,7 +82,7 @@
 }
 
 .external-icon {
-	color: #E4B82A;
+	color: #e4b82a;
 	font-size: 1.1rem;
 	transition: transform 0.2s ease;
 }

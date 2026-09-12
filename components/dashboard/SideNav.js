@@ -36,30 +36,20 @@ export default function SideNav({ userDb, points, onClose }) {
 			</div> */}
 
 			{/* <ul className='side-nav-links' onClick={onClose}>
-				<Link href='/dashboard/posters'>
-					<a className={router.pathname === '/dashboard/posters' ? 'active' : ''}>
-						<img src='/images/posters.png' alt='🌁' /> Posters
-					</a>
+				<Link href='/dashboard/posters' className={router.pathname === '/dashboard/posters' ? 'active' : ''}>
+					<img src='/images/posters.png' alt='🌁' /> Posters
 				</Link>
-				<Link href='/dashboard/referrals'>
-					<a className={router.pathname === '/dashboard/referrals' ? 'active' : ''}>
-						<img src='/images/referrals.png' alt='🎫' /> Referals
-					</a>
+				<Link href='/dashboard/referrals' className={router.pathname === '/dashboard/referrals' ? 'active' : ''}>
+					<img src='/images/referrals.png' alt='🎫' /> Referals
 				</Link>
-				<Link href='/dashboard/feedback'>
-					<a className={router.pathname === '/dashboard/feedback' ? 'active' : ''}>
-						<img src='/images/feedback.png' alt='✍️' /> Feedback
-					</a>
+				<Link href='/dashboard/feedback' className={router.pathname === '/dashboard/feedback' ? 'active' : ''}>
+					<img src='/images/feedback.png' alt='✍️' /> Feedback
 				</Link>
-				<Link href='/dashboard/whatsapp'>
-					<a className={router.pathname === '/dashboard/whatsapp' ? 'active' : ''}>
-						<img src='/images/whatsapp.png' alt='✅' /> Whatsapp
-					</a>
+				<Link href='/dashboard/whatsapp' className={router.pathname === '/dashboard/whatsapp' ? 'active' : ''}>
+					<img src='/images/whatsapp.png' alt='✅' /> Whatsapp
 				</Link>
-				<Link href='#'>
-					<a onClick={logout}>
-						<img src='/images/door.png' alt='🚪' /> Logout
-					</a>
+				<Link href='#' onClick={logout}>
+					<img src='/images/door.png' alt='🚪' /> Logout
 				</Link>
 			</ul> */}
 			<div className='spacerv-md'></div>
