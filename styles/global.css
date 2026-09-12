@@ -47,6 +47,12 @@ button:active {
 	color: #fff;
 	background: none;
 	padding-bottom: 1.08rem;
+	transition: all 0.3s ease;
+}
+.btn-outline:hover {
+	background: #ffffff;
+	border-color: #ffffff;
+	color: #000000;
 }
 .btn-primary {
 	color: #fff;
