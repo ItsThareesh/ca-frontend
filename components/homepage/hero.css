@@ -56,6 +56,19 @@
 	font-size: 1.25rem;
 	color: rgba(255, 255, 255, 0.7);
 	margin: 1rem 0 1.5rem 0;
+	min-height: 1.75rem;
+}
+.typewriter-cursor {
+	display: inline-block;
+	margin-left: 4px;
+	color: #a855f7;
+	font-weight: 400;
+	animation: typewriter-blink 0.8s infinite;
+}
+
+@keyframes typewriter-blink {
+	0%, 100% { opacity: 1; }
+	50% { opacity: 0; }
 }
 .hero-cta-wrapper {
 	display: flex;
@@ -164,20 +177,32 @@
   font-size: 1rem;
   text-align: center;
   font-weight: 500;
+  transition: all 0.3s ease;
+  cursor: pointer;
   
-  /* --- NEW STYLES BELOW --- */
-  width: fit-content; /* Make the width only as large as its content */
-  max-width: 100%; /* Ensure it doesn't overflow on smaller screens */
-  text-align: left; /* Align text to the left within the reduced width */
-  margin-left: 0; /* Align it to the left edge of its parent container */
+  width: fit-content;
+  max-width: 100%;
+  text-align: left;
+  margin-left: 0;
 }
 
-/* Optional: If you want to increase the font size of the timer numbers */
+.deadline-timer:hover {
+  background: #ffffff;
+  border-color: #ffffff;
+  color: #000000;
+}
+
+.deadline-timer:hover span,
+.deadline-timer:hover strong {
+  color: #000000;
+}
+
 .deadline-timer strong {
   color: #a855f7;
   font-weight: 700;
   letter-spacing: 1px;
-  font-size: 1.1rem; /* Slightly larger for emphasis */
+  font-size: 1.1rem;
+  transition: color 0.3s ease;
 }
 
 /* If the .hero-text container itself has padding that pushes content,
