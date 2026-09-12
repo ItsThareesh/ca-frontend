@@ -11,9 +11,9 @@ export default function Hero() {
 			</div>
 			<div className='spacerv-lg'></div>
 
-			<div className='hero-sponsors-wrapper'>
+			{/* <div className='hero-sponsors-wrapper'>
 				<Sponsors />
-			</div>
+			</div> */}
 
 			<img className='hero-arrow' alt='' src='/images/arrow-down.svg' />
 		</div>
