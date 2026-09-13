@@ -55,12 +55,12 @@ button:active {
 	color: #000000;
 }
 .btn-primary {
-	color: #fff;
+	color: #000000;
 	background: var(--primary);
 	text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.15);
 }
 .btn-secondary {
-	color: #fff;
+	color: #0a0000;
 	background: linear-gradient(277.9deg, #1f31d1 -5.62%, #2dc0ef 106.21%);
 }
 
