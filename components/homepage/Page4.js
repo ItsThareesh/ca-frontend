@@ -31,7 +31,7 @@ const WALLS = HEX_POINTS.map((p, i) => {
 
 export default function Page4() {
 	return (
-		<div className='w-full relative overflow-hidden bg-[#08080a] py-16 sm:py-24 antialiased my-8'>
+		<div className='w-full relative overflow-hidden py-16 sm:py-24 antialiased my-8'>
 			{/* Background cyber grid */}
 			<div
 				aria-hidden='true'
@@ -47,7 +47,7 @@ export default function Page4() {
 			{/* Ambient Glow Aura Behind Emblem */}
 			<div
 				aria-hidden='true'
-				className='absolute right-10 top-1/2 -translate-y-1/2 w-[500px] h-[500px] pedestal-glow filter blur-3xl opacity-70 pointer-events-none'
+				className='absolute right-10 top-1/2 -translate-y-1/2 w-[500px] h-[500px] pedestal- filter blur-3xl opacity-70 pointer-events-none'
 			></div>
 
 			{/* Inner Content Container */}
