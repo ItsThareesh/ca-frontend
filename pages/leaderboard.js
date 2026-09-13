@@ -39,7 +39,7 @@ export default function Leaderboard() {
 	}, [])
 
 	return (
-		<div className='leaderboard-page relative min-h-screen overflow-hidden'>
+		<div className='relative min-h-screen overflow-hidden'>
 			{/* GhostFibers full-page background */}
 			<GhostFibers className='fixed inset-0 z-0' />
 
