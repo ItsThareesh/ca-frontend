@@ -10,6 +10,9 @@
 		"prettier": "prettier --write ."
 	},
 	"dependencies": {
+		"@dicebear/collection": "^9.4.2",
+		"@dicebear/core": "^9.4.3",
+		"@dicebear/styles": "^10.6.0",
 		"axios": "^0.27.2",
 		"firebase": "^9.9.3",
 		"jwt-decode": "^4.0.0",

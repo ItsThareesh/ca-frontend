@@ -5,12 +5,13 @@ import { signOut } from 'lib/firebase'
 import { toast } from 'react-toastify'
 import { useEffect, useState } from 'react'
 import { useUserContext } from 'context/UserContext'
+import { getGlyphsAvatarUrl } from 'lib/dicebear'
 
 export default function SideNav({ userDb, points, onClose }) {
 	const router = useRouter()
 	const { user, logout } = useUserContext()
 
-	const MOCK_IMAGE_URL = 'https://ui-avatars.com/api/?name=Hamood+Habibi&background=222222&color=d4af37&size=120'
+	const MOCK_IMAGE_URL = getGlyphsAvatarUrl('Hamood Habibi')
 	const displayUser = user || {
 		name: 'Hamood Habibi',
 		email: 'hamood.habibi@iitm.ac.in',

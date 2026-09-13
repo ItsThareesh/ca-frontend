@@ -23,6 +23,7 @@ import {
 	FiTrash2,
 } from 'react-icons/fi'
 import axios from 'axios'
+import { getGlyphsAvatarUrl } from 'lib/dicebear'
 
 import s from '../styles/hub-profile.module.css'
 
@@ -36,7 +37,7 @@ export function generateRandomReferralCode(length = 7) {
 }
 
 export function getDefaultAvatar(name = 'Hamood Habibi') {
-	return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=222222&color=d4af37&size=160&bold=true`
+	return getGlyphsAvatarUrl(name)
 }
 
 /* ═════════════════════════════════════════════════════════════
@@ -45,6 +46,8 @@ export function getDefaultAvatar(name = 'Hamood Habibi') {
    ═════════════════════════════════════════════════════════════ */
 const USE_MOCK = true
 
+// MOCK_PROFILE intentionally has no avatarUrl — the avatar is always
+// generated dynamically from the user's name via DiceBear glyphs.
 const MOCK_PROFILE = {
 	name: 'Hamood Habibi',
 	email: 'hamood.habibi@iitm.ac.in',
@@ -57,7 +60,6 @@ const MOCK_PROFILE = {
 	ref_code: 'K7N9W2X',
 	total_points: 345,
 	experience: true,
-	avatarUrl: 'https://ui-avatars.com/api/?name=Hamood+Habibi&background=222222&color=d4af37&size=160&bold=true',
 }
 
 const MOCK_NAMES = [
@@ -278,7 +280,14 @@ export default function ProfilePage() {
 		? `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(referralLink)}&size=320x320&bgcolor=09090b&color=e5b842&format=png&qzone=2&ecc=H`
 		: ''
 	const firstName = (profile?.name || 'Ambassador').split(' ')[0]
-	const avatarSrc = profile?.avatarUrl || profile?.imageUrl || getDefaultAvatar(profile?.name)
+	// avatarSrc: only use a stored avatarUrl when the user has uploaded a real image
+	// (data URL). DiceBear CDN URLs stored in profile are seeded from the original
+	// name and won't update — always recompute them from the current name.
+	const storedAvatar = profile?.avatarUrl || profile?.imageUrl || ''
+	const isUserUploadedAvatar = storedAvatar.startsWith('data:')
+	const avatarSrc = isUserUploadedAvatar
+		? storedAvatar
+		: getDefaultAvatar(profile?.name)
 
 	/* Badges criteria:
 	   - Leaderboard badge: unlocked at 25% of 50 referrals (≥ 13 refs)
@@ -423,6 +432,9 @@ export default function ProfilePage() {
 			const updated = {
 				...profile,
 				...editFormData,
+				// If the user hasn't uploaded a real image, clear the stored avatarUrl so the
+				// avatar recomputes from the (possibly new) name via DiceBear.
+				avatarUrl: editFormData.avatarUrl?.startsWith('data:') ? editFormData.avatarUrl : '',
 			}
 
 			if (!USE_MOCK && accessToken) {
@@ -902,7 +914,6 @@ export default function ProfilePage() {
 											<img src="/images/tathva26-gold.png" alt="Tathva 26 Logo" />
 										</div>
 									</div>
-									<span className={s.qrBadge}>Scan to register</span>
 								</div>
 							)}
 						</div>
@@ -940,47 +951,49 @@ export default function ProfilePage() {
 					</div>
 
 					{/* Visual Milestone Track */}
-					<div className={s.progressTrack}>
-						<div className={s.trackBg}>
-							<div className={s.trackFill} style={{ width: `${fillPercent}%` }} />
-							<div className={s.trackMarkers}>
+					<div className={s.progressTrackWrapper}>
+						<div className={s.progressTrack}>
+							<div className={s.trackBg}>
+								<div className={s.trackFill} style={{ width: `${fillPercent}%` }} />
+								<div className={s.trackMarkers}>
+									{REFERRAL_MILESTONES.map((item, i) => {
+										const percent = (i / (REFERRAL_MILESTONES.length - 1)) * 100
+										const isPassed = totalReferrals >= item.count
+										return (
+											<div
+												key={item.count}
+												style={{ left: `${percent}%` }}
+												className={`${s.trackDiamond} ${isPassed ? s.trackDiamondActive : ''}`}
+												title={`${item.title} - ${item.bonusText || 'Start'}`}
+											/>
+										)
+									})}
+								</div>
+							</div>
+							<div className={s.trackLabels}>
 								{REFERRAL_MILESTONES.map((item, i) => {
+									const isActive = totalReferrals >= item.count
 									const percent = (i / (REFERRAL_MILESTONES.length - 1)) * 100
-									const isPassed = totalReferrals >= item.count
 									return (
 										<div
 											key={item.count}
 											style={{ left: `${percent}%` }}
-											className={`${s.trackDiamond} ${isPassed ? s.trackDiamondActive : ''}`}
-											title={`${item.title} - ${item.bonusText || 'Start'}`}
-										/>
+											className={s.trackLabelWrapper}
+										>
+											<span
+												className={`${s.trackMilestoneCount} ${isActive ? s.trackLabelMidActive : s.trackLabelMidInactive}`}
+											>
+												{item.count} {item.count === 1 ? 'ref' : 'refs'}
+											</span>
+											{item.bonus > 0 && (
+												<span className={`${s.trackMilestoneBonus} ${isActive ? s.bonusActive : ''}`}>
+													+₹{item.bonus}
+												</span>
+											)}
+										</div>
 									)
 								})}
 							</div>
-						</div>
-						<div className={s.trackLabels}>
-							{REFERRAL_MILESTONES.map((item, i) => {
-								const isActive = totalReferrals >= item.count
-								const percent = (i / (REFERRAL_MILESTONES.length - 1)) * 100
-								return (
-									<div
-										key={item.count}
-										style={{ left: `${percent}%` }}
-										className={s.trackLabelWrapper}
-									>
-										<span
-											className={`${s.trackMilestoneCount} ${isActive ? s.trackLabelMidActive : s.trackLabelMidInactive}`}
-										>
-											{item.count} {item.count === 1 ? 'ref' : 'refs'}
-										</span>
-										{item.bonus > 0 && (
-											<span className={`${s.trackMilestoneBonus} ${isActive ? s.bonusActive : ''}`}>
-												+₹{item.bonus}
-											</span>
-										)}
-									</div>
-								)
-							})}
 						</div>
 					</div>
 
