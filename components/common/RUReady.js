@@ -9,8 +9,8 @@ export default function RUReady() {
 	const { user, isLoggedIn } = useUserContext()
 	const router = useRouter()
 	const iconRef = useRef(null)
-	const [spinning, setSpinning] = useState(false)
-	const [hovering, setHovering] = useState(false)
+	const [scrollSpinning, setScrollSpinning] = useState(false)
+	const [hoverSpinning, setHoverSpinning] = useState(false)
 	const [hasAnimated, setHasAnimated] = useState(false)
 
 	useEffect(() => {
@@ -22,8 +22,8 @@ export default function RUReady() {
 			const rect = el.getBoundingClientRect()
 			if (rect.top <= window.innerHeight && rect.bottom >= 0) {
 				setHasAnimated(true)
-				setSpinning(true)
-				setTimeout(() => setSpinning(false), 1000)
+				setScrollSpinning(true)
+				setTimeout(() => setScrollSpinning(false), 1000)
 			}
 		}
 
@@ -33,13 +33,12 @@ export default function RUReady() {
 	}, [hasAnimated])
 
 	const handleHoverEnter = () => {
-		setHovering(true)
-		setSpinning(true)
+		if (!hoverSpinning) {
+			setHoverSpinning(true)
+		}
 	}
-
-	const handleHoverLeave = () => {
-		setHovering(false)
-		setSpinning(false)
+	const handleAnimationEnd = () => {
+		setHoverSpinning(false)
 	}
 
 	const handleClick = () => {
@@ -62,11 +61,11 @@ export default function RUReady() {
 						ref={iconRef}
 						src='/images/simon.png'
 						alt='Tathva mascot'
-						className={`${styles['vic-icon']} ${spinning ? styles['spin-once'] : ''} ${
-							hovering ? styles['spin-hover'] : ''
+						className={`${styles['vic-icon']} ${
+							scrollSpinning || hoverSpinning ? styles['spin-once'] : ''
 						}`}
 						onMouseEnter={handleHoverEnter}
-						onMouseLeave={handleHoverLeave}
+						onAnimationEnd={handleAnimationEnd}
 					/>
 					<div className={styles['r-u-ready-text']}>
 						<h3>Are you ready?</h3>
