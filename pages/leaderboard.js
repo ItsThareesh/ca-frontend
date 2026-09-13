@@ -45,7 +45,7 @@ export default function Leaderboard() {
 
 			{/* Page content above GhostFibers */}
 			<div className='relative z-10'>
-				<PageHeader title='Leaderboard' icon='/images/leaderboard.png' />
+				<PageHeader title='Leaderboard' />
 
 				<div className='container'>
 					<div className={styles['leaderboard']}>

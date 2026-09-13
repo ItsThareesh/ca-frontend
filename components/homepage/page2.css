@@ -1,10 +1,3 @@
-.page-2 {
-	background: linear-gradient(180deg, rgba(214, 215, 217, 0) 0%, #d6d7d9 61.98%, #c89b3c 100%);
-	background-size: 100% 60%;
-	background-repeat: no-repeat;
-	background-position: bottom;
-}
-
 .page-2-heading {
 	font-size: 3.45rem;
 	font-weight: 600;
@@ -44,7 +37,8 @@
 }
 
 @keyframes dot-vanish-pulse {
-	0%, 100% {
+	0%,
+	100% {
 		opacity: 0;
 		transform: scale(0.2);
 	}

@@ -18,22 +18,13 @@ export default function Menu({ show, onClose }) {
 
 			<ul className={styles['menu-links']} onClick={onClose}>
 				<li>
-					<Link href='/'>
-						<img src='/images/home.png' alt='🏡' />
-						Home
-					</Link>
+					<Link href='/'>Home</Link>
 				</li>
 				<li>
-					<Link href='/leaderboard'>
-						<img src='/images/leaderboard.png' alt='🏆' />
-						Leaderboard
-					</Link>
+					<Link href='/leaderboard'>Leaderboard</Link>
 				</li>
 				<li>
-					<Link href='/contact'>
-						<img src='/images/contact.png' alt='☎️' />
-						Contact
-					</Link>
+					<Link href='/contact'>Contact</Link>
 				</li>
 			</ul>
 		</div>
