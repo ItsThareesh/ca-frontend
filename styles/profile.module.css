@@ -28,7 +28,6 @@
 	align-items: center;
 	gap: 2rem;
 	position: relative;
-	overflow: hidden;
 }
 
 /* subtle shimmer accent on the card */
@@ -288,9 +287,11 @@
 	border: none;
 	color: rgba(255, 255, 255, 0.5);
 	cursor: pointer;
-	padding: 0.25rem;
-	display: flex;
+	padding: 0 !important;
+	margin: 0;
+	display: inline-flex;
 	align-items: center;
+	justify-content: center;
 	font-size: 1rem;
 	transition: color 0.2s;
 	width: auto;
@@ -1210,7 +1211,11 @@
 	text-align: left;
 }
 
-.customBadgeWrap:hover .customTooltipCard {
+.customBadgeWrap:hover .customTooltipCard,
+.customBadgeWrap:focus .customTooltipCard,
+.customBadgeWrap:focus-within .customTooltipCard,
+.customBadgeWrap:active .customTooltipCard,
+.customBadgeWrapActive .customTooltipCard {
 	opacity: 1;
 	visibility: visible;
 	transform: translateX(-50%) translateY(0);

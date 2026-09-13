@@ -160,7 +160,6 @@
 	padding: 1.5rem 1.75rem;
 	border-radius: var(--hub-radius);
 	position: relative;
-	overflow: hidden;
 	transition: border-color 0.3s ease, box-shadow 0.3s ease;
 }
 
@@ -375,11 +374,14 @@
 }
 
 .iconBtn {
-	display: grid;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 !important;
+	margin: 0;
 	width: 2.5rem;
 	height: 2.5rem;
 	flex-shrink: 0;
-	place-items: center;
 	border-radius: 8px;
 	border: 1px solid rgba(255, 255, 255, 0.14);
 	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
@@ -390,6 +392,13 @@
 	cursor: pointer;
 	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 	font-size: 0.95rem;
+	line-height: 1;
+	box-sizing: border-box;
+}
+
+.iconBtn svg {
+	display: block;
+	margin: auto;
 }
 
 .iconBtn:hover:not(:disabled) {
@@ -746,11 +755,14 @@
 
 /* ── Anchor link button (for referral open) ───────────────── */
 .anchorBtn {
-	display: grid;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0 !important;
+	margin: 0;
 	width: 2.5rem;
 	height: 2.5rem;
 	flex-shrink: 0;
-	place-items: center;
 	border-radius: 8px;
 	border: 1px solid rgba(255, 255, 255, 0.14);
 	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
@@ -762,6 +774,13 @@
 	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 	text-decoration: none;
 	font-size: 1.05rem;
+	line-height: 1;
+	box-sizing: border-box;
+}
+
+.anchorBtn svg {
+	display: block;
+	margin: auto;
 }
 
 .anchorBtn:hover {
@@ -1903,7 +1922,11 @@
 	z-index: 200;
 }
 
-.customBadgeWrap:hover .customTooltipCard {
+.customBadgeWrap:hover .customTooltipCard,
+.customBadgeWrap:focus .customTooltipCard,
+.customBadgeWrap:focus-within .customTooltipCard,
+.customBadgeWrap:active .customTooltipCard,
+.customBadgeWrapActive .customTooltipCard {
 	opacity: 1;
 	visibility: visible;
 	transform: translateX(-50%) translateY(0);

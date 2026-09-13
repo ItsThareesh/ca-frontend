@@ -195,6 +195,17 @@ export default function ProfilePage() {
 	// copy states
 	const [copied, setCopied] = useState(null) // 'code' | 'link' | null
 
+	// mobile tooltip toggle state
+	const [activeBadgeTooltip, setActiveBadgeTooltip] = useState(null)
+
+	useEffect(() => {
+		function handleGlobalClick() {
+			setActiveBadgeTooltip(null)
+		}
+		window.addEventListener('click', handleGlobalClick)
+		return () => window.removeEventListener('click', handleGlobalClick)
+	}, [])
+
 	// Load stored mock data if available
 	useEffect(() => {
 		if (typeof window !== 'undefined' && USE_MOCK) {
@@ -533,7 +544,16 @@ export default function ProfilePage() {
 												<div className={s.iconBadgesWrapper}>
 													{/* Leaderboard Badge */}
 													{isInLeaderboard && (
-														<div className={s.customBadgeWrap}>
+														<div
+															className={`${s.customBadgeWrap} ${activeBadgeTooltip === 'leaderboard' ? s.customBadgeWrapActive : ''}`}
+															tabIndex={0}
+															role="button"
+															aria-label="In Leaderboard badge"
+															onClick={(e) => {
+																e.stopPropagation()
+																setActiveBadgeTooltip((prev) => (prev === 'leaderboard' ? null : 'leaderboard'))
+															}}
+														>
 															<div className={s.iconBadge} title="In Leaderboard">
 																<svg viewBox="0 0 100 100" className={s.badgeSvgIcon} aria-hidden="true">
 																	<path d="M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z" />
@@ -555,7 +575,7 @@ export default function ProfilePage() {
 																			<span className={s.tooltipTitle}>In Leaderboard</span>
 																			<span className={s.tooltipTag}>ACTIVE</span>
 																		</div>
-																		<p className={s.tooltipBody}>Ranked in the top 25% of Tathva CAs. Keep referring to climb higher!</p>
+																		<p className={s.tooltipBody}>You've made it to the leaderboard. Keep referring to climb higher!</p>
 																	</div>
 																</div>
 															</div>
@@ -564,7 +584,16 @@ export default function ProfilePage() {
 
 													{/* Top 20 Badge */}
 													{isInTop20 && (
-														<div className={s.customBadgeWrap}>
+														<div
+															className={`${s.customBadgeWrap} ${activeBadgeTooltip === 'top20' ? s.customBadgeWrapActive : ''}`}
+															tabIndex={0}
+															role="button"
+															aria-label="In Top 20 badge"
+															onClick={(e) => {
+																e.stopPropagation()
+																setActiveBadgeTooltip((prev) => (prev === 'top20' ? null : 'top20'))
+															}}
+														>
 															<div className={`${s.iconBadge} ${s.iconBadgeTop20}`} title="In Top 20">
 																<svg viewBox="0 0 24 24" className={`${s.badgeSvgIcon} ${s.badgeSvgIconGold}`} aria-hidden="true">
 																	<path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z" />
@@ -902,7 +931,7 @@ export default function ProfilePage() {
 								</div>
 							) : (
 								<div className={s.progressTarget}>
-									<span className={s.allMilestonesTag}>🎉 All Major Milestones Unlocked!</span>
+									<span className={s.allMilestonesTag}>🤑 All Major Milestones Unlocked!</span>
 									<br />
 									Earning ₹50 for every new referral!
 								</div>
