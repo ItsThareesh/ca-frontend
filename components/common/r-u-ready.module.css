@@ -8,50 +8,60 @@
 	border-radius: 0.75rem;
 	width: 100%;
 	max-width: 900px;
+	gap: 2rem;
 }
 
 .r-u-ready .left {
 	display: flex;
 	align-items: center;
-	position: relative;
+	gap: 1.5rem;
+	flex-shrink: 0;
 }
 
 .vic-icon {
 	height: 90px;
 	width: 90px;
-	animation: vic-shake 1.5s cubic-bezier(0.45, -0.01, 0, 1) infinite;
+	flex-shrink: 0;
+	transition: transform 0.3s ease;
 }
 
-@keyframes vic-shake {
+.vic-icon.spin-once {
+	animation: vic-spin 1s cubic-bezier(0.45, -0.01, 0, 1) forwards;
+}
+
+.vic-icon.spin-hover {
+	animation: vic-spin 1s cubic-bezier(0.45, -0.01, 0, 1) infinite;
+}
+
+@keyframes vic-spin {
 	0% {
-		transform: rotate(-5deg);
-	}
-
-	30% {
-		transform: rotate(-5deg);
-	}
-
-	55% {
-		transform: rotate(10deg);
-	}
-
-	82% {
-		transform: rotate(-28deg);
+		transform: rotate(0deg);
 	}
 
 	100% {
-		transform: rotate(-5deg);
+		transform: rotate(360deg);
 	}
+}
+
+.r-u-ready-text {
+	display: flex;
+	flex-direction: column;
+	gap: 0.5rem;
 }
 
 .r-u-ready h3 {
 	font-size: 2.25rem;
 	font-family: 'Clash Display', sans-serif;
 	font-weight: 600;
+	margin: 0;
+	line-height: 1.2;
 }
 
 .r-u-ready p {
 	color: rgba(255, 255, 255, 0.7);
+	margin: 0;
+	font-size: 1.125rem;
+	line-height: 1.5;
 }
 
 .sign-up-btn {
@@ -140,32 +150,65 @@
 	.r-u-ready h3 {
 		font-size: 2rem;
 	}
+	.r-u-ready p {
+		font-size: 1rem;
+	}
+	.r-u-ready-btn {
+		font-size: 1.125rem;
+	}
 }
 
 @media (max-width: 658px) {
-	.r-u-ready,
-	.r-u-ready .left {
-		text-align: center;
+	.r-u-ready {
 		flex-direction: column;
+		text-align: center;
+		max-width: 100%;
+		padding: 2rem 1.5rem;
+		gap: 1.5rem;
 	}
 
-	.r-u-ready {
-		max-width: 400px;
+	.r-u-ready .left {
+		flex-direction: column;
+		align-items: center;
+		gap: 1rem;
+		width: 100%;
 	}
 
 	.vic-icon {
-		position: absolute;
-		bottom: 5.5rem;
+		height: 80px;
+		width: 80px;
+		position: static;
 	}
 
-	.r-u-ready .left {
-		margin-bottom: 1rem;
+	.r-u-ready-text {
+		align-items: center;
+	}
+
+	.r-u-ready h3 {
+		font-size: 1.75rem;
+	}
+
+	.r-u-ready p {
+		font-size: 1rem;
 	}
 }
 
 @media (max-width: 550px) {
 	.r-u-ready {
-		margin-top: 1rem;
-		padding: 2rem 1.5rem;
+		padding: 1.5rem 1rem;
+	}
+
+	.vic-icon {
+		height: 70px;
+		width: 70px;
+	}
+
+	.r-u-ready h3 {
+		font-size: 1.5rem;
+	}
+
+	.r-u-ready-btn {
+		font-size: 1rem;
+		padding: 0.875rem 1.5rem;
 	}
 }
