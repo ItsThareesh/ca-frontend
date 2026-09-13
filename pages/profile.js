@@ -139,6 +139,28 @@ export function calculateReferralRewards(count) {
 	return 4150 + (r - 50) * 50
 }
 
+export function calculateMilestoneProgress(count, milestones = REFERRAL_MILESTONES) {
+	if (!count || count <= 0) return 0
+	const numSegments = milestones.length - 1
+	if (numSegments <= 0) return 0
+	const maxCount = milestones[milestones.length - 1].count
+	if (count >= maxCount) return 100
+
+	const segmentWidth = 100 / numSegments
+
+	for (let i = 0; i < numSegments; i++) {
+		const startCount = milestones[i].count
+		const endCount = milestones[i + 1].count
+
+		if (count >= startCount && count <= endCount) {
+			const segmentProgress = (count - startCount) / (endCount - startCount)
+			return i * segmentWidth + segmentProgress * segmentWidth
+		}
+	}
+
+	return 100
+}
+
 const ROWS_PER_PAGE = 10
 const REFERRAL_BASE_URL = 'https://ca.tathva.org/?ref='
 
@@ -260,10 +282,9 @@ export default function ProfilePage() {
 		profile?.is_top20 || profile?.isInTop20 || (totalReferrals >= TOP20_REF_THRESHOLD && isInLeaderboard)
 	)
 
-	/* milestone progress */
+	/* milestone progress - piecewise segment interpolation to match marker positions */
 	const fillPercent = useMemo(() => {
-		const clamped = Math.min(totalReferrals, MAX_MILESTONE_COUNT)
-		return (clamped / MAX_MILESTONE_COUNT) * 100
+		return calculateMilestoneProgress(totalReferrals, REFERRAL_MILESTONES)
 	}, [totalReferrals])
 
 	const nextMilestone = REFERRAL_MILESTONES.slice(1).find((m) => m.count > totalReferrals)

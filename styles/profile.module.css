@@ -17,8 +17,11 @@
    1. CA DETAILS CARD
    ============================================================ */
 .caCard {
-	background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%);
-	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: linear-gradient(145deg, rgba(28, 28, 35, 0.75) 0%, rgba(14, 14, 18, 0.85) 100%);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.55);
 	border-radius: 1rem;
 	padding: 2.5rem;
 	display: flex;
@@ -35,9 +38,9 @@
 	top: 0;
 	left: 0;
 	right: 0;
-	height: 3px;
-	background: var(--primary);
-	opacity: 0.7;
+	height: 2px;
+	background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.6), rgba(212, 175, 55, 0.8), transparent);
+	opacity: 0.9;
 }
 
 .avatarWrapper {
@@ -55,6 +58,8 @@
 	background-position: center;
 	background-repeat: no-repeat;
 	display: block;
+	border: 2px solid rgba(212, 175, 55, 0.5);
+	box-shadow: 0 0 24px rgba(212, 175, 55, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.3);
 }
 
 .avatarGlow {
@@ -110,7 +115,7 @@
 	display: inline-flex;
 	align-items: center;
 	gap: 0.4rem;
-	background: linear-gradient(135deg, #9c741f 0%, #d4af37 60%, #c0c0c0 100%);
+	background: linear-gradient(135deg, #fce072 0%, #d4af37 60%, #9c741f 100%);
 	color: #000;
 	padding: 0.35rem 0.9rem;
 	border-radius: 2rem;
@@ -118,6 +123,7 @@
 	font-weight: 700;
 	text-transform: uppercase;
 	letter-spacing: 0.06em;
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.8), 0 2px 10px rgba(212, 175, 55, 0.3);
 }
 
 .caPoints {
@@ -136,8 +142,11 @@
    2. REFERRAL CODE SECTION
    ============================================================ */
 .referralSection {
-	background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%);
-	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: linear-gradient(145deg, rgba(30, 28, 24, 0.75) 0%, rgba(14, 14, 18, 0.85) 100%);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	border: 1px solid rgba(212, 175, 55, 0.35);
+	box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.25), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.55), 0 0 35px rgba(212, 175, 55, 0.08);
 	border-radius: 1rem;
 	padding: 2rem 2.5rem;
 }
@@ -171,13 +180,17 @@
 	align-items: center;
 	border-radius: 0.625rem;
 	overflow: hidden;
-	border: 1px solid rgba(255, 255, 255, 0.08);
+	border: 1px solid rgba(212, 175, 55, 0.4);
+	background: rgba(10, 10, 14, 0.65);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.06);
 	width: fit-content;
 	max-width: 100%;
 }
 
 .codeLabel {
-	background: var(--primary);
+	background: linear-gradient(135deg, #fce072 0%, #d4af37 60%, #9c741f 100%);
 	color: #000;
 	font-weight: 700;
 	font-size: 0.8rem;
@@ -187,7 +200,7 @@
 }
 
 .codeValue {
-	background: rgba(255, 255, 255, 0.06);
+	background: transparent;
 	color: #fff;
 	font-weight: 600;
 	font-size: 1.05rem;
@@ -213,17 +226,21 @@
 	font-size: 0.85rem;
 	font-weight: 500;
 	cursor: pointer;
-	transition: all 0.2s ease;
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	background: rgba(255, 255, 255, 0.04);
-	color: rgba(255, 255, 255, 0.8);
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	border: 1px solid rgba(255, 255, 255, 0.14);
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+	backdrop-filter: blur(10px);
+	-webkit-backdrop-filter: blur(10px);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.2), 0 2px 8px rgba(0, 0, 0, 0.25);
+	color: rgba(255, 255, 255, 0.85);
 	line-height: 1;
 	width: auto;
 }
 
 .refActionBtn:hover {
-	background: rgba(255, 255, 255, 0.1);
-	border-color: rgba(212, 175, 55, 0.4);
+	background: linear-gradient(135deg, rgba(212, 175, 55, 0.2) 0%, rgba(212, 175, 55, 0.05) 100%);
+	border-color: rgba(212, 175, 55, 0.6);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 14px rgba(212, 175, 55, 0.25);
 	color: #fff;
 	transform: translateY(-1px);
 }
@@ -233,8 +250,9 @@
 }
 
 .refActionBtnCopied {
-	background: rgba(34, 197, 94, 0.15) !important;
-	border-color: rgba(34, 197, 94, 0.4) !important;
+	background: linear-gradient(135deg, rgba(34, 197, 94, 0.25) 0%, rgba(34, 197, 94, 0.08) 100%) !important;
+	border-color: rgba(34, 197, 94, 0.55) !important;
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 0 14px rgba(34, 197, 94, 0.25) !important;
 	color: #22c55e !important;
 }
 
@@ -243,8 +261,11 @@
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
-	background: rgba(255, 255, 255, 0.03);
-	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: rgba(10, 10, 14, 0.6);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	box-shadow: inset 0 2px 6px rgba(0, 0, 0, 0.6), inset 0 -1px 0 rgba(255, 255, 255, 0.04);
 	border-radius: 0.5rem;
 	padding: 0.5rem 0.75rem;
 	max-width: 100%;
@@ -304,8 +325,11 @@
    3. MILESTONE PROGRESS LINE
    ============================================================ */
 .milestoneSection {
-	background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%);
-	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: linear-gradient(145deg, rgba(28, 28, 35, 0.75) 0%, rgba(14, 14, 18, 0.85) 100%);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.55);
 	border-radius: 1rem;
 	padding: 2rem 2.5rem;
 }
@@ -695,8 +719,11 @@
    4. REFERRALS TABLE
    ============================================================ */
 .referralsTableSection {
-	background: linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%);
-	border: 1px solid rgba(255, 255, 255, 0.06);
+	background: linear-gradient(145deg, rgba(28, 28, 35, 0.75) 0%, rgba(14, 14, 18, 0.85) 100%);
+	backdrop-filter: blur(20px) saturate(180%);
+	-webkit-backdrop-filter: blur(20px) saturate(180%);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	box-shadow: inset 0 1px 1px 0 rgba(255, 255, 255, 0.22), inset 0 -1px 1px 0 rgba(0, 0, 0, 0.5), 0 20px 50px rgba(0, 0, 0, 0.55);
 	border-radius: 1rem;
 	padding: 2rem 2.5rem;
 }
@@ -720,8 +747,12 @@
 
 .tableCount {
 	font-size: 0.8rem;
-	color: rgba(255, 255, 255, 0.35);
-	background: rgba(255, 255, 255, 0.06);
+	color: rgba(255, 255, 255, 0.75);
+	background: linear-gradient(135deg, rgba(255, 255, 255, 0.08) 0%, rgba(255, 255, 255, 0.02) 100%);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	border: 1px solid rgba(255, 255, 255, 0.12);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15);
 	padding: 0.25rem 0.65rem;
 	border-radius: 1rem;
 	font-weight: 500;
@@ -730,7 +761,7 @@
 .tableWrapper {
 	overflow-x: auto;
 	border-radius: 0.625rem;
-	border: 1px solid rgba(255, 255, 255, 0.06);
+	border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .refTable {
@@ -741,7 +772,10 @@
 }
 
 .refTable thead {
-	background: rgba(255, 255, 255, 0.04);
+	background: linear-gradient(180deg, rgba(255, 255, 255, 0.06) 0%, rgba(255, 255, 255, 0.02) 100%);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
 }
 
 .refTable th {
@@ -1082,18 +1116,20 @@
 	align-items: center;
 	gap: 0.75rem;
 	padding: 0.85rem 1.25rem;
-	background: rgba(212, 175, 55, 0.08);
-	border: 1px solid rgba(212, 175, 55, 0.22);
+	background: linear-gradient(135deg, rgba(212, 175, 55, 0.1) 0%, rgba(212, 175, 55, 0.02) 100%);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	border: 1px solid rgba(212, 175, 55, 0.3);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15), 0 8px 24px rgba(0, 0, 0, 0.4);
 	border-radius: 12px;
 	margin-bottom: 1.5rem;
 	font-size: 0.88rem;
-	color: rgba(255, 255, 255, 0.85);
-	backdrop-filter: blur(8px);
+	color: rgba(255, 255, 255, 0.9);
 	flex-wrap: wrap;
 }
 
 .pointsRuleTag {
-	background: linear-gradient(135deg, #d4af37, #9c741f);
+	background: linear-gradient(135deg, #fce072 0%, #d4af37 60%, #9c741f 100%);
 	color: #000;
 	font-size: 0.72rem;
 	font-weight: 700;
@@ -1101,6 +1137,7 @@
 	border-radius: 4px;
 	letter-spacing: 0.5px;
 	text-transform: uppercase;
+	box-shadow: 0 0 8px rgba(212, 175, 55, 0.4);
 }
 
 .iconBadgesWrapper {
@@ -1127,26 +1164,28 @@
 	height: 28px;
 	border-radius: 50%;
 	font-size: 0.95rem;
-	background: rgba(46, 204, 113, 0.15);
-	border: 1px solid rgba(46, 204, 113, 0.45);
-	box-shadow: 0 0 12px rgba(46, 204, 113, 0.25);
+	background: linear-gradient(135deg, rgba(46, 204, 113, 0.25) 0%, rgba(46, 204, 113, 0.08) 100%);
+	backdrop-filter: blur(8px);
+	-webkit-backdrop-filter: blur(8px);
+	border: 1px solid rgba(46, 204, 113, 0.55);
+	box-shadow: 0 0 12px rgba(46, 204, 113, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
 	transition: all 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
 	user-select: none;
 }
 
 .customBadgeWrap:hover .iconBadge {
 	transform: scale(1.18);
-	box-shadow: 0 0 16px rgba(46, 204, 113, 0.45);
+	box-shadow: 0 0 20px rgba(46, 204, 113, 0.6), inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
 
 .iconBadgeTop20 {
-	background: rgba(212, 175, 55, 0.15);
-	border: 1px solid rgba(212, 175, 55, 0.45);
-	box-shadow: 0 0 12px rgba(212, 175, 55, 0.25);
+	background: linear-gradient(135deg, rgba(212, 175, 55, 0.25) 0%, rgba(212, 175, 55, 0.08) 100%);
+	border-color: rgba(212, 175, 55, 0.6);
+	box-shadow: 0 0 12px rgba(212, 175, 55, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.4);
 }
 
 .customBadgeWrap:hover .iconBadgeTop20 {
-	box-shadow: 0 0 18px rgba(212, 175, 55, 0.55);
+	box-shadow: 0 0 22px rgba(212, 175, 55, 0.65), inset 0 1px 1px rgba(255, 255, 255, 0.6);
 }
 
 /* Custom Tooltip Floating Card */
@@ -1156,12 +1195,13 @@
 	left: 50%;
 	transform: translateX(-50%) translateY(6px);
 	width: 260px;
-	background: rgba(14, 14, 18, 0.96);
-	border: 1px solid rgba(212, 175, 55, 0.35);
+	background: linear-gradient(145deg, rgba(24, 22, 16, 0.88) 0%, rgba(12, 10, 8, 0.94) 100%);
+	border: 1px solid rgba(212, 175, 55, 0.45);
 	border-radius: 12px;
 	padding: 0.85rem 1rem;
-	box-shadow: 0 16px 36px rgba(0, 0, 0, 0.75), 0 0 20px rgba(212, 175, 55, 0.15);
-	backdrop-filter: blur(16px);
+	box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.3), 0 20px 50px rgba(0, 0, 0, 0.85), 0 0 24px rgba(212, 175, 55, 0.2);
+	backdrop-filter: blur(24px) saturate(190%);
+	-webkit-backdrop-filter: blur(24px) saturate(190%);
 	opacity: 0;
 	visibility: hidden;
 	pointer-events: none;
@@ -1183,7 +1223,7 @@
 	left: 50%;
 	transform: translateX(-50%);
 	border: 6px solid transparent;
-	border-top-color: rgba(212, 175, 55, 0.35);
+	border-top-color: rgba(212, 175, 55, 0.45);
 }
 
 .tooltipCardContent {
