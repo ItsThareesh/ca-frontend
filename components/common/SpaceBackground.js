@@ -1,12 +1,13 @@
-import { useRef, useMemo } from 'react'
+import { useRef, useMemo, useState, useEffect } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Points, PointMaterial } from '@react-three/drei'
 import * as THREE from 'three'
 
+const REGION_SIZE = 60
+
 const Stars = ({ count = 3000 }) => {
 	const pointsRef = useRef()
 
-	// Dynamically generate a circular texture for the particles
 	const circleTexture = useMemo(() => {
 		if (typeof document === 'undefined') return null
 		const canvas = document.createElement('canvas')
@@ -27,16 +28,13 @@ const Stars = ({ count = 3000 }) => {
 		for (let i = 0; i < count; i++) {
 			let x, y, z, orbitMinDistSq
 			do {
-				// Distribute stars symmetrically in a 100x100x100 cube centered at origin
-				x = (Math.random() - 0.5) * 100
-				y = (Math.random() - 0.5) * 100
-				z = (Math.random() - 0.5) * 100
+				x = (Math.random() - 0.5) * REGION_SIZE
+				y = (Math.random() - 0.5) * REGION_SIZE
+				z = (Math.random() - 0.5) * REGION_SIZE
 
-				// Calculate the closest this star will ever get to the camera at (0, 0, 10)
-				// as it rotates around the Y axis.
 				const r_xz = Math.sqrt(x * x + z * z)
 				orbitMinDistSq = y * y + (r_xz - 10) ** 2
-			} while (orbitMinDistSq < 25) // Reject if it orbits within 5 units of the camera
+			} while (orbitMinDistSq < 25)
 
 			p.set([x, y, z], i * 3)
 			s[i] = Math.random() * 0.2 + 0.05
@@ -46,7 +44,6 @@ const Stars = ({ count = 3000 }) => {
 
 	useFrame((state) => {
 		if (pointsRef.current) {
-			// Very subtle rotation for the stars
 			pointsRef.current.rotation.y = state.clock.elapsedTime * 0.02
 		}
 	})
@@ -70,7 +67,6 @@ const Stars = ({ count = 3000 }) => {
 const Meteor = () => {
 	const meshRef = useRef()
 
-	// Random start and trajectory
 	const startPos = useMemo(
 		() =>
 			new THREE.Vector3(
@@ -84,11 +80,9 @@ const Meteor = () => {
 
 	useFrame((state, delta) => {
 		if (meshRef.current) {
-			// Move diagonally downwards
 			meshRef.current.position.x -= speed * delta * 0.5
 			meshRef.current.position.y -= speed * delta
 
-			// Reset if it goes too far
 			if (meshRef.current.position.y < -30) {
 				meshRef.current.position.copy(startPos)
 				meshRef.current.position.x = (Math.random() - 0.5) * 40
@@ -108,7 +102,6 @@ const Meteor = () => {
 const CameraRig = () => {
 	const { camera } = useThree()
 	useFrame((state) => {
-		// Subtle mouse parallax
 		const targetX = (state.pointer.x * 2 - camera.position.x) * 0.1
 		const targetY = (state.pointer.y * 2 - camera.position.y) * 0.1
 		camera.position.x += targetX
@@ -118,23 +111,42 @@ const CameraRig = () => {
 	return null
 }
 
+// dial particle count / pixel ratio back on smaller / weaker screens
+function useIsMobile() {
+	const [isMobile, setIsMobile] = useState(false)
+	useEffect(() => {
+		const mq = window.matchMedia('(max-width: 768px)')
+		const update = () => setIsMobile(mq.matches)
+		update()
+		mq.addEventListener('change', update)
+		return () => mq.removeEventListener('change', update)
+	}, [])
+	return isMobile
+}
+
 export default function SpaceBackground() {
+	const isMobile = useIsMobile()
+
 	return (
 		<div
 			style={{
 				position: 'fixed',
-				top: 0,
-				left: 0,
-				width: '100vw',
-				height: '100vh',
+				inset: 0,
+				width: '100%',
+				height: '100%',
 				zIndex: -1,
 				background: '#050505',
+				overflow: 'hidden',
 			}}
 		>
-			<Canvas camera={{ position: [0, 0, 10], fov: 60 }}>
+			<Canvas
+				camera={{ position: [0, 0, 10], fov: 60 }}
+				dpr={isMobile ? [1, 1.5] : [1, 2]}
+				resize={{ scroll: false, debounce: 0 }}
+				style={{ width: '100%', height: '100%', display: 'block' }}
+			>
 				<fog attach='fog' args={['#050505', 10, 40]} />
-				<Stars count={120000} />
-				{/* Render a few occasional meteors */}
+				<Stars count={isMobile ? 8000 : 30000} />
 				{[...Array(3)].map((_, i) => (
 					<Meteor key={i} />
 				))}
