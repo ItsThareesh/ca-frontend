@@ -18,6 +18,10 @@ body {
 	overflow-x: hidden;
 }
 
+body.leaderboard-page {
+	background-image: none;
+}
+
 .container {
 	width: 100%;
 	padding: 0 4rem;
