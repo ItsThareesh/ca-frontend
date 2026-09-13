@@ -1,0 +1,1065 @@
+import { useState, useEffect, useMemo, useRef } from 'react'
+import { useRouter } from 'next/router'
+import Head from 'next/head'
+import { toast } from 'react-toastify'
+import { useUserContext } from 'context/UserContext'
+import { fetchReferrals } from 'lib/req/referrals'
+import {
+	FiCopy,
+	FiCheck,
+	FiExternalLink,
+	FiLogOut,
+	FiMail,
+	FiPhone,
+	FiUser,
+	FiChevronLeft,
+	FiChevronRight,
+	FiEdit2,
+	FiCamera,
+	FiX,
+	FiBookOpen,
+	FiAward,
+	FiCheckCircle,
+	FiTrash2,
+} from 'react-icons/fi'
+import axios from 'axios'
+
+import s from '../styles/hub-profile.module.css'
+
+export function generateRandomReferralCode(length = 7) {
+	const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
+	let result = ''
+	for (let i = 0; i < length; i++) {
+		result += chars.charAt(Math.floor(Math.random() * chars.length))
+	}
+	return result
+}
+
+export function getDefaultAvatar(name = 'Hamood Habibi') {
+	return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&background=222222&color=d4af37&size=160&bold=true`
+}
+
+/* ═════════════════════════════════════════════════════════════
+   MOCK DATA — remove this block and set USE_MOCK = false
+   when connecting to the real backend
+   ═════════════════════════════════════════════════════════════ */
+const USE_MOCK = true
+
+const MOCK_PROFILE = {
+	name: 'Hamood Habibi',
+	email: 'hamood.habibi@iitm.ac.in',
+	phone: '+91 98765 43210',
+	college: 'IIT Madras',
+	branch: 'Mechanical Engg',
+	year: 'Year 3',
+	is_ca: true,
+	tathvaId: 'TVA-2025-0042',
+	ref_code: 'K7N9W2X',
+	total_points: 345,
+	experience: true,
+	avatarUrl: 'https://ui-avatars.com/api/?name=Hamood+Habibi&background=222222&color=d4af37&size=160&bold=true',
+}
+
+const MOCK_NAMES = [
+	'Adithya Narayanan', 'Sneha Thomas', 'Rahul Krishnan', 'Karthik Raja', 'Meera Pillai',
+	'Ananya Sharma', 'Rohan Verma', 'Diya Patel', 'Kavya Rajesh', 'Arun Kumar',
+	'Sidharth M', 'Neha Nair', 'Vishnu T', 'Priya Raj', 'Gautam Menon',
+	'Aparna S', 'Nikhil Joseph', 'Pooja Hegde', 'Akash Varma', 'Shruti Iyer',
+	'Varun Nambiar', 'Devika R', 'Harishankar P', 'Keerthana M', 'Abhishek Das',
+	'Naveen Paul', 'Tanvi Desai', 'Ajay George', 'Lakshmi B', 'Ashwin K',
+	'Swathi Suresh', 'Deepak Chandran', 'Sandhya V', 'Midhun Mohan', 'Anjali R',
+	'Sanjay Pillai', 'Bhavana K', 'Pranav Nair', 'Divya Unni', 'Gokul Krishna',
+	'Vandana M', 'Rajesh K', 'Nimisha Joy', 'Vivek Ram', 'Parvathy S',
+	'Sarath Babu', 'Arya C', 'Manoj Kumar', 'Athira T', 'Shyam Prasad',
+	'Rhea Sen', 'Jithin Mathew', 'Gayathri N', 'Arvind Swamy', 'Sunitha R',
+	'Akhil Das', 'Reshma V', 'Sreehari K', 'Malavika P', 'Tony Varghese'
+]
+
+const MOCK_EVENTS = [
+	{ event: 'Robotics Workshop', type: 'Workshop', points: 10 },
+	{ event: 'CodeStorm Hackathon', type: 'Hackathon', points: 15 },
+	{ event: 'AI/ML Masterclass', type: 'Lecture', points: 3 },
+	{ event: 'Drone Racing', type: 'Event', points: 10 },
+	{ event: 'Tathva Registration', type: 'Registration', points: 5 },
+	{ event: 'IoT Bootcamp', type: 'Workshop', points: 10 },
+	{ event: 'CyberSec CTF', type: 'Hackathon', points: 15 },
+	{ event: 'Quantum Computing', type: 'Lecture', points: 3 },
+	{ event: 'Bridge Building', type: 'Event', points: 10 },
+	{ event: '3D Printing Workshop', type: 'Workshop', points: 10 },
+	{ event: 'DataViz Challenge', type: 'Hackathon', points: 15 },
+	{ event: 'Blockchain Seminar', type: 'Lecture', points: 3 },
+]
+
+export function generateMockReferrals(count) {
+	return Array.from({ length: count }, (_, i) => {
+		const name = MOCK_NAMES[i % MOCK_NAMES.length]
+		const ev = MOCK_EVENTS[i % MOCK_EVENTS.length]
+		return {
+			name: i >= MOCK_NAMES.length ? `${name} ${Math.floor(i / MOCK_NAMES.length) + 1}` : name,
+			event: ev.event,
+			type: ev.type,
+			points: ev.points,
+		}
+	})
+}
+/* ═════════════════════════════════════════════════════════════ */
+
+/* ═════════════════════════════════════════════════════════════
+   REFERRAL REWARDS & MILESTONES CONFIG
+   - 1–4 referrals: No reward
+   - 5 referrals: ₹100 milestone
+   - 6–9: ₹50 per referral
+   - 10 referrals: ₹200 milestone (total ₹500)
+   - 11–14: ₹50 per referral
+   - 15 referrals: ₹300 milestone (total ₹1,000)
+   - 16–19: ₹50 per referral
+   - 20 referrals: ₹500 milestone (total ₹1,700)
+   - 21–49: ₹50 per referral
+   - 50 referrals: ₹1,000 major milestone (total ₹4,150)
+   - 51+: ₹50 per referral
+   ═════════════════════════════════════════════════════════════ */
+export const REFERRAL_MILESTONES = [
+	{ count: 0, bonus: 0, label: 'Start', title: '0 Referrals', total: 0 },
+	{ count: 5, bonus: 100, label: 'Milestone 1', title: '5 Referrals', bonusText: '₹100 Milestone', total: 100 },
+	{ count: 10, bonus: 200, label: 'Milestone 2', title: '10 Referrals', bonusText: '₹200 Milestone', total: 500 },
+	{ count: 15, bonus: 300, label: 'Milestone 3', title: '15 Referrals', bonusText: '₹300 Milestone', total: 1000 },
+	{ count: 20, bonus: 500, label: 'Milestone 4', title: '20 Referrals', bonusText: '₹500 Milestone', total: 1700 },
+	{ count: 50, bonus: 1000, label: 'Major Milestone', title: '50 Referrals', bonusText: '₹1,000 Major Milestone', total: 4150 },
+]
+
+export const MAX_MILESTONE_COUNT = 50
+
+export function calculateReferralRewards(count) {
+	const r = Math.max(0, count)
+	if (r < 5) return 0
+	if (r < 10) return 100 + (r - 5) * 50
+	if (r < 15) return 500 + (r - 10) * 50
+	if (r < 20) return 1000 + (r - 15) * 50
+	if (r < 50) return 1700 + (r - 20) * 50
+	return 4150 + (r - 50) * 50
+}
+
+const ROWS_PER_PAGE = 10
+const REFERRAL_BASE_URL = 'https://ca.tathva.org/?ref='
+
+export default function ProfilePage() {
+	const { user, accessToken, logout } = useUserContext()
+	const router = useRouter()
+
+	const [profile, setProfile] = useState(USE_MOCK ? MOCK_PROFILE : null)
+	const [referrals, setReferrals] = useState([])
+	const [loading, setLoading] = useState(USE_MOCK ? false : true)
+	const [page, setPage] = useState(0)
+
+	// edit state
+	const [isEditing, setIsEditing] = useState(false)
+	const [saving, setSaving] = useState(false)
+	const [editFormData, setEditFormData] = useState({
+		name: '',
+		phone: '',
+		college: '',
+		branch: '',
+		year: 'Year 1',
+		experience: false,
+		avatarUrl: '',
+	})
+
+	const fileInputRef = useRef(null)
+
+	// mock testing state
+	const [mockPoints, setMockPoints] = useState(USE_MOCK ? MOCK_PROFILE.total_points : 0)
+	const [mockReferralCount, setMockReferralCount] = useState(USE_MOCK ? 14 : 0)
+
+	// copy states
+	const [copied, setCopied] = useState(null) // 'code' | 'link' | null
+
+	// Load stored mock data if available
+	useEffect(() => {
+		if (typeof window !== 'undefined' && USE_MOCK) {
+			try {
+				let randomCode = localStorage.getItem('tathva_ca_referral_code')
+				if (!randomCode || randomCode.length !== 7) {
+					randomCode = generateRandomReferralCode(7)
+					localStorage.setItem('tathva_ca_referral_code', randomCode)
+				}
+
+				const saved = localStorage.getItem('tathva_ca_mock_profile')
+				if (saved) {
+					const parsed = JSON.parse(saved)
+					// Ensure ref_code is 7 chars
+					const validRefCode = (parsed.ref_code && parsed.ref_code.length === 7) ? parsed.ref_code : randomCode
+					setProfile((prev) => ({
+						...prev,
+						...parsed,
+						ref_code: validRefCode,
+					}))
+					if (parsed.total_points !== undefined) {
+						setMockPoints(parsed.total_points)
+					}
+				} else {
+					setProfile((prev) => ({ ...prev, ref_code: randomCode }))
+				}
+			} catch (e) {
+				console.error(e)
+			}
+		}
+	}, [])
+
+	useEffect(() => {
+		if (USE_MOCK) return
+		if (!user || !accessToken) {
+			router.push('/login')
+			return
+		}
+		loadData()
+	}, [accessToken, user])
+
+	async function loadData() {
+		try {
+			const [profileRes, referralsData] = await Promise.all([
+				axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, {
+					headers: { Authorization: `Bearer ${accessToken}` },
+				}),
+				fetchReferrals().catch(() => []),
+			])
+			setProfile(profileRes.data)
+			setReferrals(referralsData || [])
+		} catch (err) {
+			console.error(err)
+			toast.error('Failed to load profile')
+		} finally {
+			setLoading(false)
+		}
+	}
+
+	/* derived */
+	const refCode = profile?.ref_code || profile?.refCode || ''
+	const totalPoints = USE_MOCK ? mockPoints : (profile?.total_points || profile?.totalPoints || 0)
+	const activeReferrals = useMemo(() => {
+		return USE_MOCK ? generateMockReferrals(mockReferralCount) : referrals
+	}, [mockReferralCount, referrals])
+	const totalReferrals = activeReferrals.length
+	const earnedRewards = useMemo(() => calculateReferralRewards(totalReferrals), [totalReferrals])
+	const referralLink = refCode ? `${REFERRAL_BASE_URL}${refCode}` : ''
+	const qrUrl = refCode
+		? `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(referralLink)}&size=320x320&bgcolor=09090b&color=e5b842&format=png&qzone=2&ecc=H`
+		: ''
+	const firstName = (profile?.name || 'Ambassador').split(' ')[0]
+	const avatarSrc = profile?.avatarUrl || profile?.imageUrl || getDefaultAvatar(profile?.name)
+
+	/* Badges criteria:
+	   - Leaderboard badge: unlocked at 25% of 50 referrals (≥ 13 refs)
+	   - Top 20 badge: unlocked at 75% of 50 referrals (≥ 38 refs) */
+	const LEADERBOARD_REF_THRESHOLD = Math.ceil(MAX_MILESTONE_COUNT * 0.25) // 13 referrals (25%)
+	const TOP20_REF_THRESHOLD = Math.ceil(MAX_MILESTONE_COUNT * 0.75) // 38 referrals (75%)
+
+	const isInLeaderboard = Boolean(
+		profile?.is_leaderboard || profile?.isInLeaderboard || (totalReferrals >= LEADERBOARD_REF_THRESHOLD)
+	)
+	const isInTop20 = Boolean(
+		profile?.is_top20 || profile?.isInTop20 || (totalReferrals >= TOP20_REF_THRESHOLD && isInLeaderboard)
+	)
+
+	/* milestone progress */
+	const fillPercent = useMemo(() => {
+		const clamped = Math.min(totalReferrals, MAX_MILESTONE_COUNT)
+		return (clamped / MAX_MILESTONE_COUNT) * 100
+	}, [totalReferrals])
+
+	const nextMilestone = REFERRAL_MILESTONES.slice(1).find((m) => m.count > totalReferrals)
+	const referralsToNext = nextMilestone ? nextMilestone.count - totalReferrals : 0
+
+	/* pagination */
+	const totalPages = Math.max(1, Math.ceil(activeReferrals.length / ROWS_PER_PAGE))
+	const paginatedReferrals = activeReferrals.slice(page * ROWS_PER_PAGE, (page + 1) * ROWS_PER_PAGE)
+
+	// Keep page within bounds when referral count changes
+	useEffect(() => {
+		if (page >= totalPages && totalPages > 0) {
+			setPage(Math.max(0, totalPages - 1))
+		}
+	}, [totalPages, page])
+
+	/* copy handler using native clipboard API */
+	function handleCopy(text, kind) {
+		if (!text) return
+		if (typeof navigator !== 'undefined' && navigator.clipboard) {
+			navigator.clipboard
+				.writeText(text)
+				.then(() => {
+					setCopied(kind)
+					toast.success(kind === 'code' ? 'Referral code copied!' : 'Referral link copied!')
+					setTimeout(() => setCopied(null), 1600)
+				})
+				.catch(() => fallbackCopy(text, kind))
+		} else {
+			fallbackCopy(text, kind)
+		}
+	}
+
+	function fallbackCopy(text, kind) {
+		try {
+			const textArea = document.createElement('textarea')
+			textArea.value = text
+			textArea.style.position = 'fixed'
+			textArea.style.opacity = '0'
+			document.body.appendChild(textArea)
+			textArea.select()
+			document.execCommand('copy')
+			document.body.removeChild(textArea)
+			setCopied(kind)
+			toast.success(kind === 'code' ? 'Referral code copied!' : 'Referral link copied!')
+			setTimeout(() => setCopied(null), 1600)
+		} catch (err) {
+			console.error(err)
+			toast.error('Failed to copy')
+		}
+	}
+
+	/* ── profile image handlers ── */
+	function handleImageChange(e) {
+		const file = e.target.files?.[0]
+		if (!file) return
+
+		if (!file.type.startsWith('image/')) {
+			toast.error('Please select a valid image file (PNG, JPG, WEBP)')
+			return
+		}
+
+		if (file.size > 5 * 1024 * 1024) {
+			toast.error('Image size must be less than 5MB')
+			return
+		}
+
+		const reader = new FileReader()
+		reader.onload = () => {
+			const result = reader.result
+			setEditFormData((prev) => ({ ...prev, avatarUrl: result }))
+
+			if (!isEditing) {
+				const updated = { ...profile, avatarUrl: result }
+				setProfile(updated)
+				if (USE_MOCK) {
+					localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
+				}
+				toast.success('Profile picture updated!')
+			}
+		}
+		reader.readAsDataURL(file)
+	}
+
+	function handleRemoveImage() {
+		const fallback = getDefaultAvatar(profile?.name)
+		setEditFormData((prev) => ({ ...prev, avatarUrl: fallback }))
+		if (!isEditing) {
+			const updated = { ...profile, avatarUrl: fallback }
+			setProfile(updated)
+			if (USE_MOCK) {
+				localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
+			}
+			toast.success('Profile picture reset to default')
+		}
+	}
+
+	/* ── edit form handlers ── */
+	function startEditing() {
+		setEditFormData({
+			name: profile?.name || '',
+			phone: profile?.phone || '',
+			college: profile?.college || '',
+			branch: profile?.branch || '',
+			year: profile?.year || 'Year 1',
+			experience: profile?.experience !== undefined ? profile.experience : false,
+			avatarUrl: avatarSrc,
+		})
+		setIsEditing(true)
+	}
+
+	function cancelEditing() {
+		setIsEditing(false)
+	}
+
+	async function handleSaveProfile(e) {
+		e?.preventDefault()
+		if (!editFormData.name.trim()) {
+			toast.error('Name is required')
+			return
+		}
+
+		setSaving(true)
+		try {
+			const updated = {
+				...profile,
+				...editFormData,
+			}
+
+			if (!USE_MOCK && accessToken) {
+				await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, updated, {
+					headers: { Authorization: `Bearer ${accessToken}` },
+				})
+			} else if (USE_MOCK) {
+				localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
+			}
+
+			setProfile(updated)
+			setIsEditing(false)
+			toast.success('CA details updated successfully!')
+		} catch (err) {
+			console.error(err)
+			toast.error('Failed to update CA details')
+		} finally {
+			setSaving(false)
+		}
+	}
+
+	/* ── loading ── */
+	if (loading) {
+		return (
+			<div className={`${s.hubPage} ${s.hubRoot}`}>
+				<Head>
+					<title>Ambassador Profile — Tathva 2026</title>
+				</Head>
+				<div className={s.loadingState}>
+					<div className={s.loadingSpinner} />
+					Loading your dashboard…
+				</div>
+			</div>
+		)
+	}
+
+	/* ── render ── */
+	return (
+		<div className={`${s.hubPage} ${s.hubRoot}`}>
+			<Head>
+				<title>Ambassador Profile — Tathva 2026</title>
+				<meta name="description" content="View your Tathva 2026 campus ambassador profile, referral activity, and points." />
+			</Head>
+
+			{/* Hidden file input for photo upload */}
+			<input
+				type="file"
+				ref={fileInputRef}
+				onChange={handleImageChange}
+				accept="image/*"
+				className={s.hiddenFileInput}
+			/>
+
+			<div className={s.hubContainer}>
+				{/* ── WELCOME ── */}
+				<section className={s.welcomeSection}>
+					<div className={s.welcomeMain}>
+						<p className={s.welcomeTag}>Ambassador profile</p>
+						<h1 className={s.welcomeHeading}>
+							Welcome back, <span className={s.welcomeGold}>{firstName}.</span>
+						</h1>
+						<p className={s.welcomeDesc}>
+							Share your referral code and move closer to the next milestone.
+						</p>
+					</div>
+					<div className={s.welcomeActions}>
+						<button className={s.signOutBtn} onClick={logout} title="Sign out" aria-label="Sign out">
+							<FiLogOut size={16} />
+							<span>Sign out</span>
+						</button>
+					</div>
+				</section>
+
+				{/* ── MOCK TESTING ── */}
+				{USE_MOCK && (
+					<div className={s.testBanner}>
+						<label className={s.testLabel}>
+							<span>~ referrals milestone testing slider ~</span>
+							<span className={s.testPoints}>
+								{totalReferrals} Refs &bull; ₹{earnedRewards.toLocaleString('en-IN')} Earned
+							</span>
+						</label>
+						<input
+							type="range"
+							min="0"
+							max="60"
+							step="1"
+							value={mockReferralCount}
+							onChange={(e) => setMockReferralCount(parseInt(e.target.value))}
+							className={s.testSlider}
+						/>
+					</div>
+				)}
+
+				{/* ── TOP GRID (Details + Referral) ── */}
+				<div className={s.topGrid}>
+					{/* Details card */}
+					<section className={`${s.detailsCard} ${s.panelGlow}`}>
+						{!isEditing ? (
+							/* ── VIEW MODE ── */
+							<>
+								<div className={s.detailsTop}>
+									<div className={s.detailsAvatarGroup}>
+										<div className={s.detailsAvatarWrapperStatic}>
+											<div className={s.detailsAvatar}>
+												{avatarSrc ? (
+													<img src={avatarSrc} alt={profile?.name || 'Avatar'} className={s.avatarImg} />
+												) : (
+													<FiUser size={34} strokeWidth={1.5} />
+												)}
+											</div>
+										</div>
+
+										<div className={s.detailsInfo}>
+											<p className={s.detailsCaId}>CA ID · {profile?.tathvaId || '—'}</p>
+											<h2 className={s.detailsName}>{profile?.name || 'Campus Ambassador'}</h2>
+											{/* Icon Badges — Leaderboard & Top 20 */}
+											{(isInLeaderboard || isInTop20) && (
+												<div className={s.iconBadgesWrapper}>
+													{/* Leaderboard Badge */}
+													{isInLeaderboard && (
+														<div className={s.customBadgeWrap}>
+															<div className={s.iconBadge} title="In Leaderboard">
+																<svg viewBox="0 0 100 100" className={s.badgeSvgIcon} aria-hidden="true">
+																	<path d="M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z" />
+																</svg>
+															</div>
+															<div className={s.customTooltipCard}>
+																<div className={s.tooltipArrow} />
+																<div className={s.tooltipCardContent}>
+																	<div className={s.tooltipArtContainer}>
+																		<svg className={s.animSvgIcon} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+																			<path d="M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z" />
+																		</svg>
+																		<div className={s.tooltipStarContainer}>
+																			<div className={`${s.starEight} ${s.starEightGreen}`} />
+																		</div>
+																	</div>
+																	<div className={s.tooltipTextWrap}>
+																		<div className={s.tooltipHeaderRow}>
+																			<span className={s.tooltipTitle}>In Leaderboard</span>
+																			<span className={s.tooltipTag}>ACTIVE</span>
+																		</div>
+																		<p className={s.tooltipBody}>Ranked in the top 25% of Tathva CAs. Keep referring to climb higher!</p>
+																	</div>
+																</div>
+															</div>
+														</div>
+													)}
+
+													{/* Top 20 Badge */}
+													{isInTop20 && (
+														<div className={s.customBadgeWrap}>
+															<div className={`${s.iconBadge} ${s.iconBadgeTop20}`} title="In Top 20">
+																<svg viewBox="0 0 24 24" className={`${s.badgeSvgIcon} ${s.badgeSvgIconGold}`} aria-hidden="true">
+																	<path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z" />
+																</svg>
+															</div>
+															<div className={`${s.customTooltipCard} ${s.customTooltipCardGold}`}>
+																<div className={`${s.tooltipArrow} ${s.tooltipArrowGold}`} />
+																<div className={s.tooltipCardContent}>
+																	<div className={s.tooltipArtContainer}>
+																		<svg className={`${s.animSvgIcon} ${s.animSvgIconGold}`} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+																			<path d="M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z" />
+																		</svg>
+																		<div className={s.tooltipStarContainer}>
+																			<div className={`${s.starEight} ${s.starEightGold}`} />
+																		</div>
+																	</div>
+																	<div className={s.tooltipTextWrap}>
+																		<div className={s.tooltipHeaderRow}>
+																			<span className={`${s.tooltipTitle} ${s.tooltipTitleGold}`}>In Top 20</span>
+																			<span className={`${s.tooltipTag} ${s.tooltipTagGold}`}>ELITE</span>
+																		</div>
+																		<p className={s.tooltipBody}>You're in the Top 20 campus ambassadors. An elite achiever of Tathva 2026!</p>
+																	</div>
+																</div>
+															</div>
+														</div>
+													)}
+												</div>
+											)}
+										</div>
+									</div>
+
+									<button
+										type="button"
+										className={s.editBtn}
+										onClick={startEditing}
+										title="Edit CA Details"
+									>
+										<FiEdit2 size={13} />
+										<span>Edit</span>
+									</button>
+								</div>
+
+								<hr className={s.detailsDivider} />
+
+								<div className={s.detailsGrid}>
+									<div className={s.detailRow}>
+										<div className={s.detailIcon}>
+											<FiMail size={16} />
+										</div>
+										<div className={s.detailContent}>
+											<span className={s.detailLabel}>Email Address</span>
+											<span className={s.detailText}>{profile?.email || 'Not provided'}</span>
+										</div>
+									</div>
+
+									<div className={s.detailRow}>
+										<div className={s.detailIcon}>
+											<FiPhone size={16} />
+										</div>
+										<div className={s.detailContent}>
+											<span className={s.detailLabel}>WhatsApp / Phone</span>
+											<span className={s.detailText}>{profile?.phone || 'Not provided'}</span>
+										</div>
+									</div>
+
+									<div className={s.detailRow}>
+										<div className={s.detailIcon}>
+											<FiBookOpen size={16} />
+										</div>
+										<div className={s.detailContent}>
+											<span className={s.detailLabel}>College / Institute</span>
+											<span className={s.detailText}>{profile?.college || 'Not provided'}</span>
+										</div>
+									</div>
+
+									<div className={s.detailRow}>
+										<div className={s.detailIcon}>
+											<FiAward size={16} />
+										</div>
+										<div className={s.detailContent}>
+											<span className={s.detailLabel}>Branch & Year</span>
+											<span className={s.detailText}>
+												{profile?.branch ? profile.branch : 'Branch N/A'} · {profile?.year || 'Year N/A'}
+											</span>
+										</div>
+									</div>
+
+									<div className={s.detailRow}>
+										<div className={s.detailIcon}>
+											<FiCheckCircle size={16} />
+										</div>
+										<div className={s.detailContent}>
+											<span className={s.detailLabel}>Prior CA Experience</span>
+											<span className={s.detailText}>
+												{profile?.experience ? 'Experienced CA' : 'First-time CA'}
+											</span>
+										</div>
+									</div>
+								</div>
+							</>
+						) : (
+							/* ── EDIT MODE ── */
+							<div>
+								<div className={s.editCardHeader}>
+									<h3 className={s.editCardTitle}>Edit CA Profile</h3>
+									<button
+										type="button"
+										className={s.iconBtn}
+										onClick={cancelEditing}
+										title="Cancel editing"
+									>
+										<FiX size={16} />
+									</button>
+								</div>
+
+								{/* Avatar Upload in Edit Mode */}
+								<div className={s.avatarEditSection}>
+									<div
+										className={s.detailsAvatarWrapper}
+										onClick={() => fileInputRef.current?.click()}
+										title="Hover and click to upload or change photo"
+									>
+										<div className={s.detailsAvatar}>
+											{editFormData.avatarUrl ? (
+												<img src={editFormData.avatarUrl} alt="Preview" className={s.avatarImg} />
+											) : (
+												<FiUser size={34} strokeWidth={1.5} />
+											)}
+										</div>
+										<div className={s.avatarUploadOverlay}>
+											<FiCamera size={15} />
+											<span>Upload</span>
+										</div>
+									</div>
+
+									<div className={s.avatarEditInfo}>
+										<p className={s.avatarInstruction}></p>
+										{editFormData.avatarUrl && (
+											<button
+												type="button"
+												className={s.removePhotoBtn}
+												onClick={handleRemoveImage}
+											>
+												<FiTrash2 size={12} />
+												<span>Remove photo</span>
+											</button>
+										)}
+									</div>
+								</div>
+
+								{/* Form Fields */}
+								<form className={s.editForm} onSubmit={handleSaveProfile}>
+									<div className={s.formGrid}>
+										<div className={`${s.formGroup} ${s.formGroupFull}`}>
+											<label className={s.formLabel}>Full Name *</label>
+											<input
+												type="text"
+												className={s.formInput}
+												value={editFormData.name}
+												onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
+												placeholder="Enter your name"
+												required
+											/>
+										</div>
+
+										<div className={s.formGroup}>
+											<label className={s.formLabel}>WhatsApp / Phone</label>
+											<input
+												type="tel"
+												className={s.formInput}
+												value={editFormData.phone}
+												onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
+												placeholder="+91 98765 43210"
+											/>
+										</div>
+
+										<div className={s.formGroup}>
+											<label className={s.formLabel}>Year of Study</label>
+											<select
+												className={s.formSelect}
+												value={editFormData.year}
+												onChange={(e) => setEditFormData({ ...editFormData, year: e.target.value })}
+											>
+												<option value="Year 1">Year 1</option>
+												<option value="Year 2">Year 2</option>
+												<option value="Year 3">Year 3</option>
+												<option value="Year 4">Year 4</option>
+												<option value="Year 5">Year 5</option>
+												<option value="Other">Other</option>
+											</select>
+										</div>
+
+										<div className={`${s.formGroup} ${s.formGroupFull}`}>
+											<label className={s.formLabel}>Institute / College</label>
+											<input
+												type="text"
+												className={s.formInput}
+												value={editFormData.college}
+												onChange={(e) => setEditFormData({ ...editFormData, college: e.target.value })}
+												placeholder="e.g. NIT Calicut"
+											/>
+										</div>
+
+										<div className={s.formGroup}>
+											<label className={s.formLabel}>Branch / Department</label>
+											<input
+												type="text"
+												className={s.formInput}
+												value={editFormData.branch}
+												onChange={(e) => setEditFormData({ ...editFormData, branch: e.target.value })}
+												placeholder="e.g. Computer Science"
+											/>
+										</div>
+
+										<div className={s.formGroup}>
+											<label className={s.formLabel}>Prior CA Experience</label>
+											<select
+												className={s.formSelect}
+												value={editFormData.experience ? 'true' : 'false'}
+												onChange={(e) =>
+													setEditFormData({ ...editFormData, experience: e.target.value === 'true' })
+												}
+											>
+												<option value="false">No (First time)</option>
+												<option value="true">Yes (Experienced)</option>
+											</select>
+										</div>
+									</div>
+
+									<div className={s.formActions}>
+										<button type="submit" className={s.saveBtn} disabled={saving}>
+											<FiCheck size={16} />
+											<span>{saving ? 'Saving…' : 'Save Changes'}</span>
+										</button>
+										<button type="button" className={s.cancelBtn} onClick={cancelEditing}>
+											<FiX size={15} />
+											<span>Cancel</span>
+										</button>
+									</div>
+								</form>
+							</div>
+						)}
+					</section>
+
+					{/* Referral card */}
+					<section className={`${s.referralCard} ${s.panelGlow}`}>
+						<div className={s.referralGlow} />
+						<p className={s.referralLabel}>Your invite</p>
+						<h2 className={s.referralTitle}>Referral code</h2>
+						<div className={s.referralBody}>
+							<div className={s.referralFields}>
+								{/* Code */}
+								<div>
+									<p className={s.fieldLabel}>Unique code</p>
+									<div className={s.fieldRow}>
+										<div className={s.codeBox}>{refCode || '——'}</div>
+										<button
+											type="button"
+											className={s.iconBtn}
+											aria-label="Copy referral code"
+											title="Copy referral code"
+											disabled={!refCode}
+											onClick={() => handleCopy(refCode, 'code')}
+										>
+											{copied === 'code' ? <FiCheck size={17} /> : <FiCopy size={17} />}
+										</button>
+									</div>
+								</div>
+								{/* Link */}
+								<div>
+									<p className={s.fieldLabel}>Referral link</p>
+									<div className={s.fieldRow}>
+										<div className={s.linkBox}>{referralLink || '——'}</div>
+										<button
+											type="button"
+											className={s.iconBtn}
+											aria-label="Copy referral link"
+											title="Copy referral link"
+											disabled={!refCode}
+											onClick={() => handleCopy(referralLink, 'link')}
+										>
+											{copied === 'link' ? <FiCheck size={17} /> : <FiCopy size={17} />}
+										</button>
+										{referralLink && (
+											<a
+												href={referralLink}
+												target="_blank"
+												rel="noreferrer"
+												className={s.anchorBtn}
+												aria-label="Open referral link"
+												title="Open referral link"
+											>
+												<FiExternalLink size={17} />
+											</a>
+										)}
+									</div>
+								</div>
+							</div>
+							{/* QR Code in Golden Black Theme with center logo */}
+							{qrUrl && (
+								<div className={s.qrWrapper}>
+									<div className={s.qrCodeContainer}>
+										<img src={qrUrl} alt="QR code for referral link" className={s.qrImage} />
+										<div className={s.qrCenterLogo} title="Tathva '26">
+											<img src="/images/tathva26-gold.png" alt="Tathva 26 Logo" />
+										</div>
+									</div>
+									<span className={s.qrBadge}>Scan to register</span>
+								</div>
+							)}
+						</div>
+					</section>
+				</div>
+
+				{/* ── REWARDS & MILESTONE PROGRESS ── */}
+				<section className={`${s.progressSection} ${s.panelGlow}`}>
+					<div className={s.progressHeader}>
+						<div>
+							<div className={s.rewardTag}>Referral Rewards Wallet</div>
+							<h2 className={s.progressTitle}>
+								₹{earnedRewards.toLocaleString('en-IN')}{' '}
+								<span className={s.earnedSub}>Total Earned</span>
+							</h2>
+							<p className={s.progressSubtext}>
+								{totalReferrals} successful referrals &bull; ₹50 per referral between milestones
+							</p>
+						</div>
+						<div className={s.progressTargetBox}>
+							{nextMilestone ? (
+								<div className={s.progressTarget}>
+									Next Milestone at <span className={s.progressTargetBold}>{nextMilestone.count} referrals</span>:
+									<br />
+									<span className={s.progressRewardPill}>{nextMilestone.bonusText}</span> ({referralsToNext} more needed)
+								</div>
+							) : (
+								<div className={s.progressTarget}>
+									<span className={s.allMilestonesTag}>🎉 All Major Milestones Unlocked!</span>
+									<br />
+									Earning ₹50 for every new referral!
+								</div>
+							)}
+						</div>
+					</div>
+
+					{/* Visual Milestone Track */}
+					<div className={s.progressTrack}>
+						<div className={s.trackBg}>
+							<div className={s.trackFill} style={{ width: `${fillPercent}%` }} />
+							<div className={s.trackMarkers}>
+								{REFERRAL_MILESTONES.map((item, i) => {
+									const percent = (i / (REFERRAL_MILESTONES.length - 1)) * 100
+									const isPassed = totalReferrals >= item.count
+									return (
+										<div
+											key={item.count}
+											style={{ left: `${percent}%` }}
+											className={`${s.trackDiamond} ${isPassed ? s.trackDiamondActive : ''}`}
+											title={`${item.title} - ${item.bonusText || 'Start'}`}
+										/>
+									)
+								})}
+							</div>
+						</div>
+						<div className={s.trackLabels}>
+							{REFERRAL_MILESTONES.map((item, i) => {
+								const isActive = totalReferrals >= item.count
+								const percent = (i / (REFERRAL_MILESTONES.length - 1)) * 100
+								return (
+									<div
+										key={item.count}
+										style={{ left: `${percent}%` }}
+										className={s.trackLabelWrapper}
+									>
+										<span
+											className={`${s.trackMilestoneCount} ${isActive ? s.trackLabelMidActive : s.trackLabelMidInactive}`}
+										>
+											{item.count} {item.count === 1 ? 'ref' : 'refs'}
+										</span>
+										{item.bonus > 0 && (
+											<span className={`${s.trackMilestoneBonus} ${isActive ? s.bonusActive : ''}`}>
+												+₹{item.bonus}
+											</span>
+										)}
+									</div>
+								)
+							})}
+						</div>
+					</div>
+
+					{/* Milestone Rewards Strategy Grid */}
+					<div className={s.rewardsGrid}>
+						<div className={`${s.rewardCard} ${totalReferrals >= 5 ? s.rewardCardActive : ''}`}>
+							<div className={s.rewardCardHead}>
+								<span className={s.tierPill}>Tier 1</span>
+								<span className={s.tierBonus}>₹100</span>
+							</div>
+							<p className={s.tierTarget}>5 Referrals</p>
+							<p className={s.tierDesc}>Unlock initial milestone reward</p>
+							<span className={s.tierStatus}>{totalReferrals >= 5 ? '✓ Unlocked' : `${Math.max(0, 5 - totalReferrals)} to go`}</span>
+						</div>
+
+						<div className={`${s.rewardCard} ${totalReferrals >= 10 ? s.rewardCardActive : ''}`}>
+							<div className={s.rewardCardHead}>
+								<span className={s.tierPill}>Tier 2</span>
+								<span className={s.tierBonus}>₹200</span>
+							</div>
+							<p className={s.tierTarget}>10 Referrals</p>
+							<p className={s.tierDesc}>₹50/ref (6–9) + ₹200 bonus (₹500 total)</p>
+							<span className={s.tierStatus}>{totalReferrals >= 10 ? '✓ Unlocked' : `${Math.max(0, 10 - totalReferrals)} to go`}</span>
+						</div>
+
+						<div className={`${s.rewardCard} ${totalReferrals >= 15 ? s.rewardCardActive : ''}`}>
+							<div className={s.rewardCardHead}>
+								<span className={s.tierPill}>Tier 3</span>
+								<span className={s.tierBonus}>₹300</span>
+							</div>
+							<p className={s.tierTarget}>15 Referrals</p>
+							<p className={s.tierDesc}>₹50/ref (11–14) + ₹300 bonus (₹1,000 total)</p>
+							<span className={s.tierStatus}>{totalReferrals >= 15 ? '✓ Unlocked' : `${Math.max(0, 15 - totalReferrals)} to go`}</span>
+						</div>
+
+						<div className={`${s.rewardCard} ${totalReferrals >= 20 ? s.rewardCardActive : ''}`}>
+							<div className={s.rewardCardHead}>
+								<span className={s.tierPill}>Tier 4</span>
+								<span className={s.tierBonus}>₹500</span>
+							</div>
+							<p className={s.tierTarget}>20 Referrals</p>
+							<p className={s.tierDesc}>₹50/ref (16–19) + ₹500 bonus (₹1,700 total)</p>
+							<span className={s.tierStatus}>{totalReferrals >= 20 ? '✓ Unlocked' : `${Math.max(0, 20 - totalReferrals)} to go`}</span>
+						</div>
+
+						<div className={`${s.rewardCard} ${s.majorTierCard} ${totalReferrals >= 50 ? s.rewardCardActive : ''}`}>
+							<div className={s.rewardCardHead}>
+								<span className={s.majorTierPill}>Major Tier</span>
+								<span className={s.majorTierBonus}>₹1,000</span>
+							</div>
+							<p className={s.tierTarget}>50 Referrals</p>
+							<p className={s.tierDesc}>₹50/ref (21–49) + ₹1,000 bonus (₹4,150 total)</p>
+							<span className={s.tierStatus}>{totalReferrals >= 50 ? '✓ Unlocked' : `${Math.max(0, 50 - totalReferrals)} to go`}</span>
+						</div>
+					</div>
+				</section>
+
+				{/* ── REFERRALS TABLE ── */}
+				<section className={s.tableSection}>
+					<div className={s.tableHeader}>
+						<div className={s.tableHeaderLeft}>
+							<p className={s.tableLabel}>Activity</p>
+							<h2 className={s.tableTitle}>Your referrals</h2>
+						</div>
+						<div className={s.tableCount}>
+							<p className={s.tableCountNum}>{totalReferrals}</p>
+							<p className={s.tableCountLabel}>Total referrals</p>
+						</div>
+					</div>
+
+					{activeReferrals.length > 0 ? (
+						<>
+							<div className={s.tableScroll}>
+								<table className={s.refTable}>
+									<thead>
+										<tr>
+											<th>Name</th>
+											<th>Event</th>
+											<th>Type</th>
+											<th>Points</th>
+										</tr>
+									</thead>
+									<tbody>
+										{paginatedReferrals.map((r, i) => (
+											<tr key={i}>
+												<td className={s.tdName}>{r.name}</td>
+												<td className={s.tdEvent}>{r.event}</td>
+												<td>
+													<span className={s.typeBadge}>{r.type}</span>
+												</td>
+												<td className={s.tdPoints}>+{r.points}</td>
+											</tr>
+										))}
+									</tbody>
+								</table>
+							</div>
+
+							{/* Pagination */}
+							<div className={s.pagination}>
+								<span className={s.paginationInfo}>
+									Showing {page * ROWS_PER_PAGE + 1}–
+									{Math.min((page + 1) * ROWS_PER_PAGE, totalReferrals)} of {totalReferrals}
+								</span>
+								<div className={s.paginationBtns}>
+									<button
+										className={s.pageBtn}
+										disabled={page === 0}
+										onClick={() => setPage((p) => p - 1)}
+									>
+										<FiChevronLeft /> Prev
+									</button>
+									<button
+										className={s.pageBtn}
+										disabled={page >= totalPages - 1}
+										onClick={() => setPage((p) => p + 1)}
+									>
+										Next <FiChevronRight />
+									</button>
+								</div>
+							</div>
+						</>
+					) : (
+						<div className={s.emptyState}>
+							<span className={s.emptyIcon}>📭</span>
+							<span className={s.emptyText}>No referrals yet! Share your referral code to get started!</span>
+						</div>
+					)}
+				</section>
+			</div>
+		</div>
+	)
+}

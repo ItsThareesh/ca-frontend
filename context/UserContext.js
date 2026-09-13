@@ -46,11 +46,9 @@ export default function UserContextWrapper({ children }) {
 				branch: data?.branch || '',
 				year: data?.year || '',
 				experience: data?.experience || false,
-				// name: data?.name,
-				// email: data?.email,
-				// refCode: data?.refCode || data?.ref_code,
-				// points: data?.totalPoints || data?.total_points || 0,
-				imageUrl: `https://source.boringavatars.com/beam/120/${data?.email}?colors=CAF729,79DD7E,2ECBAA,21B6B6,888DDA`,
+				refCode: data?.refCode || data?.ref_code || '',
+				totalPoints: data?.totalPoints || data?.total_points || 0,
+				imageUrl: data?.avatarUrl || data?.imageUrl || `https://ui-avatars.com/api/?name=${encodeURIComponent(data?.name || 'Hamood Habibi')}&background=222222&color=d4af37&size=120&bold=true`,
 			}
 
 			setUser(currentUser)

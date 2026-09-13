@@ -14,13 +14,14 @@ export default function DashboardLayout({ children }) {
 	const [showSideNav, setShowSideNav] = useState(false)
 
 	useEffect(() => {
-		getUser().then((user) => {
-			if (!user) router.push('/')
-			else if (!user?.name) {
-				if (sectionsConfig?.regOpen) router.push('/register')
-				else router.push('/regclosed')
-			}
-		})
+		// disabled auth guard for testing profiel
+		// getUser().then((user) => {
+		// 	if (!user) router.push('/')
+		// 	else if (!user?.name) {
+		// 		if (sectionsConfig?.regOpen) router.push('/register')
+		// 		else router.push('/regclosed')
+		// 	}
+		// })
 	}, [])
 
 	function getSubHeading(pathname) {

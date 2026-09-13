@@ -10,15 +10,22 @@ export default function SideNav({ userDb, points, onClose }) {
 	const router = useRouter()
 	const { user, logout } = useUserContext()
 
+	const MOCK_IMAGE_URL = 'https://ui-avatars.com/api/?name=Hamood+Habibi&background=222222&color=d4af37&size=120'
+	const displayUser = user || {
+		name: 'Hamood Habibi',
+		email: 'hamood.habibi@iitm.ac.in',
+		imageUrl: MOCK_IMAGE_URL
+	}
+
 	return (
 		<div className='side-nav'>
 			<div className='dashboard-menu-close-wrapper'>
 				<IoMdClose className='dashboard-menu-icon' onClick={onClose} />
 			</div>
 			<div className='user-wrapper'>
-				<div className='user-avatar' style={{ backgroundImage: `url(${user?.imageUrl})` }}></div>
-				<h3 className='user-name'>{user?.name || '--'}</h3>
-				<span className='user-email'>{user?.email}</span>
+				<div className='user-avatar' style={{ backgroundImage: `url(${displayUser?.imageUrl})` }}></div>
+				<h3 className='user-name'>{displayUser?.name || '--'}</h3>
+				<span className='user-email'>{displayUser?.email}</span>
 				{/* <p className='user-points'>
 					{Number.isInteger(parseInt(user?.points)) ? user?.points : '--'} Points
 				</p> */}

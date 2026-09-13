@@ -17,7 +17,7 @@ export default function Login() {
 	// Redirect if already logged in
 	useEffect(() => {
 		if (isLoggedIn) {
-			const redirectTo = sessionStorage.getItem('redirectTo') || '/dashboard/profile'
+			const redirectTo = sessionStorage.getItem('redirectTo') || '/profile'
 			sessionStorage.removeItem('redirectTo')
 			router.push(redirectTo)
 		}
@@ -40,7 +40,7 @@ export default function Login() {
 		setIsLoading(false)
 
 		if (result.success) {
-			const redirectTo = sessionStorage.getItem('redirectTo') || '/dashboard/profile'
+			const redirectTo = sessionStorage.getItem('redirectTo') || '/profile'
 			sessionStorage.removeItem('redirectTo')
 			router.push(redirectTo)
 		}
