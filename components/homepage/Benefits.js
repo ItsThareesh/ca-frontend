@@ -228,7 +228,7 @@ export default function Benefits() {
 					</div>
 					<div className="benefits-v2__preference-divider" />
 					<p className="benefits-v2__preference-text">
-						Applicants having good interpersonal and communication skills with previous experience will be given preference.
+						A Minimum of 299 points needed to be eligible for rewards.
 					</p>
 				</div>
 			</div>
