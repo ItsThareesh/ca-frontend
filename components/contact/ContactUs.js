@@ -135,15 +135,7 @@ export default function ContactUs() {
 														<span className={styles['action-label']}>Phone Number</span>
 														<span className={styles['action-value']}>{contact.phone}</span>
 													</div>
-													<span className={styles['action-tag']}>Copy</span>
-
-													<CopyToClipboard
-														text={generateDescription(writeup, registerLink, refCode)}
-														onCopy={() => toast('Copied!')}
-													>
-														<button className='btn-outline'>Copy</button>
-													</CopyToClipboard>
-
+													<span className={styles['action-tag']}>Call Now</span>
 												</a>
 
 												{/* Email Link */}
