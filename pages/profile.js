@@ -44,7 +44,7 @@ export function getDefaultAvatar(name = 'Hamood Habibi') {
    MOCK DATA — remove this block and set USE_MOCK = false
    when connecting to the real backend
    ═════════════════════════════════════════════════════════════ */
-const USE_MOCK = true
+const USE_MOCK = false
 
 // MOCK_PROFILE intentionally has no avatarUrl — the avatar is always
 // generated dynamically from the user's name via DiceBear glyphs.
@@ -63,18 +63,66 @@ const MOCK_PROFILE = {
 }
 
 const MOCK_NAMES = [
-	'Adithya Narayanan', 'Sneha Thomas', 'Rahul Krishnan', 'Karthik Raja', 'Meera Pillai',
-	'Ananya Sharma', 'Rohan Verma', 'Diya Patel', 'Kavya Rajesh', 'Arun Kumar',
-	'Sidharth M', 'Neha Nair', 'Vishnu T', 'Priya Raj', 'Gautam Menon',
-	'Aparna S', 'Nikhil Joseph', 'Pooja Hegde', 'Akash Varma', 'Shruti Iyer',
-	'Varun Nambiar', 'Devika R', 'Harishankar P', 'Keerthana M', 'Abhishek Das',
-	'Naveen Paul', 'Tanvi Desai', 'Ajay George', 'Lakshmi B', 'Ashwin K',
-	'Swathi Suresh', 'Deepak Chandran', 'Sandhya V', 'Midhun Mohan', 'Anjali R',
-	'Sanjay Pillai', 'Bhavana K', 'Pranav Nair', 'Divya Unni', 'Gokul Krishna',
-	'Vandana M', 'Rajesh K', 'Nimisha Joy', 'Vivek Ram', 'Parvathy S',
-	'Sarath Babu', 'Arya C', 'Manoj Kumar', 'Athira T', 'Shyam Prasad',
-	'Rhea Sen', 'Jithin Mathew', 'Gayathri N', 'Arvind Swamy', 'Sunitha R',
-	'Akhil Das', 'Reshma V', 'Sreehari K', 'Malavika P', 'Tony Varghese'
+	'Adithya Narayanan',
+	'Sneha Thomas',
+	'Rahul Krishnan',
+	'Karthik Raja',
+	'Meera Pillai',
+	'Ananya Sharma',
+	'Rohan Verma',
+	'Diya Patel',
+	'Kavya Rajesh',
+	'Arun Kumar',
+	'Sidharth M',
+	'Neha Nair',
+	'Vishnu T',
+	'Priya Raj',
+	'Gautam Menon',
+	'Aparna S',
+	'Nikhil Joseph',
+	'Pooja Hegde',
+	'Akash Varma',
+	'Shruti Iyer',
+	'Varun Nambiar',
+	'Devika R',
+	'Harishankar P',
+	'Keerthana M',
+	'Abhishek Das',
+	'Naveen Paul',
+	'Tanvi Desai',
+	'Ajay George',
+	'Lakshmi B',
+	'Ashwin K',
+	'Swathi Suresh',
+	'Deepak Chandran',
+	'Sandhya V',
+	'Midhun Mohan',
+	'Anjali R',
+	'Sanjay Pillai',
+	'Bhavana K',
+	'Pranav Nair',
+	'Divya Unni',
+	'Gokul Krishna',
+	'Vandana M',
+	'Rajesh K',
+	'Nimisha Joy',
+	'Vivek Ram',
+	'Parvathy S',
+	'Sarath Babu',
+	'Arya C',
+	'Manoj Kumar',
+	'Athira T',
+	'Shyam Prasad',
+	'Rhea Sen',
+	'Jithin Mathew',
+	'Gayathri N',
+	'Arvind Swamy',
+	'Sunitha R',
+	'Akhil Das',
+	'Reshma V',
+	'Sreehari K',
+	'Malavika P',
+	'Tony Varghese',
 ]
 
 const MOCK_EVENTS = [
@@ -122,11 +170,46 @@ export function generateMockReferrals(count) {
    ═════════════════════════════════════════════════════════════ */
 export const REFERRAL_MILESTONES = [
 	{ count: 0, bonus: 0, label: 'Start', title: '0 Referrals', total: 0 },
-	{ count: 5, bonus: 100, label: 'Milestone 1', title: '5 Referrals', bonusText: '₹100 Milestone', total: 100 },
-	{ count: 10, bonus: 200, label: 'Milestone 2', title: '10 Referrals', bonusText: '₹200 Milestone', total: 500 },
-	{ count: 15, bonus: 300, label: 'Milestone 3', title: '15 Referrals', bonusText: '₹300 Milestone', total: 1000 },
-	{ count: 20, bonus: 500, label: 'Milestone 4', title: '20 Referrals', bonusText: '₹500 Milestone', total: 1700 },
-	{ count: 50, bonus: 1000, label: 'Major Milestone', title: '50 Referrals', bonusText: '₹1,000 Major Milestone', total: 4150 },
+	{
+		count: 5,
+		bonus: 100,
+		label: 'Milestone 1',
+		title: '5 Referrals',
+		bonusText: '₹100 Milestone',
+		total: 100,
+	},
+	{
+		count: 10,
+		bonus: 200,
+		label: 'Milestone 2',
+		title: '10 Referrals',
+		bonusText: '₹200 Milestone',
+		total: 500,
+	},
+	{
+		count: 15,
+		bonus: 300,
+		label: 'Milestone 3',
+		title: '15 Referrals',
+		bonusText: '₹300 Milestone',
+		total: 1000,
+	},
+	{
+		count: 20,
+		bonus: 500,
+		label: 'Milestone 4',
+		title: '20 Referrals',
+		bonusText: '₹500 Milestone',
+		total: 1700,
+	},
+	{
+		count: 50,
+		bonus: 1000,
+		label: 'Major Milestone',
+		title: '50 Referrals',
+		bonusText: '₹1,000 Major Milestone',
+		total: 4150,
+	},
 ]
 
 export const MAX_MILESTONE_COUNT = 50
@@ -167,7 +250,7 @@ const ROWS_PER_PAGE = 10
 const REFERRAL_BASE_URL = 'https://ca.tathva.org/?ref='
 
 export default function ProfilePage() {
-	const { user, accessToken, logout } = useUserContext()
+	const { user, accessToken, authLoading, logout } = useUserContext()
 	const router = useRouter()
 
 	const [profile, setProfile] = useState(USE_MOCK ? MOCK_PROFILE : null)
@@ -183,7 +266,7 @@ export default function ProfilePage() {
 		phone: '',
 		college: '',
 		branch: '',
-		year: 'Year 1',
+		year: '1',
 		experience: false,
 		avatarUrl: '',
 	})
@@ -222,7 +305,8 @@ export default function ProfilePage() {
 				if (saved) {
 					const parsed = JSON.parse(saved)
 					// Ensure ref_code is 7 chars
-					const validRefCode = (parsed.ref_code && parsed.ref_code.length === 7) ? parsed.ref_code : randomCode
+					const validRefCode =
+						parsed.ref_code && parsed.ref_code.length === 7 ? parsed.ref_code : randomCode
 					setProfile((prev) => ({
 						...prev,
 						...parsed,
@@ -242,12 +326,13 @@ export default function ProfilePage() {
 
 	useEffect(() => {
 		if (USE_MOCK) return
+		if (authLoading) return // wait for context to finish restoring the session
 		if (!user || !accessToken) {
 			router.push('/login')
 			return
 		}
 		loadData()
-	}, [accessToken, user])
+	}, [accessToken, user, authLoading])
 
 	async function loadData() {
 		try {
@@ -269,7 +354,7 @@ export default function ProfilePage() {
 
 	/* derived */
 	const refCode = profile?.ref_code || profile?.refCode || ''
-	const totalPoints = USE_MOCK ? mockPoints : (profile?.total_points || profile?.totalPoints || 0)
+	const totalPoints = USE_MOCK ? mockPoints : profile?.total_points || profile?.totalPoints || 0
 	const activeReferrals = useMemo(() => {
 		return USE_MOCK ? generateMockReferrals(mockReferralCount) : referrals
 	}, [mockReferralCount, referrals])
@@ -277,7 +362,9 @@ export default function ProfilePage() {
 	const earnedRewards = useMemo(() => calculateReferralRewards(totalReferrals), [totalReferrals])
 	const referralLink = refCode ? `${REFERRAL_BASE_URL}${refCode}` : ''
 	const qrUrl = refCode
-		? `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(referralLink)}&size=320x320&bgcolor=09090b&color=e5b842&format=png&qzone=2&ecc=H`
+		? `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
+				referralLink
+		  )}&size=320x320&bgcolor=09090b&color=e5b842&format=png&qzone=2&ecc=H`
 		: ''
 	const firstName = (profile?.name || 'Ambassador').split(' ')[0]
 	// avatarSrc: only use a stored avatarUrl when the user has uploaded a real image
@@ -285,9 +372,7 @@ export default function ProfilePage() {
 	// name and won't update — always recompute them from the current name.
 	const storedAvatar = profile?.avatarUrl || profile?.imageUrl || ''
 	const isUserUploadedAvatar = storedAvatar.startsWith('data:')
-	const avatarSrc = isUserUploadedAvatar
-		? storedAvatar
-		: getDefaultAvatar(profile?.name)
+	const avatarSrc = isUserUploadedAvatar ? storedAvatar : getDefaultAvatar(profile?.name)
 
 	/* Badges criteria:
 	   - Leaderboard badge: unlocked at 25% of 50 referrals (≥ 13 refs)
@@ -296,10 +381,14 @@ export default function ProfilePage() {
 	const TOP20_REF_THRESHOLD = Math.ceil(MAX_MILESTONE_COUNT * 0.75) // 38 referrals (75%)
 
 	const isInLeaderboard = Boolean(
-		profile?.is_leaderboard || profile?.isInLeaderboard || (totalReferrals >= LEADERBOARD_REF_THRESHOLD)
+		profile?.is_leaderboard ||
+			profile?.isInLeaderboard ||
+			totalReferrals >= LEADERBOARD_REF_THRESHOLD
 	)
 	const isInTop20 = Boolean(
-		profile?.is_top20 || profile?.isInTop20 || (totalReferrals >= TOP20_REF_THRESHOLD && isInLeaderboard)
+		profile?.is_top20 ||
+			profile?.isInTop20 ||
+			(totalReferrals >= TOP20_REF_THRESHOLD && isInLeaderboard)
 	)
 
 	/* milestone progress - piecewise segment interpolation to match marker positions */
@@ -317,8 +406,6 @@ export default function ProfilePage() {
 		}, 150)
 		return () => clearTimeout(timer)
 	}, [fillPercent, loading])
-
-
 
 	/* pagination */
 	const totalPages = Math.max(1, Math.ceil(activeReferrals.length / ROWS_PER_PAGE))
@@ -419,7 +506,7 @@ export default function ProfilePage() {
 			phone: profile?.phone || '',
 			college: profile?.college || '',
 			branch: profile?.branch || '',
-			year: profile?.year || 'Year 1',
+			year: profile?.year ? String(profile.year) : '1',
 			experience: profile?.experience !== undefined ? profile.experience : false,
 			avatarUrl: avatarSrc,
 		})
@@ -437,30 +524,50 @@ export default function ProfilePage() {
 			return
 		}
 
+		// If the user hasn't uploaded a real image, clear the stored avatarUrl so the
+		// avatar recomputes from the (possibly new) name via DiceBear.
+		const avatarUrl = editFormData.avatarUrl?.startsWith('data:') ? editFormData.avatarUrl : ''
+		const updated = { ...profile, ...editFormData, year: Number(editFormData.year), avatarUrl }
+
+		if (USE_MOCK) {
+			localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
+			setProfile(updated)
+			setIsEditing(false)
+			toast.success('CA details updated successfully!')
+			return
+		}
+
+		const token = localStorage.getItem('access_token')
+		if (!token) {
+			toast.error('You need to be signed in to update your profile')
+			return
+		}
+
+		// Send only the fields the form actually edits — not the full merged
+		// profile object (which carries backend-only fields like id/email/points
+		// straight through from the GET response). A strict backend schema will
+		// reject unrecognized keys in the body, so keep this payload minimal.
+		const payload = {
+			name: editFormData.name,
+			phone: editFormData.phone,
+			college: editFormData.college,
+			branch: editFormData.branch,
+			year: Number(editFormData.year),
+			experience: editFormData.experience,
+		}
+
 		setSaving(true)
 		try {
-			const updated = {
-				...profile,
-				...editFormData,
-				// If the user hasn't uploaded a real image, clear the stored avatarUrl so the
-				// avatar recomputes from the (possibly new) name via DiceBear.
-				avatarUrl: editFormData.avatarUrl?.startsWith('data:') ? editFormData.avatarUrl : '',
-			}
-
-			if (!USE_MOCK && accessToken) {
-				await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, updated, {
-					headers: { Authorization: `Bearer ${accessToken}` },
-				})
-			} else if (USE_MOCK) {
-				localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
-			}
+			await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, payload, {
+				headers: { Authorization: `Bearer ${token}` },
+			})
 
 			setProfile(updated)
 			setIsEditing(false)
 			toast.success('CA details updated successfully!')
 		} catch (err) {
-			console.error(err)
-			toast.error('Failed to update CA details')
+			console.error('Failed to update profile:', err.response?.status, err.response?.data || err.message)
+			toast.error(err.response?.data?.message || err.response?.data?.error || 'Failed to update CA details')
 		} finally {
 			setSaving(false)
 		}
@@ -486,15 +593,18 @@ export default function ProfilePage() {
 		<div className={`${s.hubPage} ${s.hubRoot}`}>
 			<Head>
 				<title>Ambassador Profile — Tathva 2026</title>
-				<meta name="description" content="View your Tathva 2026 campus ambassador profile, referral activity, and points." />
+				<meta
+					name='description'
+					content='View your Tathva 2026 campus ambassador profile, referral activity, and points.'
+				/>
 			</Head>
 
 			{/* Hidden file input for photo upload */}
 			<input
-				type="file"
+				type='file'
 				ref={fileInputRef}
 				onChange={handleImageChange}
-				accept="image/*"
+				accept='image/*'
 				className={s.hiddenFileInput}
 			/>
 
@@ -502,7 +612,6 @@ export default function ProfilePage() {
 				{/* ── WELCOME ── */}
 				<section className={s.welcomeSection}>
 					<div className={s.welcomeMain}>
-						
 						<h1 className={s.welcomeHeading}>
 							Welcome back, <span className={s.welcomeGold}>{firstName}.</span>
 						</h1>
@@ -511,14 +620,17 @@ export default function ProfilePage() {
 						</p>
 					</div>
 					<div className={s.welcomeActions}>
-						<button className={s.signOutBtn} onClick={logout} title="Sign out" aria-label="Sign out">
+						<button
+							className={s.signOutBtn}
+							onClick={logout}
+							title='Sign out'
+							aria-label='Sign out'
+						>
 							<FiLogOut size={16} />
 							<span>Sign out</span>
 						</button>
 					</div>
 				</section>
-
-
 
 				{/* ── TOP GRID (Details + Referral) ── */}
 				<div className={s.topGrid}>
@@ -532,7 +644,11 @@ export default function ProfilePage() {
 										<div className={s.detailsAvatarWrapperStatic}>
 											<div className={s.detailsAvatar}>
 												{avatarSrc ? (
-													<img src={avatarSrc} alt={profile?.name || 'Avatar'} className={s.avatarImg} />
+													<img
+														src={avatarSrc}
+														alt={profile?.name || 'Avatar'}
+														className={s.avatarImg}
+													/>
 												) : (
 													<FiUser size={34} strokeWidth={1.5} />
 												)}
@@ -548,26 +664,38 @@ export default function ProfilePage() {
 													{/* Leaderboard Badge */}
 													{isInLeaderboard && (
 														<div
-															className={`${s.customBadgeWrap} ${activeBadgeTooltip === 'leaderboard' ? s.customBadgeWrapActive : ''}`}
+															className={`${s.customBadgeWrap} ${
+																activeBadgeTooltip === 'leaderboard' ? s.customBadgeWrapActive : ''
+															}`}
 															tabIndex={0}
-															role="button"
-															aria-label="In Leaderboard badge"
+															role='button'
+															aria-label='In Leaderboard badge'
 															onClick={(e) => {
 																e.stopPropagation()
-																setActiveBadgeTooltip((prev) => (prev === 'leaderboard' ? null : 'leaderboard'))
+																setActiveBadgeTooltip((prev) =>
+																	prev === 'leaderboard' ? null : 'leaderboard'
+																)
 															}}
 														>
-															<div className={s.iconBadge} title="In Leaderboard">
-																<svg viewBox="0 0 100 100" className={s.badgeSvgIcon} aria-hidden="true">
-																	<path d="M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z" />
+															<div className={s.iconBadge} title='In Leaderboard'>
+																<svg
+																	viewBox='0 0 100 100'
+																	className={s.badgeSvgIcon}
+																	aria-hidden='true'
+																>
+																	<path d='M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z' />
 																</svg>
 															</div>
 															<div className={s.customTooltipCard}>
 																<div className={s.tooltipArrow} />
 																<div className={s.tooltipCardContent}>
 																	<div className={s.tooltipArtContainer}>
-																		<svg className={s.animSvgIcon} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-																			<path d="M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z" />
+																		<svg
+																			className={s.animSvgIcon}
+																			viewBox='0 0 100 100'
+																			xmlns='http://www.w3.org/2000/svg'
+																		>
+																			<path d='M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z' />
 																		</svg>
 																		<div className={s.tooltipStarContainer}>
 																			<div className={`${s.starEight} ${s.starEightGreen}`} />
@@ -578,7 +706,10 @@ export default function ProfilePage() {
 																			<span className={s.tooltipTitle}>In Leaderboard</span>
 																			<span className={s.tooltipTag}>ACTIVE</span>
 																		</div>
-																		<p className={s.tooltipBody}>You've made it to the leaderboard. Keep referring to climb higher!</p>
+																		<p className={s.tooltipBody}>
+																			You've made it to the leaderboard. Keep referring to climb
+																			higher!
+																		</p>
 																	</div>
 																</div>
 															</div>
@@ -588,26 +719,39 @@ export default function ProfilePage() {
 													{/* Top 20 Badge */}
 													{isInTop20 && (
 														<div
-															className={`${s.customBadgeWrap} ${activeBadgeTooltip === 'top20' ? s.customBadgeWrapActive : ''}`}
+															className={`${s.customBadgeWrap} ${
+																activeBadgeTooltip === 'top20' ? s.customBadgeWrapActive : ''
+															}`}
 															tabIndex={0}
-															role="button"
-															aria-label="In Top 20 badge"
+															role='button'
+															aria-label='In Top 20 badge'
 															onClick={(e) => {
 																e.stopPropagation()
 																setActiveBadgeTooltip((prev) => (prev === 'top20' ? null : 'top20'))
 															}}
 														>
-															<div className={`${s.iconBadge} ${s.iconBadgeTop20}`} title="In Top 20">
-																<svg viewBox="0 0 24 24" className={`${s.badgeSvgIcon} ${s.badgeSvgIconGold}`} aria-hidden="true">
-																	<path d="M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z" />
+															<div
+																className={`${s.iconBadge} ${s.iconBadgeTop20}`}
+																title='In Top 20'
+															>
+																<svg
+																	viewBox='0 0 24 24'
+																	className={`${s.badgeSvgIcon} ${s.badgeSvgIconGold}`}
+																	aria-hidden='true'
+																>
+																	<path d='M12 2L9.19 8.63 2 9.24l5.46 4.73L5.82 21 12 17.27 18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2z' />
 																</svg>
 															</div>
 															<div className={`${s.customTooltipCard} ${s.customTooltipCardGold}`}>
 																<div className={`${s.tooltipArrow} ${s.tooltipArrowGold}`} />
 																<div className={s.tooltipCardContent}>
 																	<div className={s.tooltipArtContainer}>
-																		<svg className={`${s.animSvgIcon} ${s.animSvgIconGold}`} viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
-																			<path d="M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z" />
+																		<svg
+																			className={`${s.animSvgIcon} ${s.animSvgIconGold}`}
+																			viewBox='0 0 100 100'
+																			xmlns='http://www.w3.org/2000/svg'
+																		>
+																			<path d='M62.11,53.93c22.582-3.125,22.304-23.471,18.152-29.929-4.166-6.444-10.36-2.153-10.36-2.153v-4.166H30.099v4.166s-6.194-4.291-10.36,2.153c-4.152,6.458-4.43,26.804,18.152,29.929l5.236,7.777v8.249s-.944,4.597-4.833,4.986c-3.903,.389-7.791,4.028-7.791,7.374h38.997c0-3.347-3.889-6.986-7.791-7.374-3.889-.389-4.833-4.986-4.833-4.986v-8.249l5.236-7.777Zm7.388-24.818s2.833-3.097,5.111-1.347c2.292,1.75,2.292,15.86-8.999,18.138l3.889-16.791Zm-44.108-1.347c2.278-1.75,5.111,1.347,5.111,1.347l3.889,16.791c-11.291-2.278-11.291-16.388-8.999-18.138Z' />
 																		</svg>
 																		<div className={s.tooltipStarContainer}>
 																			<div className={`${s.starEight} ${s.starEightGold}`} />
@@ -615,10 +759,17 @@ export default function ProfilePage() {
 																	</div>
 																	<div className={s.tooltipTextWrap}>
 																		<div className={s.tooltipHeaderRow}>
-																			<span className={`${s.tooltipTitle} ${s.tooltipTitleGold}`}>In Top 20</span>
-																			<span className={`${s.tooltipTag} ${s.tooltipTagGold}`}>ELITE</span>
+																			<span className={`${s.tooltipTitle} ${s.tooltipTitleGold}`}>
+																				In Top 20
+																			</span>
+																			<span className={`${s.tooltipTag} ${s.tooltipTagGold}`}>
+																				ELITE
+																			</span>
 																		</div>
-																		<p className={s.tooltipBody}>You're in the Top 20 campus ambassadors. An elite achiever of Tathva 2026!</p>
+																		<p className={s.tooltipBody}>
+																			You're in the Top 20 campus ambassadors. An elite achiever of
+																			Tathva 2026!
+																		</p>
 																	</div>
 																</div>
 															</div>
@@ -630,10 +781,10 @@ export default function ProfilePage() {
 									</div>
 
 									<button
-										type="button"
+										type='button'
 										className={s.editBtn}
 										onClick={startEditing}
-										title="Edit CA Details"
+										title='Edit CA Details'
 									>
 										<FiEdit2 size={13} />
 										<span>Edit</span>
@@ -680,7 +831,8 @@ export default function ProfilePage() {
 										<div className={s.detailContent}>
 											<span className={s.detailLabel}>Branch & Year</span>
 											<span className={s.detailText}>
-												{profile?.branch ? profile.branch : 'Branch N/A'} · {profile?.year || 'Year N/A'}
+												{profile?.branch ? profile.branch : 'Branch N/A'} ·{' '}
+												{profile?.year ? `Year ${profile.year}` : 'Year N/A'}
 											</span>
 										</div>
 									</div>
@@ -704,10 +856,10 @@ export default function ProfilePage() {
 								<div className={s.editCardHeader}>
 									<h3 className={s.editCardTitle}>Edit CA Profile</h3>
 									<button
-										type="button"
+										type='button'
 										className={s.iconBtn}
 										onClick={cancelEditing}
-										title="Cancel editing"
+										title='Cancel editing'
 									>
 										<FiX size={16} />
 									</button>
@@ -718,11 +870,11 @@ export default function ProfilePage() {
 									<div
 										className={s.detailsAvatarWrapper}
 										onClick={() => fileInputRef.current?.click()}
-										title="Hover and click to upload or change photo"
+										title='Hover and click to upload or change photo'
 									>
 										<div className={s.detailsAvatar}>
 											{editFormData.avatarUrl ? (
-												<img src={editFormData.avatarUrl} alt="Preview" className={s.avatarImg} />
+												<img src={editFormData.avatarUrl} alt='Preview' className={s.avatarImg} />
 											) : (
 												<FiUser size={34} strokeWidth={1.5} />
 											)}
@@ -737,7 +889,7 @@ export default function ProfilePage() {
 										<p className={s.avatarInstruction}></p>
 										{editFormData.avatarUrl && (
 											<button
-												type="button"
+												type='button'
 												className={s.removePhotoBtn}
 												onClick={handleRemoveImage}
 											>
@@ -754,11 +906,11 @@ export default function ProfilePage() {
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
 											<label className={s.formLabel}>Full Name *</label>
 											<input
-												type="text"
+												type='text'
 												className={s.formInput}
 												value={editFormData.name}
 												onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
-												placeholder="Enter your name"
+												placeholder='Enter your name'
 												required
 											/>
 										</div>
@@ -766,11 +918,13 @@ export default function ProfilePage() {
 										<div className={s.formGroup}>
 											<label className={s.formLabel}>WhatsApp / Phone</label>
 											<input
-												type="tel"
+												type='tel'
 												className={s.formInput}
 												value={editFormData.phone}
-												onChange={(e) => setEditFormData({ ...editFormData, phone: e.target.value })}
-												placeholder="+91 98765 43210"
+												onChange={(e) =>
+													setEditFormData({ ...editFormData, phone: e.target.value })
+												}
+												placeholder='+91 98765 43210'
 											/>
 										</div>
 
@@ -781,34 +935,37 @@ export default function ProfilePage() {
 												value={editFormData.year}
 												onChange={(e) => setEditFormData({ ...editFormData, year: e.target.value })}
 											>
-												<option value="Year 1">Year 1</option>
-												<option value="Year 2">Year 2</option>
-												<option value="Year 3">Year 3</option>
-												<option value="Year 4">Year 4</option>
-												<option value="Year 5">Year 5</option>
-												<option value="Other">Other</option>
+												<option value='1'>Year 1</option>
+												<option value='2'>Year 2</option>
+												<option value='3'>Year 3</option>
+												<option value='4'>Year 4</option>
+												<option value='5'>Year 5</option>
 											</select>
 										</div>
 
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
 											<label className={s.formLabel}>Institute / College</label>
 											<input
-												type="text"
+												type='text'
 												className={s.formInput}
 												value={editFormData.college}
-												onChange={(e) => setEditFormData({ ...editFormData, college: e.target.value })}
-												placeholder="e.g. NIT Calicut"
+												onChange={(e) =>
+													setEditFormData({ ...editFormData, college: e.target.value })
+												}
+												placeholder='e.g. NIT Calicut'
 											/>
 										</div>
 
 										<div className={s.formGroup}>
 											<label className={s.formLabel}>Branch / Department</label>
 											<input
-												type="text"
+												type='text'
 												className={s.formInput}
 												value={editFormData.branch}
-												onChange={(e) => setEditFormData({ ...editFormData, branch: e.target.value })}
-												placeholder="e.g. Computer Science"
+												onChange={(e) =>
+													setEditFormData({ ...editFormData, branch: e.target.value })
+												}
+												placeholder='e.g. Computer Science'
 											/>
 										</div>
 
@@ -818,21 +975,24 @@ export default function ProfilePage() {
 												className={s.formSelect}
 												value={editFormData.experience ? 'true' : 'false'}
 												onChange={(e) =>
-													setEditFormData({ ...editFormData, experience: e.target.value === 'true' })
+													setEditFormData({
+														...editFormData,
+														experience: e.target.value === 'true',
+													})
 												}
 											>
-												<option value="false">No (First time)</option>
-												<option value="true">Yes (Experienced)</option>
+												<option value='false'>No (First time)</option>
+												<option value='true'>Yes (Experienced)</option>
 											</select>
 										</div>
 									</div>
 
 									<div className={s.formActions}>
-										<button type="submit" className={s.saveBtn} disabled={saving}>
+										<button type='submit' className={s.saveBtn} disabled={saving}>
 											<FiCheck size={16} />
 											<span>{saving ? 'Saving…' : 'Save Changes'}</span>
 										</button>
-										<button type="button" className={s.cancelBtn} onClick={cancelEditing}>
+										<button type='button' className={s.cancelBtn} onClick={cancelEditing}>
 											<FiX size={15} />
 											<span>Cancel</span>
 										</button>
@@ -855,10 +1015,10 @@ export default function ProfilePage() {
 									<div className={s.fieldRow}>
 										<div className={s.codeBox}>{refCode || '——'}</div>
 										<button
-											type="button"
+											type='button'
 											className={s.iconBtn}
-											aria-label="Copy referral code"
-											title="Copy referral code"
+											aria-label='Copy referral code'
+											title='Copy referral code'
 											disabled={!refCode}
 											onClick={() => handleCopy(refCode, 'code')}
 										>
@@ -872,10 +1032,10 @@ export default function ProfilePage() {
 									<div className={s.fieldRow}>
 										<div className={s.linkBox}>{referralLink || '——'}</div>
 										<button
-											type="button"
+											type='button'
 											className={s.iconBtn}
-											aria-label="Copy referral link"
-											title="Copy referral link"
+											aria-label='Copy referral link'
+											title='Copy referral link'
 											disabled={!refCode}
 											onClick={() => handleCopy(referralLink, 'link')}
 										>
@@ -884,11 +1044,11 @@ export default function ProfilePage() {
 										{referralLink && (
 											<a
 												href={referralLink}
-												target="_blank"
-												rel="noreferrer"
+												target='_blank'
+												rel='noreferrer'
 												className={s.anchorBtn}
-												aria-label="Open referral link"
-												title="Open referral link"
+												aria-label='Open referral link'
+												title='Open referral link'
 											>
 												<FiExternalLink size={17} />
 											</a>
@@ -900,9 +1060,9 @@ export default function ProfilePage() {
 							{qrUrl && (
 								<div className={s.qrWrapper}>
 									<div className={s.qrCodeContainer}>
-										<img src={qrUrl} alt="QR code for referral link" className={s.qrImage} />
+										<img src={qrUrl} alt='QR code for referral link' className={s.qrImage} />
 										<div className={s.qrCenterLogo} title="Tathva '26">
-											<img src="/images/tathva26-gold.png" alt="Tathva 26 Logo" />
+											<img src='/images/tathva26-gold.png' alt='Tathva 26 Logo' />
 										</div>
 									</div>
 								</div>
@@ -924,7 +1084,6 @@ export default function ProfilePage() {
 								{totalReferrals} successful referrals &bull; ₹50 per referral between milestones
 							</p>
 						</div>
-
 					</div>
 
 					{/* Visual Milestone Track */}
@@ -963,7 +1122,9 @@ export default function ProfilePage() {
 											className={s.trackLabelWrapper}
 										>
 											<span
-												className={`${s.trackMilestoneCount} ${isActive ? s.trackLabelMidActive : s.trackLabelMidInactive}`}
+												className={`${s.trackMilestoneCount} ${
+													isActive ? s.trackLabelMidActive : s.trackLabelMidInactive
+												}`}
 												style={{
 													transitionDelay: isActive ? `${delaySec.toFixed(2)}s` : '0s',
 												}}
@@ -996,7 +1157,9 @@ export default function ProfilePage() {
 							</div>
 							<p className={s.tierTarget}>5 Referrals</p>
 							<p className={s.tierDesc}>Unlock initial milestone reward</p>
-							<span className={s.tierStatus}>{totalReferrals >= 5 ? '✓ Unlocked' : `${Math.max(0, 5 - totalReferrals)} to go`}</span>
+							<span className={s.tierStatus}>
+								{totalReferrals >= 5 ? '✓ Unlocked' : `${Math.max(0, 5 - totalReferrals)} to go`}
+							</span>
 						</div>
 
 						<div className={`${s.rewardCard} ${totalReferrals >= 10 ? s.rewardCardActive : ''}`}>
@@ -1006,7 +1169,9 @@ export default function ProfilePage() {
 							</div>
 							<p className={s.tierTarget}>10 Referrals</p>
 							<p className={s.tierDesc}>₹50/ref (6–9) + ₹200 bonus (₹500 total)</p>
-							<span className={s.tierStatus}>{totalReferrals >= 10 ? '✓ Unlocked' : `${Math.max(0, 10 - totalReferrals)} to go`}</span>
+							<span className={s.tierStatus}>
+								{totalReferrals >= 10 ? '✓ Unlocked' : `${Math.max(0, 10 - totalReferrals)} to go`}
+							</span>
 						</div>
 
 						<div className={`${s.rewardCard} ${totalReferrals >= 15 ? s.rewardCardActive : ''}`}>
@@ -1016,7 +1181,9 @@ export default function ProfilePage() {
 							</div>
 							<p className={s.tierTarget}>15 Referrals</p>
 							<p className={s.tierDesc}>₹50/ref (11–14) + ₹300 bonus (₹1,000 total)</p>
-							<span className={s.tierStatus}>{totalReferrals >= 15 ? '✓ Unlocked' : `${Math.max(0, 15 - totalReferrals)} to go`}</span>
+							<span className={s.tierStatus}>
+								{totalReferrals >= 15 ? '✓ Unlocked' : `${Math.max(0, 15 - totalReferrals)} to go`}
+							</span>
 						</div>
 
 						<div className={`${s.rewardCard} ${totalReferrals >= 20 ? s.rewardCardActive : ''}`}>
@@ -1026,17 +1193,25 @@ export default function ProfilePage() {
 							</div>
 							<p className={s.tierTarget}>20 Referrals</p>
 							<p className={s.tierDesc}>₹50/ref (16–19) + ₹500 bonus (₹1,700 total)</p>
-							<span className={s.tierStatus}>{totalReferrals >= 20 ? '✓ Unlocked' : `${Math.max(0, 20 - totalReferrals)} to go`}</span>
+							<span className={s.tierStatus}>
+								{totalReferrals >= 20 ? '✓ Unlocked' : `${Math.max(0, 20 - totalReferrals)} to go`}
+							</span>
 						</div>
 
-						<div className={`${s.rewardCard} ${s.majorTierCard} ${totalReferrals >= 50 ? s.rewardCardActive : ''}`}>
+						<div
+							className={`${s.rewardCard} ${s.majorTierCard} ${
+								totalReferrals >= 50 ? s.rewardCardActive : ''
+							}`}
+						>
 							<div className={s.rewardCardHead}>
 								<span className={s.majorTierPill}>Major Tier</span>
 								<span className={s.majorTierBonus}>₹1,000</span>
 							</div>
 							<p className={s.tierTarget}>50 Referrals</p>
 							<p className={s.tierDesc}>₹50/ref (21–49) + ₹1,000 bonus (₹4,150 total)</p>
-							<span className={s.tierStatus}>{totalReferrals >= 50 ? '✓ Unlocked' : `${Math.max(0, 50 - totalReferrals)} to go`}</span>
+							<span className={s.tierStatus}>
+								{totalReferrals >= 50 ? '✓ Unlocked' : `${Math.max(0, 50 - totalReferrals)} to go`}
+							</span>
 						</div>
 					</div>
 				</section>
@@ -1108,7 +1283,9 @@ export default function ProfilePage() {
 					) : (
 						<div className={s.emptyState}>
 							<span className={s.emptyIcon}>📭</span>
-							<span className={s.emptyText}>No referrals yet! Share your referral code to get started!</span>
+							<span className={s.emptyText}>
+								No referrals yet! Share your referral code to get started!
+							</span>
 						</div>
 					)}
 				</section>

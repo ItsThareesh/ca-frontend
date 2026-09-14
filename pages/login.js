@@ -2,11 +2,12 @@ import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { useUserContext } from 'context/UserContext'
 import Link from 'next/link'
+import { FcGoogle } from 'react-icons/fc'
 import styles from '../styles/login.module.css'
 
 export default function Login() {
 	const router = useRouter()
-	const { login, isLoggedIn } = useUserContext()
+	const { login, loginWithGoogle, isLoggedIn } = useUserContext()
 
 	const [formData, setFormData] = useState({
 		email: '',
@@ -96,6 +97,17 @@ export default function Login() {
 						{isLoading ? 'Signing in...' : 'Sign In'}
 					</button>
 				</form>
+
+				<div className={styles.divider}>or</div>
+
+				<button
+					type='button'
+					className={styles.googleButton}
+					onClick={loginWithGoogle}
+				>
+					<FcGoogle size={20} />
+					Sign in with Google
+				</button>
 
 				<div className={styles.footer}>
 					<p className={styles.footerText}>
