@@ -2,7 +2,7 @@ import { useEffect } from 'react'
 import PageHeader from '../components/common/PageHeader'
 import ContactUs from 'components/contact/ContactUs'
 import RUReady from 'components/common/RUReady'
-import GhostFibers from 'components/leaderboard/GhostFibers'
+import SpaceBackground from 'components/common/SpaceBackground'
 
 export default function Contact() {
 	useEffect(() => {
@@ -18,8 +18,7 @@ export default function Contact() {
 	return (
 		<div className='leaderboard-page relative min-h-screen overflow-hidden'>
 			{/* GhostFibers full-page background */}
-			<GhostFibers className='fixed inset-0 z-0' />
-
+			<SpaceBackground />
 			{/* Page content above GhostFibers */}
 			<div className='relative z-10'>
 				<PageHeader title='Contact us' />

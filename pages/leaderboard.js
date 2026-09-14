@@ -4,6 +4,7 @@ import PageHeader from 'components/common/PageHeader'
 import RUReady from 'components/common/RUReady'
 import styles from 'components/leaderboard/leaderboard.module.css'
 import GhostFibers from 'components/leaderboard/GhostFibers'
+import SpaceBackground from 'components/common/SpaceBackground'
 
 export default function Leaderboard() {
 	const [leaderboard, setLeaderboard] = useState([])
@@ -40,10 +41,7 @@ export default function Leaderboard() {
 
 	return (
 		<div className='relative min-h-screen overflow-hidden'>
-			{/* GhostFibers full-page background */}
-			<GhostFibers className='fixed inset-0 z-0' />
-
-			{/* Page content above GhostFibers */}
+			<SpaceBackground />
 			<div className='relative z-10'>
 				<PageHeader title='Leaderboard' />
 

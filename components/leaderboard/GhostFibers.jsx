@@ -2,8 +2,8 @@ import { useEffect, useRef } from 'react'
 import { Mesh, Program, Renderer, Triangle } from 'ogl'
 
 const GhostFibers = ({
-	lineColor = '#140E35',
-	glowColor = '#ffd700',
+	lineColor = '#111',
+	glowColor = '#000',
 	speed = 0.2,
 	scale = 2,
 	rotation = 0,
