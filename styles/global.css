@@ -9,7 +9,7 @@ html {
 
 body {
 	position: relative;
-	min-width: 360px;
+	min-width: 320px;
 	color: #ffff;
 	background-color: #000;
 	overflow-x: hidden;

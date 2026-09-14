@@ -52,7 +52,13 @@
 	color: #000;
 	padding: 0.75rem 1.5rem;
 	border-radius: 100px;
+	font-weight: 500;
+	transition: 0.15s ease all;
 }
+.sign-in-desktop:hover {
+	transform: translateY(0.125rem);
+}
+
 .sign-out-desktop {
 	display: flex;
 	align-items: center;
@@ -66,7 +72,22 @@
 
 .sign-in-mobile {
 	display: none;
+	background-color: #fff;
+	color: #000;
+	padding: 0.6rem 1.25rem;
+	border-radius: 100px;
+	font-family: 'Inter', sans-serif;
+	font-weight: 500;
+	font-size: 0.95rem;
+	align-items: center;
+	justify-content: center;
+	white-space: nowrap;
+	transition: 0.15s ease all;
 }
+.sign-in-mobile:hover {
+	transform: translateY(0.125rem);
+}
+
 .sign-out-mobile {
 	display: none;
 	align-items: center;
@@ -75,8 +96,8 @@
 	margin-right: 1rem;
 }
 .sign-out-mobile .avatar {
-	width: 3rem;
-	height: 3rem;
+	width: 2.5rem;
+	height: 2.5rem;
 }
 
 .sign-in-desktop,
@@ -99,6 +120,7 @@
 	.menu-icon {
 		display: inline-block;
 		margin-right: 0.5rem;
+		cursor: pointer;
 	}
 	.nav-logo {
 		height: 55px;
@@ -115,7 +137,12 @@
 
 @media (max-width: 550px) {
 	.navbar {
-		padding: 0.75rem;
+		padding: 0.75rem 1rem;
 		padding-bottom: 0;
 	}
+	.sign-in-mobile {
+		padding: 0.45rem 1rem;
+		font-size: 0.875rem;
+	}
 }
+
