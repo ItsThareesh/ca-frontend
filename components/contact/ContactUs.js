@@ -56,9 +56,7 @@ export default function ContactUs() {
 
 					{/* Card Header */}
 					<div className={styles['card-header']}>
-
 						<h2 className={styles['card-title']}>Contact Us</h2>
-
 
 						{/* General inquiries bar */}
 						<div className={styles['general-inquiry']}>
@@ -95,19 +93,16 @@ export default function ContactUs() {
 										id={`contact-header-${index}`}
 									>
 										<div className={styles['trigger-left']}>
-											<div className={styles['avatar-icon']}>
-												<span>{contact.name.charAt(0)}</span>
-											</div>
 											<div className={styles['contact-identity']}>
 												<h3 className={styles['contact-name']}>{contact.name}</h3>
 											</div>
 										</div>
 
 										<div className={styles['trigger-right']}>
-											<span className={styles['status-hint']}>
-												{isOpen ? 'Close' : 'Details'}
-											</span>
-											<div className={`${styles['chevron-wrapper']} ${isOpen ? styles['rotate'] : ''}`}>
+											<span className={styles['status-hint']}>{isOpen ? 'Close' : 'Details'}</span>
+											<div
+												className={`${styles['chevron-wrapper']} ${isOpen ? styles['rotate'] : ''}`}
+											>
 												<FiChevronDown className={styles['chevron-icon']} />
 											</div>
 										</div>

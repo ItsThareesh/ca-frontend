@@ -435,7 +435,9 @@ export default function Benefits() {
 						{/* 2nd Place */}
 						<div className='benefits-v2__card benefits-v2__card--silver benefits-v2__card--side'>
 							<div className='benefits-v2__card-rank'>2nd</div>
-							<SilverTrophy size={64} className='benefits-v2__card-icon' />
+							<div className='benefits-v2__trophy-3d benefits-v2__trophy-3d--silver'>
+								<SilverTrophy size={64} className='benefits-v2__card-icon' />
+							</div>
 							<div className='benefits-v2__card-amount'>₹5,000</div>
 							<div className='benefits-v2__card-label'>Runner Up</div>
 						</div>
@@ -443,7 +445,9 @@ export default function Benefits() {
 						{/* 1st Place (center, largest) */}
 						<div className='benefits-v2__card benefits-v2__card--gold benefits-v2__card--center mb-5'>
 							<div className='benefits-v2__card-rank'>1st</div>
-							<GoldTrophy size={80} className='benefits-v2__card-icon' />
+							<div className='benefits-v2__trophy-3d benefits-v2__trophy-3d--gold'>
+								<GoldTrophy size={80} className='benefits-v2__card-icon' />
+							</div>
 							<div className='benefits-v2__card-amount'>₹10,000</div>
 							<div className='benefits-v2__card-label'>Grand Champion</div>
 						</div>
@@ -451,7 +455,9 @@ export default function Benefits() {
 						{/* 3rd Place */}
 						<div className='benefits-v2__card benefits-v2__card--bronze benefits-v2__card--side'>
 							<div className='benefits-v2__card-rank'>3rd</div>
-							<BronzeTrophy size={64} className='benefits-v2__card-icon' />
+							<div className='benefits-v2__trophy-3d benefits-v2__trophy-3d--bronze'>
+								<BronzeTrophy size={64} className='benefits-v2__card-icon' />
+							</div>
 							<div className='benefits-v2__card-amount'>₹3,000</div>
 							<div className='benefits-v2__card-label'>Second Runner Up</div>
 						</div>

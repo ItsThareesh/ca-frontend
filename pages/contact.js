@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import ContactUs from 'components/contact/ContactUs'
-import GhostFibers from 'components/leaderboard/GhostFibers'
+import SpaceBackground from 'components/common/SpaceBackground'
 
 export default function Contact() {
 	useEffect(() => {
@@ -16,8 +16,7 @@ export default function Contact() {
 	return (
 		<div className='leaderboard-page relative min-h-[calc(100vh-220px)] overflow-hidden flex flex-col justify-center'>
 			{/* GhostFibers full-page background */}
-			<GhostFibers className='fixed inset-0 z-0' />
-
+			<SpaceBackground />
 			{/* Page content above GhostFibers */}
 			<div className='relative z-10 w-full pt-20 pb-4 sm:pt-24 sm:pb-6'>
 				<ContactUs />
