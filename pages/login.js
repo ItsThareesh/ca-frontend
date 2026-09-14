@@ -100,7 +100,7 @@ export default function Login() {
 				<div className={styles.footer}>
 					<p className={styles.footerText}>
 						<Link href='/register' className={styles.link}>
-							Sign upvdfdf
+							Sign up
 						</Link>
 					</p>
 				</div>

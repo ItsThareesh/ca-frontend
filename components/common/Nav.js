@@ -66,7 +66,9 @@ export default function Nav() {
 						Sign in
 					</div>
 				) : (
-					<div onClick={handleSignInOrDashboard}>Profile</div>
+					<div className={styles['sign-in-mobile']} onClick={handleSignInOrDashboard}>
+						Profile
+					</div>
 				)}
 			</div>
 

@@ -1,5 +1,3 @@
-"use client"
-
 import { useRouter } from 'next/router'
 import PageHeader from 'components/common/PageHeader'
 import RegisterForm from 'components/register/RegisterForm'
