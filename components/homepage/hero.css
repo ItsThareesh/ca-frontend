@@ -2,16 +2,25 @@
 	display: flex;
 	flex-direction: column;
 	justify-content: center;
-
 	height: 100vh;
 	min-height: 768px;
 	max-height: 1000px;
 	position: relative;
+	/* background image + mask now live on .hero::before so they never affect text */
+}
 
+.hero::before {
+	content: '';
+	position: absolute;
+	inset: 0;
 	background: url('/images/hero-desktop.png');
 	background-size: auto 100%;
 	background-repeat: no-repeat;
 	background-position: top right;
+	-webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 70%, transparent 100%);
+	mask-image: linear-gradient(to bottom, #000 0%, #000 65%, transparent 100%);
+	z-index: 0;
+	pointer-events: none;
 }
 
 .hero-nav-wrapper {
@@ -19,6 +28,7 @@
 	top: 0;
 	left: 0;
 	width: 100%;
+	z-index: 1;
 }
 
 .hero-content {
@@ -26,6 +36,8 @@
 	align-items: center;
 	width: 100%;
 	position: relative;
+	line-height: 1.25;
+	z-index: 1;
 }
 
 .hero-sponsors-wrapper {
@@ -33,6 +45,7 @@
 	bottom: 0;
 	left: 0;
 	width: 100%;
+	z-index: 1;
 }
 
 .hero-arrow {
@@ -44,6 +57,8 @@
 .hero-text {
 	margin-left: 3rem;
 	align-items: center;
+	position: relative;
+	z-index: 1;
 }
 .hero-heading {
 	font-family: 'Clash Display', sans-serif;
@@ -56,6 +71,24 @@
 	font-size: 1.25rem;
 	color: rgba(255, 255, 255, 0.7);
 	margin: 1rem 0 1.5rem 0;
+	min-height: 1.75rem;
+}
+.typewriter-cursor {
+	display: inline-block;
+	margin-left: 4px;
+	color: #a855f7;
+	font-weight: 400;
+	animation: typewriter-blink 0.8s infinite;
+}
+
+@keyframes typewriter-blink {
+	0%,
+	100% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0;
+	}
 }
 .hero-cta-wrapper {
 	display: flex;
@@ -106,8 +139,11 @@
 	.hero-text {
 		margin: 0;
 	}
-	.hero {
-		background-image: url('/images/hero-mobile.png');
+	.deadline-timer {
+		padding: 10px 20px;
+	}
+	.hero::before {
+		background-image: url('/images/hero-desktop.png');
 		background-size: 500px auto;
 		background-position: right center;
 	}
@@ -117,7 +153,7 @@
 }
 
 @media (max-width: 768px) {
-	.hero {
+	.hero::before {
 		background-image: none;
 	}
 	.hero-text {
@@ -126,14 +162,20 @@
 }
 
 @media (max-width: 550px) {
-	.hero {
-		background-image: url('/images/hero-mobile.png');
+	.hero::before {
+		background-image: url('/images/hero-desktop.png');
 		background-size: 100% auto;
-		background-position: center 50px;
-		justify-content: flex-end;
+		background-position: center 100px; /* was 50px — pushes image further down */
+		-webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 60%);
+		mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 60%);
 	}
-	.hero-text {
-		margin: 0;
+	.hero {
+		justify-content: flex-end;
+		line-height: 4;
+		padding-bottom: 12vh; /* increased from 8vh — pushes text further up */
+	}
+	.hero-text container {
+		line-height: 3;
 	}
 	.hero-tagline {
 		font-size: 1.1rem;
@@ -146,41 +188,141 @@
 	.hero-stats {
 		display: none;
 	}
+	.deadline-timer {
+		padding: 3px 6px;
+	}
 	.hero-arrow {
 		display: inline-block;
 		width: 40px;
 		margin: 0 auto;
-		margin-bottom: 3rem;
+		margin-bottom: 0 rem;
+	}
+}
+
+@media (max-width: 380px) {
+	.hero-text {
+		margin-bottom: 2rem; /* reduced from 3.75rem so text sits higher on small phones */
 	}
 }
 
 .deadline-timer {
-  margin: 24px 0;
-  padding: 10px 20px;
-  border-radius: 8px;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #fff;
-  font-size: 1rem;
-  text-align: center;
-  font-weight: 500;
-  
-  /* --- NEW STYLES BELOW --- */
-  width: fit-content; /* Make the width only as large as its content */
-  max-width: 100%; /* Ensure it doesn't overflow on smaller screens */
-  text-align: left; /* Align text to the left within the reduced width */
-  margin-left: 0; /* Align it to the left edge of its parent container */
+	margin: 24px 0;
+	border-radius: 8px;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	color: #fff;
+	font-size: 1rem;
+	text-align: center;
+	font-weight: 500;
+	transition: all 0.3s ease;
+	cursor: pointer;
+
+	width: fit-content;
+	max-width: 100%;
+	text-align: left;
+	margin-left: 0;
 }
 
-/* Optional: If you want to increase the font size of the timer numbers */
+.deadline-timer:hover {
+	background: #ffffff;
+	border-color: #ffffff;
+	color: #000000;
+}
+
+.deadline-timer:hover span,
+.deadline-timer:hover strong {
+	color: #000000;
+}
+
 .deadline-timer strong {
-  color: #a855f7;
-  font-weight: 700;
-  letter-spacing: 1px;
-  font-size: 1.1rem; /* Slightly larger for emphasis */
+	color: #a855f7;
+	font-weight: 700;
+	letter-spacing: 1px;
+	font-size: 1.1rem;
+	transition: color 0.3s ease;
 }
 
-/* If the .hero-text container itself has padding that pushes content,
-   you might need to adjust margin on the .deadline-timer or its parent.
-   Based on the image, margin-left: 0 should work to align it with "Campus Ambassador".
-*/
+/* ================================================== */
+/* VACANCY BANNER SECTION */
+/* ================================================== */
+.vacancy-banner-container {
+	position: absolute;
+	bottom: 80px; /* Shifted up from 30px */
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 10;
+	/* entrance animation */
+	animation: bannerEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+	opacity: 0;
+	transform-origin: bottom center;
+}
+
+.vacancy-banner {
+	width: clamp(320px, 35vw, 280px);
+	aspect-ratio: 1192 / 450;
+	background: url('/newbg.png') center/contain no-repeat;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	/* floating animation after entrance */
+	animation: bannerFloat 4s ease-in-out infinite;
+	transition: transform 0.3s ease, filter 0.3s ease;
+	/* subtle glow around gold frame */
+	filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.2));
+	cursor: default; /* Not a button, just informative */
+}
+
+.vacancy-banner:hover {
+	transform: scale(1.05);
+	filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+}
+
+.vacancy-number {
+	font-family: 'Clash Display', sans-serif;
+	font-size: clamp(2rem, 5vw, 2.75rem);
+	font-weight: 700;
+	line-height: 1;
+	color: #000000;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+	margin-top: 5%; /* Pushing it slightly to fit the exact framing, adjustable */
+}
+
+.vacancy-label {
+	font-family: inherit;
+	font-size: clamp(0.7rem, 2vw, 0.85rem);
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	color: #060606; /* matching the cream/gold */
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+	margin-top: 1%;
+}
+
+@keyframes bannerEntrance {
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(40px) scale(0.85);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0) scale(1);
+	}
+}
+
+@keyframes bannerFloat {
+	0%, 100% {
+		transform: translateY(0) scale(1);
+	}
+	50% {
+		transform: translateY(-8px) scale(1.025);
+	}
+}
+
+@media (max-width: 550px) {
+	.vacancy-banner-container {
+		bottom: 35px; /* Shifted up from 15px */
+	}
+	.vacancy-banner {
+		width: clamp(200px, 60vw, 240px);
+	}
+}

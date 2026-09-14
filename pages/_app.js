@@ -40,7 +40,7 @@ import DashboardLayout from 'components/layouts/DashboardLayout'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 
-const TITLE = `Tathva '25 — Campus Ambassador`
+const TITLE = `Tathva '26 — Campus Ambassador`
 
 const DESCRIPTION =
 	'Be the voice of Tathva in your campus. Help Tathva in its mission to educate and inspire the next generation of leaders and stand to win prizes including internships, certificates and cash prizes.'
