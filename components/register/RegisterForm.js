@@ -1,64 +1,89 @@
 import { useState, useEffect } from 'react'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { fetchCaProfile, register } from 'lib/req/register'
+import { FcGoogle } from 'react-icons/fc'
+import { completeProfile } from 'lib/req/register'
 import { useUserContext } from 'context/UserContext'
 
 import styles from './register-form.module.css'
 
 export default function RegisterForm({ editProfile }) {
-	const { user, jwt } = useUserContext()
+	const { user, accessToken, isLoggedIn, authLoading, loginWithGoogle, fetchUserProfile } =
+		useUserContext()
 	const router = useRouter()
 	const [form, setForm] = useState(null)
+	const [submitting, setSubmitting] = useState(false)
 
-	// ✅ Run client-only redirect + toast
-	useEffect(() => {
-		if (typeof window !== 'undefined') {
-			toast.error('Registrations closed')
-			const timer = setTimeout(() => {
-				router.push('/')
-			}, 1500)
-			return () => clearTimeout(timer)
-		}
-	}, [router])
-
+	// Prefill once we know who the signed-in user is
 	useEffect(() => {
 		if (!user) return
-		fetchCaProfile(jwt, user?.caId)
-			.then(setForm)
-			.catch((err) => {
-				console.error(err)
-				toast.error('Failed to load CA')
-			})
-	}, [jwt, user])
+		setForm({
+			name: user.name || '',
+			phone: user.phone || '',
+			college: user.college || '',
+			branch: user.branch || '',
+			year: user.year ? String(user.year) : '',
+			experience: user.experience || false,
+		})
+	}, [user])
 
 	const handleChange = (e) => {
 		setForm({ ...form, [e.target.name]: e.target.value })
 	}
 
-	const handleSubmit = (e) => {
+	const handleSubmit = async (e) => {
 		e.preventDefault()
-		register(jwt, user?.userId, form)
-			.then(() => {
-				window.scrollTo({ top: 0, behavior: 'smooth' })
-				toast.success('Registration successful! Please Login to get your ID.')
-				setTimeout(() => {
-					router.push('/')
-				}, 3000)
-			})
-			.catch((err) => {
-				console.error(err)
-				const errors = err.response?.data
-				if (errors?.email) {
-					toast.error('This email is already registered. Please log in instead.')
-				} else if (errors) {
-					const messages = Object.values(errors).flat().join(' | ')
-					toast.error(messages)
-				} else {
-					toast.error('Something went wrong!')
-				}
-			})
+		setSubmitting(true)
+		try {
+			await completeProfile(accessToken, form)
+			await fetchUserProfile(accessToken)
+			toast.success(editProfile ? 'Profile updated!' : 'Profile completed! Welcome aboard.')
+			router.push('/profile')
+		} catch (err) {
+			console.error(err)
+			const errors = err.response?.data
+			if (errors && typeof errors === 'object') {
+				const messages = Object.values(errors).flat().join(' | ')
+				toast.error(messages || 'Something went wrong!')
+			} else {
+				toast.error('Something went wrong!')
+			}
+		} finally {
+			setSubmitting(false)
+		}
 	}
+
+	// Still restoring a possibly-existing session — avoid flashing the wrong state
+	if (authLoading) return null
+
+	// Guest with no Google session yet — this is the "sign up" entry point itself
+	if (!isLoggedIn) {
+		return (
+			<div className='container'>
+				<div className={styles['register-form']}>
+					<div className={styles['register-form-avatar-wrapper']}>
+						<div className={styles['register-form-email-wrapper']}>
+							<span className={styles['register-form-email']}>
+								Sign up with your Google account to get started as a Campus Ambassador.
+							</span>
+						</div>
+					</div>
+
+					<button
+						type='button'
+						className={styles['register-form-google-btn']}
+						onClick={loginWithGoogle}
+					>
+						<FcGoogle size={20} />
+						Sign up with Google
+					</button>
+				</div>
+			</div>
+		)
+	}
+
+	// Authenticated, profile not hydrated from context yet
+	if (!form) return null
 
 	return (
 		<div className='container'>
@@ -75,34 +100,9 @@ export default function RegisterForm({ editProfile }) {
 						type='text'
 						name='name'
 						placeholder='Enter your name'
-						value={form?.name || ''}
+						value={form.name}
 						onChange={handleChange}
 						required
-					/>
-				</fieldset>
-
-				<fieldset>
-					<label>Email</label>
-					<input
-						type='email'
-						name='email'
-						placeholder='Enter your email'
-						value={form?.email || ''}
-						onChange={handleChange}
-						required
-					/>
-				</fieldset>
-
-				<fieldset>
-					<label>Password</label>
-					<input
-						type='password'
-						name='password'
-						placeholder='Enter your password'
-						value={form?.password || ''}
-						onChange={handleChange}
-						required
-						minLength={8}
 					/>
 				</fieldset>
 
@@ -112,7 +112,7 @@ export default function RegisterForm({ editProfile }) {
 						type='text'
 						name='phone'
 						placeholder='Enter your whatsapp no.'
-						value={form?.phone || ''}
+						value={form.phone}
 						onChange={handleChange}
 						required
 					/>
@@ -124,7 +124,7 @@ export default function RegisterForm({ editProfile }) {
 						type='text'
 						name='college'
 						placeholder='Enter your institute'
-						value={form?.college || ''}
+						value={form.college}
 						required
 						onChange={handleChange}
 					/>
@@ -136,34 +136,40 @@ export default function RegisterForm({ editProfile }) {
 						type='text'
 						name='branch'
 						placeholder='Enter your branch'
-						value={form?.branch || ''}
+						value={form.branch}
 						onChange={handleChange}
 					/>
 				</fieldset>
 
 				<fieldset>
 					<label>Year of study</label>
-					<select name='year' value={form?.year || ''} onChange={handleChange}>
+					<select name='year' value={form.year} onChange={handleChange}>
 						<option value=''>Choose year of study</option>
-						<option value='Year 1'>Year 1</option>
-						<option value='Year 2'>Year 2</option>
-						<option value='Year 3'>Year 3</option>
-						<option value='Year 4'>Year 4</option>
-						<option value='Year 5'>Year 5</option>
-						<option value='Other'>Other</option>
+						<option value='1'>Year 1</option>
+						<option value='2'>Year 2</option>
+						<option value='3'>Year 3</option>
+						<option value='4'>Year 4</option>
+						<option value='5'>Year 5</option>
 					</select>
 				</fieldset>
 
 				<fieldset>
 					<label>Have you been a CA before?</label>
-					<select name='experience' value={form?.experience || 'false'} onChange={handleChange}>
+					<select
+						name='experience'
+						value={form.experience ? 'true' : 'false'}
+						onChange={(e) => setForm({ ...form, experience: e.target.value === 'true' })}
+					>
 						<option value='false'>No</option>
 						<option value='true'>Yes</option>
 					</select>
 				</fieldset>
 
-				<button className={`btn-secondary ${styles['register-form-submit']}`}>
-					{editProfile ? 'Save' : 'Register'}
+				<button
+					className={`btn-secondary ${styles['register-form-submit']}`}
+					disabled={submitting}
+				>
+					{submitting ? 'Saving...' : editProfile ? 'Save' : 'Complete Sign Up'}
 				</button>
 			</form>
 			<div className='spacerv-md'></div>

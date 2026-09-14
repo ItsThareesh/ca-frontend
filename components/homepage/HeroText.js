@@ -2,10 +2,6 @@ import { useUserContext } from 'context/UserContext'
 import { useRouter } from 'next/router'
 import CountUp from 'react-countup'
 import { useEffect, useState } from 'react'
-import { toast } from 'react-toastify'
-// Note: Toast imports are no longer needed for this feature
-// import { toast, ToastContainer } from 'react-toastify'
-// import 'react-toastify/dist/ReactToastify.css'
 
 const HeroText = () => {
 	const router = useRouter()
@@ -70,19 +66,11 @@ const HeroText = () => {
 	}
 	// --- END: Added logic for registration deadline countdown ---
 
-	const handleSignUp2 = () => {
+	const handleSignUp = () => {
 		if (isLoggedIn) {
 			router.push('/profile')
 		} else {
 			router.push('/register')
-		}
-	}
-
-		const handleSignUp = () => {
-		if (isLoggedIn) {
-			router.push('/profile')
-		} else {
-			toast.info("Registrations are now closed.")
 		}
 	}
 

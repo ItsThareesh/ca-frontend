@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { useContext, createContext } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
@@ -14,16 +14,25 @@ export default function UserContextWrapper({ children }) {
 	const [accessToken, setAccessToken] = useState(null)
 	const [refreshToken, setRefreshToken] = useState(null)
 	const [isLoggedIn, setIsLoggedIn] = useState(false)
+	// True until the initial session-restore-from-localStorage attempt finishes.
+	// Pages that gate on `user`/`isLoggedIn` on mount (e.g. redirecting guests to
+	// /login) should wait for this to go false first, otherwise a refresh of an
+	// already-authenticated user briefly looks logged-out and bounces them.
+	const [authLoading, setAuthLoading] = useState(true)
 
 	// Initialize user from stored tokens on mount
 	useEffect(() => {
 		const storedAccessToken = localStorage.getItem('access_token')
 		const storedRefreshToken = localStorage.getItem('refresh_token')
 
-		if (storedAccessToken && storedRefreshToken) {
+		// Google sign-in only ever stores an access token (no refresh token),
+		// so only the access token is required to restore a session.
+		if (storedAccessToken) {
 			setAccessToken(storedAccessToken)
-			setRefreshToken(storedRefreshToken)
-			fetchUserProfile(storedAccessToken)
+			if (storedRefreshToken) setRefreshToken(storedRefreshToken)
+			fetchUserProfile(storedAccessToken).finally(() => setAuthLoading(false))
+		} else {
+			setAuthLoading(false)
 		}
 	}, [])
 
@@ -143,6 +152,84 @@ export default function UserContextWrapper({ children }) {
 		}
 	}
 
+	// Start the Google OAuth flow. GET /api/auth/google returns
+	// { url: <Google consent screen URL> } rather than redirecting itself,
+	// so we fetch it and then navigate the browser there. Google then returns
+	// to the backend's own /api/auth/callback, which redirects back to
+	// /auth/google/callback with a `?token=` JWT.
+	const loginWithGoogle = async () => {
+		try {
+			const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/google`)
+			if (!data?.url) throw new Error('Missing Google auth URL in response')
+
+			window.location.href = data.url
+		} catch (err) {
+			console.error('Failed to start Google sign-in:', err)
+			toast.error('Could not start Google sign-in. Please try again.')
+		}
+	}
+
+	// Complete sign-in using the JWT handed back by the Google OAuth callback redirect
+	const loginWithToken = async (token) => {
+		try {
+			localStorage.setItem('access_token', token)
+			localStorage.removeItem('refresh_token')
+
+			setAccessToken(token)
+			setRefreshToken(null)
+
+			const currentUser = await fetchUserProfile(token)
+			if (!currentUser) throw new Error('Failed to fetch user profile')
+
+			return { success: true, user: currentUser }
+		} catch (err) {
+			console.error('Google login error:', err)
+			toast.error('Google sign-in failed. Please try again.')
+			return { success: false }
+		}
+	}
+
+	// Google hands the JWT back as a `?token=` query param after OAuth completes.
+	// Which page the backend redirects to is backend-configured, not something
+	// this app controls — it may land on a dedicated callback route, or on the
+	// site root, or anywhere else. So this has to run globally (every page goes
+	// through UserContextWrapper) rather than living on one specific route.
+	const processedUrlToken = useRef(false)
+	useEffect(() => {
+		if (!router.isReady) return
+		const token = router.query.token
+		if (!token || typeof token !== 'string' || processedUrlToken.current) return
+		processedUrlToken.current = true
+
+		// Strip the token out of the address bar immediately so it never lingers
+		// there or in browser history.
+		const url = new URL(window.location.href)
+		url.searchParams.delete('token')
+		window.history.replaceState({}, '', url.pathname + url.search)
+
+		const completeGoogleLogin = async () => {
+			const result = await loginWithToken(token)
+
+			if (!result.success) {
+				window.location.replace('/login')
+				return
+			}
+
+			toast.success('Logged in successfully!')
+
+			const redirectTo = sessionStorage.getItem('redirectTo') || '/profile'
+			sessionStorage.removeItem('redirectTo')
+
+			if (!result.user?.name) {
+				window.location.replace('/register')
+			} else {
+				window.location.replace(redirectTo)
+			}
+		}
+
+		completeGoogleLogin()
+	}, [router.isReady, router.query.token])
+
 	// Logout user
 	function logout() {
 		setUser(null)
@@ -217,8 +304,11 @@ export default function UserContextWrapper({ children }) {
 				accessToken,
 				refreshToken,
 				isLoggedIn,
+				authLoading,
 				signUp,
 				login,
+				loginWithGoogle,
+				loginWithToken,
 				logout,
 				getUser,
 				fetchUserProfile,

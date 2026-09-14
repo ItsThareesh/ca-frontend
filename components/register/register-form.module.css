@@ -51,6 +51,28 @@
 	margin-top: 0.5rem;
 }
 
+.register-form-google-btn {
+	width: 100%;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	gap: 10px;
+	padding: 12px;
+	background: #ffffff;
+	color: #1a1a1a;
+	border: none;
+	border-radius: 8px;
+	font-size: 15px;
+	font-weight: 600;
+	cursor: pointer;
+	transition: all 0.2s;
+}
+
+.register-form-google-btn:hover {
+	background: #f1f1f1;
+	transform: translateY(-1px);
+}
+
 @media (max-width: 768px) {
 }
 

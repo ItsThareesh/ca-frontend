@@ -1,38 +1,10 @@
-import axios from 'axios'
-import { useEffect } from 'react'
-import { useUserContext } from 'context/UserContext'
-import { useRouter } from 'next/router'
-
 import Spinner from 'components/common/Spinner'
 
-export default function CallbackPage() {
-	const router = useRouter()
-	const { setAuthenticatedUser, sectionsConfig } = useUserContext()
-
-	useEffect(() => {
-		if (!router.isReady) return
-		const temp = async () => {
-			try {
-				const { data } = await axios.get(
-					`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/google/callback?access_token=${router.query['access_token']}`
-				)
-
-				await setAuthenticatedUser(data.jwt)
-
-				if (!data.user.name) {
-					if (sectionsConfig?.regOpen) router.push('/register')
-					else router.push('/regclosed')
-				} else {
-					let loginFrom = sessionStorage.getItem('redirectTo') || '/'
-					router.push(loginFrom)
-				}
-			} catch (err) {
-				console.error(err)
-			}
-		}
-		temp()
-	}, [router.isReady])
-
+// The actual `?token=` handling lives in context/UserContext.js (it runs
+// globally, since the backend's OAuth redirect target isn't guaranteed to be
+// this specific route). This page just shows a spinner while that happens,
+// in case the backend does land the user here.
+export default function GoogleCallbackPage() {
 	return (
 		<div
 			style={{
