@@ -63,6 +63,21 @@
 .sign-out-desktop span {
 	padding: 0 0.75rem 0 1rem;
 }
+.avatar {
+	width: 2.25rem;
+	height: 2.25rem;
+	border-radius: 50%;
+	background-size: cover;
+	background-position: center;
+	background-color: rgba(255, 255, 255, 0.1);
+	border: 1.5px solid rgba(255, 255, 255, 0.3);
+	cursor: pointer;
+	transition: all 0.2s ease;
+}
+.avatar:hover {
+	border-color: #e5b842;
+	transform: scale(1.05);
+}
 
 .sign-in-mobile {
 	display: none;

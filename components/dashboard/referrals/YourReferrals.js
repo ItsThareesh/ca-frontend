@@ -8,15 +8,17 @@ export default function YourReferrals({ referrals }) {
 					<table className='your-referrals-table'>
 						<tbody>
 							<tr>
-								<th>Title</th>
-								<th>Type</th>
+								<th>Name</th>
+								<th>Event</th>
+								<th>Workshop/Lecture</th>
 								<th>Points</th>
 							</tr>
 							{referrals.map((item, index) => (
 								<tr key={index}>
-									<td>{item?.title}</td>
-									<td>{item?.type}</td>
-									<td>{item?.points}</td>
+									<td>{item?.name || '—'}</td>
+									<td>{item?.event || '—'}</td>
+									<td>{item?.type || '—'}</td>
+									<td>+{item?.points || 0}</td>
 								</tr>
 							))}
 						</tbody>

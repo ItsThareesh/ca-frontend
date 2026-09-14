@@ -11,9 +11,13 @@ export default function Hero() {
 			</div>
 			<div className='spacerv-lg'></div>
 
-			{/* <div className='hero-sponsors-wrapper'>
-				<Sponsors />
-			</div> */}
+			{/* Vacancy Banner floating at bottom center */}
+			<div className='vacancy-banner-container'>
+				<div className='vacancy-banner'>
+					<span className='vacancy-number'>6 7</span>
+					<span className='vacancy-label'>SEATS LEFT</span>
+				</div>
+			</div>
 
 			<img className='hero-arrow' alt='' src='/images/arrow-down.svg' />
 		</div>

@@ -241,3 +241,88 @@
 	font-size: 1.1rem;
 	transition: color 0.3s ease;
 }
+
+/* ================================================== */
+/* VACANCY BANNER SECTION */
+/* ================================================== */
+.vacancy-banner-container {
+	position: absolute;
+	bottom: 80px; /* Shifted up from 30px */
+	left: 50%;
+	transform: translateX(-50%);
+	z-index: 10;
+	/* entrance animation */
+	animation: bannerEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+	opacity: 0;
+	transform-origin: bottom center;
+}
+
+.vacancy-banner {
+	width: clamp(320px, 35vw, 280px);
+	aspect-ratio: 1192 / 450;
+	background: url('/newbg.png') center/contain no-repeat;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	/* floating animation after entrance */
+	animation: bannerFloat 4s ease-in-out infinite;
+	transition: transform 0.3s ease, filter 0.3s ease;
+	/* subtle glow around gold frame */
+	filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.2));
+	cursor: default; /* Not a button, just informative */
+}
+
+.vacancy-banner:hover {
+	transform: scale(1.05);
+	filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.5));
+}
+
+.vacancy-number {
+	font-family: 'Clash Display', sans-serif;
+	font-size: clamp(2rem, 5vw, 2.75rem);
+	font-weight: 700;
+	line-height: 1;
+	color: #000000;
+	text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+	margin-top: 5%; /* Pushing it slightly to fit the exact framing, adjustable */
+}
+
+.vacancy-label {
+	font-family: inherit;
+	font-size: clamp(0.7rem, 2vw, 0.85rem);
+	font-weight: 600;
+	letter-spacing: 0.1em;
+	color: #060606; /* matching the cream/gold */
+	text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+	margin-top: 1%;
+}
+
+@keyframes bannerEntrance {
+	0% {
+		opacity: 0;
+		transform: translateX(-50%) translateY(40px) scale(0.85);
+	}
+	100% {
+		opacity: 1;
+		transform: translateX(-50%) translateY(0) scale(1);
+	}
+}
+
+@keyframes bannerFloat {
+	0%, 100% {
+		transform: translateY(0) scale(1);
+	}
+	50% {
+		transform: translateY(-8px) scale(1.025);
+	}
+}
+
+@media (max-width: 550px) {
+	.vacancy-banner-container {
+		bottom: 35px; /* Shifted up from 15px */
+	}
+	.vacancy-banner {
+		width: clamp(200px, 60vw, 240px);
+	}
+}
