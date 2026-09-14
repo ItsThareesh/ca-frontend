@@ -307,8 +307,18 @@ export default function ProfilePage() {
 		return calculateMilestoneProgress(totalReferrals, REFERRAL_MILESTONES)
 	}, [totalReferrals])
 
-	const nextMilestone = REFERRAL_MILESTONES.slice(1).find((m) => m.count > totalReferrals)
-	const referralsToNext = nextMilestone ? nextMilestone.count - totalReferrals : 0
+	/* Animated fill state to trigger fill-up animation on load / update */
+	const [animatedFill, setAnimatedFill] = useState(0)
+
+	useEffect(() => {
+		setAnimatedFill(0)
+		const timer = setTimeout(() => {
+			setAnimatedFill(fillPercent)
+		}, 150)
+		return () => clearTimeout(timer)
+	}, [fillPercent, loading])
+
+
 
 	/* pagination */
 	const totalPages = Math.max(1, Math.ceil(activeReferrals.length / ROWS_PER_PAGE))
@@ -492,7 +502,7 @@ export default function ProfilePage() {
 				{/* ── WELCOME ── */}
 				<section className={s.welcomeSection}>
 					<div className={s.welcomeMain}>
-						<p className={s.welcomeTag}>Ambassador profile</p>
+						
 						<h1 className={s.welcomeHeading}>
 							Welcome back, <span className={s.welcomeGold}>{firstName}.</span>
 						</h1>
@@ -508,26 +518,7 @@ export default function ProfilePage() {
 					</div>
 				</section>
 
-				{/* ── MOCK TESTING ── */}
-				{USE_MOCK && (
-					<div className={s.testBanner}>
-						<label className={s.testLabel}>
-							<span>~ referrals milestone testing slider ~</span>
-							<span className={s.testPoints}>
-								{totalReferrals} Refs &bull; ₹{earnedRewards.toLocaleString('en-IN')} Earned
-							</span>
-						</label>
-						<input
-							type="range"
-							min="0"
-							max="60"
-							step="1"
-							value={mockReferralCount}
-							onChange={(e) => setMockReferralCount(parseInt(e.target.value))}
-							className={s.testSlider}
-						/>
-					</div>
-				)}
+
 
 				{/* ── TOP GRID (Details + Referral) ── */}
 				<div className={s.topGrid}>
@@ -933,36 +924,26 @@ export default function ProfilePage() {
 								{totalReferrals} successful referrals &bull; ₹50 per referral between milestones
 							</p>
 						</div>
-						<div className={s.progressTargetBox}>
-							{nextMilestone ? (
-								<div className={s.progressTarget}>
-									Next Milestone at <span className={s.progressTargetBold}>{nextMilestone.count} referrals</span>:
-									<br />
-									<span className={s.progressRewardPill}>{nextMilestone.bonusText}</span> ({referralsToNext} more needed)
-								</div>
-							) : (
-								<div className={s.progressTarget}>
-									<span className={s.allMilestonesTag}>🤑 All Major Milestones Unlocked!</span>
-									<br />
-									Earning ₹50 for every new referral!
-								</div>
-							)}
-						</div>
+
 					</div>
 
 					{/* Visual Milestone Track */}
 					<div className={s.progressTrackWrapper}>
 						<div className={s.progressTrack}>
 							<div className={s.trackBg}>
-								<div className={s.trackFill} style={{ width: `${fillPercent}%` }} />
+								<div className={s.trackFill} style={{ width: `${animatedFill}%` }} />
 								<div className={s.trackMarkers}>
 									{REFERRAL_MILESTONES.map((item, i) => {
 										const percent = (i / (REFERRAL_MILESTONES.length - 1)) * 100
 										const isPassed = totalReferrals >= item.count
+										const delaySec = isPassed ? (percent / 100) * 1.3 : 0
 										return (
 											<div
 												key={item.count}
-												style={{ left: `${percent}%` }}
+												style={{
+													left: `${percent}%`,
+													animationDelay: isPassed ? `${delaySec.toFixed(2)}s` : '0s',
+												}}
 												className={`${s.trackDiamond} ${isPassed ? s.trackDiamondActive : ''}`}
 												title={`${item.title} - ${item.bonusText || 'Start'}`}
 											/>
@@ -974,6 +955,7 @@ export default function ProfilePage() {
 								{REFERRAL_MILESTONES.map((item, i) => {
 									const isActive = totalReferrals >= item.count
 									const percent = (i / (REFERRAL_MILESTONES.length - 1)) * 100
+									const delaySec = isActive ? (percent / 100) * 1.3 : 0
 									return (
 										<div
 											key={item.count}
@@ -982,11 +964,19 @@ export default function ProfilePage() {
 										>
 											<span
 												className={`${s.trackMilestoneCount} ${isActive ? s.trackLabelMidActive : s.trackLabelMidInactive}`}
+												style={{
+													transitionDelay: isActive ? `${delaySec.toFixed(2)}s` : '0s',
+												}}
 											>
 												{item.count} {item.count === 1 ? 'ref' : 'refs'}
 											</span>
 											{item.bonus > 0 && (
-												<span className={`${s.trackMilestoneBonus} ${isActive ? s.bonusActive : ''}`}>
+												<span
+													className={`${s.trackMilestoneBonus} ${isActive ? s.bonusActive : ''}`}
+													style={{
+														transitionDelay: isActive ? `${delaySec.toFixed(2)}s` : '0s',
+													}}
+												>
 													+₹{item.bonus}
 												</span>
 											)}
