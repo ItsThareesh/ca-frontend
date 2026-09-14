@@ -1,205 +1,734 @@
-.benefits {
-	display: flex;
-	margin-top: 7rem;
-	align-items: center;
+/* ═══════════════════════════════════════════════════════════
+   Benefits V2 — Premium Esports / Awards-Night Aesthetic
+   ═══════════════════════════════════════════════════════════ */
+
+/* ── Color Tokens ── */
+:root {
+	--bv2-gold:        #f7c948;
+	--bv2-gold-deep:   #d9a441;
+	--bv2-gold-dark:   #8a7047;
+	--bv2-gold-glow:   rgba(247, 201, 72, 0.12);
+	--bv2-silver:      #c0c0c0;
+	--bv2-silver-dim:  #8a8a8a;
+	--bv2-bronze:      #cd7f32;
+	--bv2-bronze-dim:  #8a5a22;
+	--bv2-bg:          #0a0a0a;
+	--bv2-card-bg:     #111113;
+	--bv2-card-border: rgba(255,255,255,0.06);
+	--bv2-text:        #ffffff;
+	--bv2-text-dim:    rgba(255,255,255,0.55);
+	--bv2-radius:      16px;
 }
 
-.benefits-image-container {
-	display: flex;
-	align-self: stretch;
-	align-items: center;
-	justify-content: center;
+/* ── Section ── */
+.benefits-v2 {
 	position: relative;
-	flex: 2;
-	min-height: 420px;
-}
-
-.benefits-image-wrapper {
-	position: relative;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	width: 440px;
-	max-width: 90vw;
-	margin: 0 auto;
-}
-
-.benefits-heading {
-	font-family: 'Clash Display', sans-serif;
-	font-size: 3.5rem;
-	font-weight: 700;
-	color: #ffffff;
-	position: absolute;
-	bottom: 22%;
-	right: 18%;
-	z-index: 10;
-	line-height: 1;
-	text-shadow: 0px 4px 14px rgba(0, 0, 0, 0.95);
-	animation: updown-sm 4s cubic-bezier(0.42, 0, 0.34, 1.03) infinite alternate-reverse;
-}
-
-.benefits-image {
 	width: 100%;
-	height: auto;
-	object-fit: contain;
-	display: block;
+	max-width: 1200px;
+	margin: 0 auto;
+	padding: 6rem 2rem 5rem;
+	overflow: hidden;
+}
+
+/* ── Entrance animation ── */
+.benefits-v2__header,
+.benefits-v2__podium,
+.benefits-v2__lower,
+.benefits-v2__info-panel {
+	opacity: 0;
+	transform: translateY(32px);
+	transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+	            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.benefits-v2--visible .benefits-v2__header   { opacity: 1; transform: none; transition-delay: 0s; }
+.benefits-v2--visible .benefits-v2__podium   { opacity: 1; transform: none; transition-delay: 0.15s; }
+.benefits-v2--visible .benefits-v2__lower    { opacity: 1; transform: none; transition-delay: 0.3s; }
+.benefits-v2--visible .benefits-v2__info-panel { opacity: 1; transform: none; transition-delay: 0.42s; }
+
+/* ── Gold radial glow (upper-right) ── */
+.benefits-v2__glow {
+	position: absolute;
+	top: -18%;
+	right: -12%;
+	width: 600px;
+	height: 600px;
+	border-radius: 50%;
+	background: radial-gradient(circle, rgba(247, 201, 72, 0.10) 0%, rgba(247, 201, 72, 0.04) 40%, transparent 70%);
+	pointer-events: none;
+	z-index: 0;
+	filter: blur(40px);
+}
+
+/* ═══════════════════════════════════════
+   HEADER
+   ═══════════════════════════════════════ */
+.benefits-v2__header {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 1rem;
+	margin-bottom: 3.5rem;
 	position: relative;
 	z-index: 1;
-	animation: scale 5s cubic-bezier(0.42, 0, 0.45, 0.86) infinite alternate-reverse;
 }
 
+.benefits-v2__title {
+	font-family: 'Clash Display', sans-serif;
+	font-weight: 700;
+	font-size: 2.6rem;
+	letter-spacing: -0.02em;
+	color: var(--bv2-text);
+	line-height: 1.15;
+}
+.benefits-v2__title-dash {
+	display: inline-block;
+	margin: 0 0.4em;
+	color: var(--bv2-gold);
+	font-weight: 300;
+}
+.benefits-v2__title-sub {
+	background: linear-gradient(135deg, var(--bv2-gold) 0%, var(--bv2-gold-deep) 100%);
+	-webkit-background-clip: text;
+	-webkit-text-fill-color: transparent;
+	background-clip: text;
+}
 
-.benefits-content {
-	flex: 3;
+.benefits-v2__preference-card {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	padding: 1rem 1.25rem;
+	border-radius: 16px;
+	background: rgba(247, 201, 72, 0.04);
+	border: 1px solid rgba(247, 201, 72, 0.12);
+	max-width: 420px;
+	transition: border-color 0.3s ease;
+}
+.benefits-v2__preference-card:hover {
+	border-color: rgba(247, 201, 72, 0.3);
+}
+.benefits-v2__preference-icon {
+	flex-shrink: 0;
+	color: var(--bv2-gold);
+	padding-left: 0.15rem;
+}
+.benefits-v2__preference-divider {
+	width: 1px;
+	height: 3rem;
+	background: rgba(247, 201, 72, 0.2);
+	flex-shrink: 0;
+}
+.benefits-v2__preference-text {
+	font-family: 'Inter', sans-serif;
+	font-size: 0.8rem;
+	font-weight: 400;
+	line-height: 1.5;
+	letter-spacing: 0.02em;
+	color: rgba(255, 255, 255, 0.7);
+}
+
+/* ═══════════════════════════════════════
+   PODIUM CARDS
+   ═══════════════════════════════════════ */
+.benefits-v2__podium {
+	display: flex;
+	justify-content: center;
+	align-items: flex-end;
+	gap: 1.25rem;
+	margin-bottom: 2rem;
+	position: relative;
+	z-index: 1;
+}
+
+/* Shared card style */
+.benefits-v2__card {
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	background: linear-gradient(180deg, rgba(182, 103, 35, 0) 0%, #bd9130 100%);
-	background-size: 100% 40%;
-	background-repeat: no-repeat;
-	background-position: bottom;
+	justify-content: center;
+	gap: 0.6rem;
+	border-radius: var(--bv2-radius);
+	background: var(--bv2-card-bg);
+	border: 1.5px solid var(--bv2-card-border);
+	position: relative;
+	overflow: hidden;
+	transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+	            box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.benefits-v2__card::before {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: var(--bv2-radius);
+	pointer-events: none;
+	opacity: 0;
+	transition: opacity 0.35s ease;
+}
+.benefits-v2__card:hover {
+	transform: translateY(-6px);
+}
+.benefits-v2__card:hover::before {
+	opacity: 1;
 }
 
-.prizes-worth-wrapper img {
-	margin: -4rem 0 -2rem 0;
+/* ── Side cards (2nd, 3rd) ── */
+.benefits-v2__card--side {
+	width: 200px;
+	padding: 2rem 1.2rem 1.8rem;
 }
 
-.prizes-wrapper {
+/* ── Center card (1st) ── */
+.benefits-v2__card--center {
+	width: 260px;
+	padding: 2.6rem 1.5rem 2.2rem;
+}
+
+/* ── GOLD (1st) ── */
+.benefits-v2__card--gold {
+	border-color: rgba(247, 201, 72, 0.35);
+	box-shadow: 0 0 40px rgba(247, 201, 72, 0.06),
+	            0 8px 32px rgba(0,0,0,0.4);
+}
+.benefits-v2__card--gold::before {
+	background: radial-gradient(ellipse at 50% 0%, rgba(247, 201, 72, 0.08) 0%, transparent 65%);
+}
+.benefits-v2__card--gold:hover {
+	box-shadow: 0 0 60px rgba(247, 201, 72, 0.12),
+	            0 12px 40px rgba(0,0,0,0.5);
+}
+.benefits-v2__card--gold:hover::before {
+	background: radial-gradient(ellipse at 50% 0%, rgba(247, 201, 72, 0.14) 0%, transparent 65%);
+}
+
+/* ── SILVER (2nd) ── */
+.benefits-v2__card--silver {
+	border-color: rgba(192, 192, 192, 0.2);
+	box-shadow: 0 0 30px rgba(192, 192, 192, 0.04),
+	            0 6px 24px rgba(0,0,0,0.35);
+}
+.benefits-v2__card--silver::before {
+	background: radial-gradient(ellipse at 50% 0%, rgba(192, 192, 192, 0.06) 0%, transparent 65%);
+}
+.benefits-v2__card--silver:hover {
+	box-shadow: 0 0 50px rgba(192, 192, 192, 0.08),
+	            0 10px 36px rgba(0,0,0,0.45);
+}
+
+/* ── BRONZE (3rd) ── */
+.benefits-v2__card--bronze {
+	border-color: rgba(205, 127, 50, 0.22);
+	box-shadow: 0 0 30px rgba(205, 127, 50, 0.04),
+	            0 6px 24px rgba(0,0,0,0.35);
+}
+.benefits-v2__card--bronze::before {
+	background: radial-gradient(ellipse at 50% 0%, rgba(205, 127, 50, 0.06) 0%, transparent 65%);
+}
+.benefits-v2__card--bronze:hover {
+	box-shadow: 0 0 50px rgba(205, 127, 50, 0.08),
+	            0 10px 36px rgba(0,0,0,0.45);
+}
+
+/* ── Card Inner Elements ── */
+.benefits-v2__card-crown {
+	position: absolute;
+	top: -2px;
+	font-size: 1.5rem;
+	filter: drop-shadow(0 2px 8px rgba(247, 201, 72, 0.3));
+	animation: benefits-v2-float 3s ease-in-out infinite alternate;
+}
+
+.benefits-v2__card-rank {
+	font-family: 'Clash Display', sans-serif;
+	font-weight: 700;
+	font-size: 0.85rem;
+	text-transform: uppercase;
+	letter-spacing: 0.12em;
+	color: var(--bv2-text-dim);
+}
+.benefits-v2__card--gold .benefits-v2__card-rank { color: var(--bv2-gold); }
+.benefits-v2__card--silver .benefits-v2__card-rank { color: var(--bv2-silver); }
+.benefits-v2__card--bronze .benefits-v2__card-rank { color: var(--bv2-bronze); }
+
+.benefits-v2__card-icon {
+	display: block;
+	flex-shrink: 0;
+	margin: 0.25rem 0;
+}
+
+.benefits-v2__card-amount {
+	font-family: 'Clash Display', sans-serif;
+	font-weight: 700;
+	color: var(--bv2-text);
+	letter-spacing: -0.02em;
+	line-height: 1;
+}
+.benefits-v2__card--center .benefits-v2__card-amount { font-size: 2.8rem; }
+.benefits-v2__card--side .benefits-v2__card-amount   { font-size: 2.1rem; }
+
+.benefits-v2__card-label {
+	font-family: 'Inter', sans-serif;
+	font-size: 0.72rem;
+	font-weight: 500;
+	color: var(--bv2-text-dim);
+	letter-spacing: 0.06em;
+	text-transform: uppercase;
+}
+
+/* Crown float animation */
+@keyframes benefits-v2-float {
+	0% { transform: translateY(0); }
+	100% { transform: translateY(-4px); }
+}
+
+/* ═══════════════════════════════════════
+   LOWER TIER CARDS
+   ═══════════════════════════════════════ */
+.benefits-v2__lower {
 	display: flex;
-	flex-wrap: wrap;
-	justify-content: space-around;
-	max-width: 720px;
+	justify-content: center;
+	gap: 1.25rem;
+	margin-bottom: 2.5rem;
+	position: relative;
+	z-index: 1;
+}
+
+.benefits-v2__lower-card {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	background: var(--bv2-card-bg);
+	border: 1.5px solid var(--bv2-card-border);
+	border-radius: var(--bv2-radius);
+	padding: 1.2rem 1.8rem;
+	transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.benefits-v2__lower-card:hover {
+	transform: translateY(-3px);
+	box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+}
+
+.benefits-v2__lower-icon-wrap {
+	width: 44px;
+	height: 44px;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	border-radius: 12px;
+	background: rgba(247, 201, 72, 0.07);
+	border: 1px solid rgba(247, 201, 72, 0.15);
+	flex-shrink: 0;
+}
+.benefits-v2__lower-icon {
+	color: var(--bv2-gold);
+}
+
+.benefits-v2__lower-range {
+	font-family: 'Clash Display', sans-serif;
+	font-weight: 700;
+	font-size: 0.8rem;
+	letter-spacing: 0.1em;
+	text-transform: uppercase;
+	color: var(--bv2-gold);
+	margin-bottom: 0.15rem;
+}
+
+.benefits-v2__lower-prize {
+	font-family: 'Clash Display', sans-serif;
+	font-weight: 700;
+	font-size: 1.3rem;
+	color: var(--bv2-text);
+	letter-spacing: -0.01em;
+}
+
+/* ═══════════════════════════════════════
+   INFO PANEL  — "How points are earned"
+   ═══════════════════════════════════════ */
+.benefits-v2__info-panel {
+	max-width: 520px;
+	margin: 0 auto;
+	background: var(--bv2-card-bg);
+	border: 1.5px solid var(--bv2-card-border);
+	border-radius: var(--bv2-radius);
+	padding: 2rem 2.2rem;
+	position: relative;
+	z-index: 1;
+}
+
+.benefits-v2__info-title {
+	font-family: 'Clash Display', sans-serif;
+	font-weight: 700;
+	font-size: 1.05rem;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--bv2-text-dim);
+	margin-bottom: 1.3rem;
+}
+
+.benefits-v2__info-items {
+	display: flex;
+	flex-direction: column;
+	gap: 0.9rem;
+}
+
+.benefits-v2__info-item {
+	display: flex;
+	align-items: center;
+	gap: 0.85rem;
+}
+
+.benefits-v2__info-icon {
+	color: var(--bv2-gold);
+	flex-shrink: 0;
+}
+
+.benefits-v2__info-text {
+	font-family: 'Inter', sans-serif;
+	font-size: 0.95rem;
+	color: rgba(255,255,255,0.82);
+	line-height: 1.4;
+}
+.benefits-v2__info-text strong {
+	color: var(--bv2-text);
+	font-weight: 600;
+}
+
+.benefits-v2__info-divider {
 	width: 100%;
-	padding: 3rem;
-	padding-top: 0;
-}
-.prizes-wrapper img {
-	height: 105px;
-	cursor: pointer;
-	transition: transform 0.3s ease;
-}
-.prizes-wrapper img:hover {
-	animation: jump-shake 7.5s cubic-bezier(0, 0.53, 0.32, 0.99) infinite;
+	height: 1px;
+	background: rgba(255,255,255,0.06);
+	margin: 0.3rem 0;
 }
 
-.benefits-content-bottom {
+/* ═══════════════════════════════════════
+   TWO-COLUMN LAYOUT
+   ═══════════════════════════════════════ */
+.benefits-v2__columns {
+	display: grid;
+	grid-template-columns: 1fr 380px;
+	gap: 2rem;
+	position: relative;
+	z-index: 1;
+}
+
+.benefits-v2__col-left {
 	display: flex;
-	padding: 5rem;
-	padding-bottom: 30px;
-	padding-top: 0;
+	flex-direction: column;
 }
 
-.other-prizes-wrapper,
-.benefits-desc-wrapper {
+.benefits-v2__col-right {
+	display: flex;
+	flex-direction: column;
+}
+
+/* Add entrance animation for columns */
+.benefits-v2__columns {
+	opacity: 0;
+	transform: translateY(32px);
+	transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
+	            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.benefits-v2--visible .benefits-v2__columns { opacity: 1; transform: none; transition-delay: 0.15s; }
+
+/* Override old standalone entrance (they're inside columns now) */
+.benefits-v2__columns .benefits-v2__podium,
+.benefits-v2__columns .benefits-v2__lower,
+.benefits-v2__columns .benefits-v2__info-panel {
+	opacity: 1;
+	transform: none;
+	transition: none;
+}
+
+/* ═══════════════════════════════════════
+   REFERRAL REWARDS PANEL
+   ═══════════════════════════════════════ */
+.benefits-v2__referral-panel {
+	background: var(--bv2-card-bg);
+	border: 1.5px solid var(--bv2-card-border);
+	border-radius: var(--bv2-radius);
+	padding: 1.8rem 1.6rem;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+}
+
+.benefits-v2__referral-title {
+	font-family: 'Clash Display', sans-serif;
+	font-weight: 700;
+	font-size: 1.05rem;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	color: var(--bv2-text-dim);
+	margin-bottom: 1.2rem;
+	display: flex;
+	align-items: center;
+	gap: 0.6rem;
+}
+
+.benefits-v2__referral-title-icon {
+	color: var(--bv2-gold);
+	flex-shrink: 0;
+}
+
+/* ── Referral List ── */
+.benefits-v2__referral-list {
+	display: flex;
+	flex-direction: column;
+	gap: 0;
 	flex: 1;
 }
 
-.benefits-desc-wrapper p {
-	font-size: x-small;
-}
-
-.text-final {
-	font-size: x-small;
-	margin-bottom: 20px;
-}
-
-.other-prizes-wrapper {
+.benefits-v2__ref-row {
 	display: flex;
-	flex-wrap: wrap;
+	justify-content: space-between;
+	align-items: center;
+	padding: 0.55rem 0.75rem;
+	border-radius: 8px;
+	transition: background 0.2s ease;
+}
+.benefits-v2__ref-row:hover {
+	background: rgba(255,255,255,0.02);
 }
 
-.other-prize-wrapper {
-	margin: 0.5rem 3.5rem 0.5rem 0;
+.benefits-v2__ref-range {
+	font-family: 'Inter', sans-serif;
+	font-size: 0.82rem;
+	color: rgba(255,255,255,0.7);
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 }
 
-.other-prize-position {
-	font-size: 1.25rem;
+.benefits-v2__ref-reward {
 	font-family: 'Clash Display', sans-serif;
-	color: rgba(255, 199, 56, 1);
+	font-weight: 700;
+	font-size: 0.92rem;
+	color: var(--bv2-text);
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
 }
 
-.other-prize {
-	font-size: 2.25rem;
+/* Dim rows (no reward) */
+.benefits-v2__ref-row--dim {
+	opacity: 0.45;
+}
+.benefits-v2__ref-row--dim .benefits-v2__ref-reward {
+	font-weight: 500;
+	color: var(--bv2-text-dim);
+}
+
+/* "/ referral" label */
+.benefits-v2__ref-per {
+	font-family: 'Inter', sans-serif;
+	font-size: 0.7rem;
+	font-weight: 400;
+	color: var(--bv2-text-dim);
+}
+
+/* ── Milestone Rows ── */
+.benefits-v2__ref-row--milestone {
+	background: rgba(247, 201, 72, 0.04);
+	border: 1px solid rgba(247, 201, 72, 0.1);
+	margin: 0.15rem 0;
+}
+.benefits-v2__ref-row--milestone:hover {
+	background: rgba(247, 201, 72, 0.07);
+}
+.benefits-v2__ref-row--milestone .benefits-v2__ref-range {
+	color: var(--bv2-gold);
 	font-weight: 600;
-	color: #fff;
-	font-family: 'Clash Display', sans-serif;
+}
+.benefits-v2__ref-row--milestone .benefits-v2__ref-reward {
+	color: var(--bv2-gold);
 }
 
-.benefits-desc-wrapper p {
-	margin-bottom: 1rem;
-	color: rgba(255, 255, 255, 0.95);
-	font-size: 1.125rem;
-}
-.benefits-desc-wrapper p:last-child {
-	margin-bottom: 0;
-}
-
-@media (max-width: 1220px) {
-	.benefits {
-		flex-direction: column;
-		margin-top: 12rem;
-	}
-	.benefits-image-container {
-		min-height: 200px;
-	}
+/* Milestone dot */
+.benefits-v2__ref-milestone-dot {
+	width: 6px;
+	height: 6px;
+	border-radius: 50%;
+	background: var(--bv2-gold);
+	flex-shrink: 0;
+	box-shadow: 0 0 6px rgba(247, 201, 72, 0.4);
 }
 
-@media (max-width: 1024px) {
-	.benefits-content-bottom {
-		padding: 3rem;
-		padding-top: 0;
-	}
+/* Milestone tag */
+.benefits-v2__ref-tag {
+	font-family: 'Inter', sans-serif;
+	font-size: 0.6rem;
+	font-weight: 600;
+	text-transform: uppercase;
+	letter-spacing: 0.08em;
+	padding: 0.15rem 0.45rem;
+	border-radius: 4px;
+	background: rgba(247, 201, 72, 0.12);
+	color: var(--bv2-gold);
+}
 
-	.benefits-desc-wrapper p {
-		font-size: 1.115rem;
+/* Major milestone (50 referrals) */
+.benefits-v2__ref-row--major {
+	background: rgba(247, 201, 72, 0.07);
+	border-color: rgba(247, 201, 72, 0.2);
+}
+.benefits-v2__ref-row--major:hover {
+	background: rgba(247, 201, 72, 0.1);
+}
+.benefits-v2__ref-row--major .benefits-v2__ref-milestone-dot {
+	width: 8px;
+	height: 8px;
+	box-shadow: 0 0 10px rgba(247, 201, 72, 0.5);
+}
+.benefits-v2__ref-tag--major {
+	background: rgba(247, 201, 72, 0.2);
+}
+
+/* ── Strategy callout ── */
+.benefits-v2__referral-strategy {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.6rem;
+	margin-top: 1rem;
+	padding: 0.85rem 0.9rem;
+	border-radius: 10px;
+	background: rgba(247, 201, 72, 0.03);
+	border: 1px solid rgba(247, 201, 72, 0.08);
+}
+.benefits-v2__strategy-icon {
+	color: var(--bv2-gold);
+	flex-shrink: 0;
+	margin-top: 0.1rem;
+}
+.benefits-v2__referral-strategy p {
+	font-family: 'Inter', sans-serif;
+	font-size: 0.72rem;
+	color: rgba(255,255,255,0.55);
+	line-height: 1.55;
+	margin: 0;
+}
+.benefits-v2__referral-strategy strong {
+	color: rgba(255,255,255,0.8);
+	font-weight: 600;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+
+@media (max-width: 1050px) {
+	.benefits-v2__columns {
+		grid-template-columns: 1fr 340px;
+		gap: 1.5rem;
 	}
 }
 
-@media (max-width: 768px) {
-	.benefits-content-bottom {
-		padding: 0 2rem 3rem 2rem;
+@media (max-width: 850px) {
+	.benefits-v2 {
+		padding: 5rem 1.5rem 4rem;
 	}
-	.prizes-wrapper {
-		padding: 2rem;
-		padding-top: 0;
+	.benefits-v2__title {
+		font-size: 2rem;
 	}
-	.other-prize-wrapper:last-child {
-		margin-right: 1rem;
+	.benefits-v2__columns {
+		grid-template-columns: 1fr;
+		gap: 2rem;
+	}
+	.benefits-v2__card--center {
+		width: 220px;
+		padding: 2.2rem 1.2rem 1.8rem;
+	}
+	.benefits-v2__card--center .benefits-v2__card-amount {
+		font-size: 2.2rem;
+	}
+	.benefits-v2__card--side {
+		width: 170px;
+		padding: 1.6rem 1rem 1.4rem;
+	}
+	.benefits-v2__card--side .benefits-v2__card-amount {
+		font-size: 1.7rem;
+	}
+	.benefits-v2__referral-panel {
+		max-width: 520px;
+		margin: 0 auto;
+		width: 100%;
 	}
 }
 
-@media (max-width: 550px) {
-	.benefits {
-		margin-top: 10rem;
-	}
-	.benefits-image-container {
-		overflow-x: clip;
-		min-height: 158px;
-		margin-top: 2.5rem;
-	}
-	.benefits-image-wrapper {
-		margin-left: 1rem;
-	}
-	.benefits-content-bottom {
-		flex-direction: column;
-	}
-	.other-prizes-wrapper {
-		margin-bottom: 1.5rem;
-	}
-	.other-prize-wrapper:nth-child(2) {
-		margin-right: 1rem;
-	}
-	.prizes-wrapper {
+@media (max-width: 650px) {
+	.benefits-v2__header {
 		flex-direction: column;
 		align-items: flex-start;
-		padding-bottom: 1rem;
 	}
-	.prizes-wrapper img:nth-child(2) {
-		align-self: flex-end;
-		margin-right: -0.75rem;
+	.benefits-v2__podium {
+		gap: 0.75rem;
 	}
+	.benefits-v2__card--center {
+		width: 180px;
+		padding: 2rem 0.8rem 1.5rem;
+	}
+	.benefits-v2__card--center .benefits-v2__card-amount {
+		font-size: 1.9rem;
+	}
+	.benefits-v2__card--side {
+		width: 130px;
+		padding: 1.4rem 0.6rem 1.2rem;
+	}
+	.benefits-v2__card--side .benefits-v2__card-amount {
+		font-size: 1.35rem;
+	}
+	.benefits-v2__lower {
+		flex-direction: column;
+		align-items: center;
+	}
+	.benefits-v2__lower-card {
+		width: 100%;
+		max-width: 340px;
+	}
+	.benefits-v2__info-panel {
+		padding: 1.5rem;
+	}
+}
 
-	.benefits-desc-wrapper p {
-		font-size: 1rem;
+@media (max-width: 420px) {
+	.benefits-v2 {
+		padding: 4rem 1rem 3rem;
+	}
+	.benefits-v2__title {
+		font-size: 1.6rem;
+	}
+	.benefits-v2__title-dash {
+		display: none;
+	}
+	.benefits-v2__title-sub {
+		display: block;
+		font-size: 1.3rem;
+		margin-top: 0.15rem;
+	}
+	.benefits-v2__card--center {
+		width: 150px;
+	}
+	.benefits-v2__card--center .benefits-v2__card-amount {
+		font-size: 1.6rem;
+	}
+	.benefits-v2__card--side {
+		width: 110px;
+	}
+	.benefits-v2__card--side .benefits-v2__card-amount {
+		font-size: 1.15rem;
+	}
+	.benefits-v2__card-label {
+		font-size: 0.6rem;
+	}
+	.benefits-v2__lower-prize {
+		font-size: 1.1rem;
+	}
+	.benefits-v2__referral-panel {
+		padding: 1.2rem 1rem;
+	}
+	.benefits-v2__ref-row {
+		padding: 0.45rem 0.5rem;
+	}
+	.benefits-v2__ref-reward {
+		font-size: 0.82rem;
 	}
 }
