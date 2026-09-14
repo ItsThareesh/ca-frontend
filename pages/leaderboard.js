@@ -93,7 +93,7 @@ export default function Leaderboard() {
 		<div className={styles['leaderboard-page-wrapper']}>
 			<SpaceBackground />
 
-			<div className='relative z-10 w-full flex flex-col items-center justify-center'>
+			<div className={styles['leaderboard-content-wrapper']}>
 				<div className={styles['leaderboard-container']}>
 					{/* Compact Page Title */}
 					<div className={styles['title-wrapper']}>
