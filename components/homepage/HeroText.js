@@ -72,7 +72,7 @@ const HeroText = () => {
 
 	const handleSignUp2 = () => {
 		if (isLoggedIn) {
-			router.push('/dashboard/profile')
+			router.push('/profile')
 		} else {
 			router.push('/register')
 		}
@@ -80,7 +80,7 @@ const HeroText = () => {
 
 		const handleSignUp = () => {
 		if (isLoggedIn) {
-			router.push('/dashboard/profile')
+			router.push('/profile')
 		} else {
 			toast.info("Registrations are now closed.")
 		}

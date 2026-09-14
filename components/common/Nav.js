@@ -15,7 +15,7 @@ export default function Nav() {
 			window.location.href = '/login'
 		} else {
 			// Redirect to dashboard
-			window.location.href = '/dashboard/profile'
+			window.location.href = '/profile'
 		}
 	}
 

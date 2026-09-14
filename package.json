@@ -10,6 +10,9 @@
 		"prettier": "prettier --write ."
 	},
 	"dependencies": {
+		"@dicebear/collection": "^9.4.2",
+		"@dicebear/core": "^9.4.3",
+		"@dicebear/styles": "^10.6.0",
 		"@react-three/drei": "^10.7.8",
 		"@react-three/fiber": "^9.7.0",
 		"axios": "^0.27.2",

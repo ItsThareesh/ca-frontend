@@ -3,6 +3,7 @@ import { useContext, createContext } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import { getGlyphsAvatarUrl } from 'lib/dicebear'
 
 const UserContext = createContext()
 
@@ -46,11 +47,9 @@ export default function UserContextWrapper({ children }) {
 				branch: data?.branch || '',
 				year: data?.year || '',
 				experience: data?.experience || false,
-				// name: data?.name,
-				// email: data?.email,
-				// refCode: data?.refCode || data?.ref_code,
-				// points: data?.totalPoints || data?.total_points || 0,
-				imageUrl: `https://source.boringavatars.com/beam/120/${data?.email}?colors=CAF729,79DD7E,2ECBAA,21B6B6,888DDA`,
+				refCode: data?.refCode || data?.ref_code || '',
+				totalPoints: data?.totalPoints || data?.total_points || 0,
+				imageUrl: data?.avatarUrl || data?.imageUrl || getGlyphsAvatarUrl(data?.name || 'Hamood Habibi'),
 			}
 
 			setUser(currentUser)
