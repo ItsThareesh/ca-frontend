@@ -4,20 +4,20 @@
 
 /* ── Color Tokens ── */
 :root {
-	--bv2-gold:        #f7c948;
-	--bv2-gold-deep:   #d9a441;
-	--bv2-gold-dark:   #8a7047;
-	--bv2-gold-glow:   rgba(247, 201, 72, 0.12);
-	--bv2-silver:      #c0c0c0;
-	--bv2-silver-dim:  #8a8a8a;
-	--bv2-bronze:      #cd7f32;
-	--bv2-bronze-dim:  #8a5a22;
-	--bv2-bg:          #0a0a0a;
-	--bv2-card-bg:     #111113;
-	--bv2-card-border: rgba(255,255,255,0.06);
-	--bv2-text:        #ffffff;
-	--bv2-text-dim:    rgba(255,255,255,0.55);
-	--bv2-radius:      16px;
+	--bv2-gold: #f7c948;
+	--bv2-gold-deep: #d9a441;
+	--bv2-gold-dark: #8a7047;
+	--bv2-gold-glow: rgba(247, 201, 72, 0.12);
+	--bv2-silver: #c0c0c0;
+	--bv2-silver-dim: #8a8a8a;
+	--bv2-bronze: #cd7f32;
+	--bv2-bronze-dim: #8a5a22;
+	--bv2-bg: #0a0a0a;
+	--bv2-card-bg: #111113;
+	--bv2-card-border: rgba(255, 255, 255, 0.06);
+	--bv2-text: #ffffff;
+	--bv2-text-dim: rgba(255, 255, 255, 0.55);
+	--bv2-radius: 0;
 }
 
 /* ── Section ── */
@@ -38,12 +38,28 @@
 	opacity: 0;
 	transform: translateY(32px);
 	transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-	            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+		transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.benefits-v2--visible .benefits-v2__header   { opacity: 1; transform: none; transition-delay: 0s; }
-.benefits-v2--visible .benefits-v2__podium   { opacity: 1; transform: none; transition-delay: 0.15s; }
-.benefits-v2--visible .benefits-v2__lower    { opacity: 1; transform: none; transition-delay: 0.3s; }
-.benefits-v2--visible .benefits-v2__info-panel { opacity: 1; transform: none; transition-delay: 0.42s; }
+.benefits-v2--visible .benefits-v2__header {
+	opacity: 1;
+	transform: none;
+	transition-delay: 0s;
+}
+.benefits-v2--visible .benefits-v2__podium {
+	opacity: 1;
+	transform: none;
+	transition-delay: 0.15s;
+}
+.benefits-v2--visible .benefits-v2__lower {
+	opacity: 1;
+	transform: none;
+	transition-delay: 0.3s;
+}
+.benefits-v2--visible .benefits-v2__info-panel {
+	opacity: 1;
+	transform: none;
+	transition-delay: 0.42s;
+}
 
 /* ── Gold radial glow (upper-right) ── */
 .benefits-v2__glow {
@@ -52,11 +68,9 @@
 	right: -12%;
 	width: 600px;
 	height: 600px;
-	border-radius: 50%;
-	background: radial-gradient(circle, rgba(247, 201, 72, 0.10) 0%, rgba(247, 201, 72, 0.04) 40%, transparent 70%);
+	border-radius: 0;
 	pointer-events: none;
 	z-index: 0;
-	filter: blur(40px);
 }
 
 /* ═══════════════════════════════════════
@@ -99,7 +113,7 @@
 	align-items: center;
 	gap: 1rem;
 	padding: 1rem 1.25rem;
-	border-radius: 16px;
+	border-radius: 0;
 	background: rgba(247, 201, 72, 0.04);
 	border: 1px solid rgba(247, 201, 72, 0.12);
 	max-width: 420px;
@@ -148,26 +162,24 @@
 	align-items: center;
 	justify-content: center;
 	gap: 0.6rem;
-	border-radius: var(--bv2-radius);
+	border-radius: 0;
 	background: var(--bv2-card-bg);
 	border: 1.5px solid var(--bv2-card-border);
 	position: relative;
 	overflow: hidden;
 	transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
-	            box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
+		box-shadow 0.35s cubic-bezier(0.22, 1, 0.36, 1);
 }
 .benefits-v2__card::before {
 	content: '';
 	position: absolute;
 	inset: 0;
-	border-radius: var(--bv2-radius);
+	border-radius: 0;
 	pointer-events: none;
 	opacity: 0;
 	transition: opacity 0.35s ease;
 }
-.benefits-v2__card:hover {
-	transform: translateY(-6px);
-}
+
 .benefits-v2__card:hover::before {
 	opacity: 1;
 }
@@ -187,46 +199,19 @@
 /* ── GOLD (1st) ── */
 .benefits-v2__card--gold {
 	border-color: rgba(247, 201, 72, 0.35);
-	box-shadow: 0 0 40px rgba(247, 201, 72, 0.06),
-	            0 8px 32px rgba(0,0,0,0.4);
-}
-.benefits-v2__card--gold::before {
-	background: radial-gradient(ellipse at 50% 0%, rgba(247, 201, 72, 0.08) 0%, transparent 65%);
-}
-.benefits-v2__card--gold:hover {
-	box-shadow: 0 0 60px rgba(247, 201, 72, 0.12),
-	            0 12px 40px rgba(0,0,0,0.5);
-}
-.benefits-v2__card--gold:hover::before {
-	background: radial-gradient(ellipse at 50% 0%, rgba(247, 201, 72, 0.14) 0%, transparent 65%);
+	box-shadow: 0 0 40px rgba(247, 201, 72, 0.06), 0 8px 32px rgba(0, 0, 0, 0.4);
 }
 
 /* ── SILVER (2nd) ── */
 .benefits-v2__card--silver {
 	border-color: rgba(192, 192, 192, 0.2);
-	box-shadow: 0 0 30px rgba(192, 192, 192, 0.04),
-	            0 6px 24px rgba(0,0,0,0.35);
-}
-.benefits-v2__card--silver::before {
-	background: radial-gradient(ellipse at 50% 0%, rgba(192, 192, 192, 0.06) 0%, transparent 65%);
-}
-.benefits-v2__card--silver:hover {
-	box-shadow: 0 0 50px rgba(192, 192, 192, 0.08),
-	            0 10px 36px rgba(0,0,0,0.45);
+	box-shadow: 0 0 30px rgba(192, 192, 192, 0.04), 0 6px 24px rgba(0, 0, 0, 0.35);
 }
 
 /* ── BRONZE (3rd) ── */
 .benefits-v2__card--bronze {
 	border-color: rgba(205, 127, 50, 0.22);
-	box-shadow: 0 0 30px rgba(205, 127, 50, 0.04),
-	            0 6px 24px rgba(0,0,0,0.35);
-}
-.benefits-v2__card--bronze::before {
-	background: radial-gradient(ellipse at 50% 0%, rgba(205, 127, 50, 0.06) 0%, transparent 65%);
-}
-.benefits-v2__card--bronze:hover {
-	box-shadow: 0 0 50px rgba(205, 127, 50, 0.08),
-	            0 10px 36px rgba(0,0,0,0.45);
+	box-shadow: 0 0 30px rgba(205, 127, 50, 0.04), 0 6px 24px rgba(0, 0, 0, 0.35);
 }
 
 /* ── Card Inner Elements ── */
@@ -246,9 +231,15 @@
 	letter-spacing: 0.12em;
 	color: var(--bv2-text-dim);
 }
-.benefits-v2__card--gold .benefits-v2__card-rank { color: var(--bv2-gold); }
-.benefits-v2__card--silver .benefits-v2__card-rank { color: var(--bv2-silver); }
-.benefits-v2__card--bronze .benefits-v2__card-rank { color: var(--bv2-bronze); }
+.benefits-v2__card--gold .benefits-v2__card-rank {
+	color: var(--bv2-gold);
+}
+.benefits-v2__card--silver .benefits-v2__card-rank {
+	color: var(--bv2-silver);
+}
+.benefits-v2__card--bronze .benefits-v2__card-rank {
+	color: var(--bv2-bronze);
+}
 
 .benefits-v2__card-icon {
 	display: block;
@@ -263,8 +254,12 @@
 	letter-spacing: -0.02em;
 	line-height: 1;
 }
-.benefits-v2__card--center .benefits-v2__card-amount { font-size: 2.8rem; }
-.benefits-v2__card--side .benefits-v2__card-amount   { font-size: 2.1rem; }
+.benefits-v2__card--center .benefits-v2__card-amount {
+	font-size: 2.8rem;
+}
+.benefits-v2__card--side .benefits-v2__card-amount {
+	font-size: 2.1rem;
+}
 
 .benefits-v2__card-label {
 	font-family: 'Inter', sans-serif;
@@ -277,8 +272,12 @@
 
 /* Crown float animation */
 @keyframes benefits-v2-float {
-	0% { transform: translateY(0); }
-	100% { transform: translateY(-4px); }
+	0% {
+		transform: translateY(0);
+	}
+	100% {
+		transform: translateY(-4px);
+	}
 }
 
 /* ═══════════════════════════════════════
@@ -299,13 +298,13 @@
 	gap: 1rem;
 	background: var(--bv2-card-bg);
 	border: 1.5px solid var(--bv2-card-border);
-	border-radius: var(--bv2-radius);
+	border-radius: 0;
 	padding: 1.2rem 1.8rem;
 	transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 .benefits-v2__lower-card:hover {
 	transform: translateY(-3px);
-	box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+	box-shadow: 0 6px 24px rgba(0, 0, 0, 0.3);
 }
 
 .benefits-v2__lower-icon-wrap {
@@ -314,7 +313,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: center;
-	border-radius: 12px;
+	border-radius: 0;
 	background: rgba(247, 201, 72, 0.07);
 	border: 1px solid rgba(247, 201, 72, 0.15);
 	flex-shrink: 0;
@@ -349,7 +348,7 @@
 	margin: 0 auto;
 	background: var(--bv2-card-bg);
 	border: 1.5px solid var(--bv2-card-border);
-	border-radius: var(--bv2-radius);
+	border-radius: 0;
 	padding: 2rem 2.2rem;
 	position: relative;
 	z-index: 1;
@@ -385,7 +384,7 @@
 .benefits-v2__info-text {
 	font-family: 'Inter', sans-serif;
 	font-size: 0.95rem;
-	color: rgba(255,255,255,0.82);
+	color: rgba(255, 255, 255, 0.82);
 	line-height: 1.4;
 }
 .benefits-v2__info-text strong {
@@ -396,7 +395,7 @@
 .benefits-v2__info-divider {
 	width: 100%;
 	height: 1px;
-	background: rgba(255,255,255,0.06);
+	background: rgba(255, 255, 255, 0.06);
 	margin: 0.3rem 0;
 }
 
@@ -426,9 +425,13 @@
 	opacity: 0;
 	transform: translateY(32px);
 	transition: opacity 0.7s cubic-bezier(0.22, 1, 0.36, 1),
-	            transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
+		transform 0.7s cubic-bezier(0.22, 1, 0.36, 1);
 }
-.benefits-v2--visible .benefits-v2__columns { opacity: 1; transform: none; transition-delay: 0.15s; }
+.benefits-v2--visible .benefits-v2__columns {
+	opacity: 1;
+	transform: none;
+	transition-delay: 0.15s;
+}
 
 /* Override old standalone entrance (they're inside columns now) */
 .benefits-v2__columns .benefits-v2__podium,
@@ -445,7 +448,7 @@
 .benefits-v2__referral-panel {
 	background: var(--bv2-card-bg);
 	border: 1.5px solid var(--bv2-card-border);
-	border-radius: var(--bv2-radius);
+	border-radius: 0;
 	padding: 1.8rem 1.6rem;
 	height: 100%;
 	display: flex;
@@ -483,17 +486,17 @@
 	justify-content: space-between;
 	align-items: center;
 	padding: 0.55rem 0.75rem;
-	border-radius: 8px;
+	border-radius: 0;
 	transition: background 0.2s ease;
 }
 .benefits-v2__ref-row:hover {
-	background: rgba(255,255,255,0.02);
+	background: rgba(255, 255, 255, 0.02);
 }
 
 .benefits-v2__ref-range {
 	font-family: 'Inter', sans-serif;
 	font-size: 0.82rem;
-	color: rgba(255,255,255,0.7);
+	color: rgba(255, 255, 255, 0.7);
 	display: flex;
 	align-items: center;
 	gap: 0.5rem;
@@ -547,7 +550,7 @@
 .benefits-v2__ref-milestone-dot {
 	width: 6px;
 	height: 6px;
-	border-radius: 50%;
+	border-radius: 0;
 	background: var(--bv2-gold);
 	flex-shrink: 0;
 	box-shadow: 0 0 6px rgba(247, 201, 72, 0.4);
@@ -561,7 +564,7 @@
 	text-transform: uppercase;
 	letter-spacing: 0.08em;
 	padding: 0.15rem 0.45rem;
-	border-radius: 4px;
+	border-radius: 0;
 	background: rgba(247, 201, 72, 0.12);
 	color: var(--bv2-gold);
 }
@@ -590,7 +593,7 @@
 	gap: 0.6rem;
 	margin-top: 1rem;
 	padding: 0.85rem 0.9rem;
-	border-radius: 10px;
+	border-radius: 0;
 	background: rgba(247, 201, 72, 0.03);
 	border: 1px solid rgba(247, 201, 72, 0.08);
 }
@@ -602,12 +605,12 @@
 .benefits-v2__referral-strategy p {
 	font-family: 'Inter', sans-serif;
 	font-size: 0.72rem;
-	color: rgba(255,255,255,0.55);
+	color: rgba(255, 255, 255, 0.55);
 	line-height: 1.55;
 	margin: 0;
 }
 .benefits-v2__referral-strategy strong {
-	color: rgba(255,255,255,0.8);
+	color: rgba(255, 255, 255, 0.8);
 	font-weight: 600;
 }
 
