@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
-import PageHeader from '../components/common/PageHeader'
 import ContactUs from 'components/contact/ContactUs'
-import RUReady from 'components/common/RUReady'
 import GhostFibers from 'components/leaderboard/GhostFibers'
 
 export default function Contact() {
@@ -16,15 +14,13 @@ export default function Contact() {
 	}, [])
 
 	return (
-		<div className='leaderboard-page relative min-h-screen overflow-hidden'>
+		<div className='leaderboard-page relative min-h-[calc(100vh-220px)] overflow-hidden flex flex-col justify-center'>
 			{/* GhostFibers full-page background */}
 			<GhostFibers className='fixed inset-0 z-0' />
 
 			{/* Page content above GhostFibers */}
-			<div className='relative z-10'>
-				<PageHeader title='Contact us' />
+			<div className='relative z-10 w-full pt-20 pb-4 sm:pt-24 sm:pb-6'>
 				<ContactUs />
-				<RUReady />
 			</div>
 		</div>
 	)

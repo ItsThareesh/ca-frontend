@@ -1,178 +1,175 @@
-import { useState, useEffect, useRef } from 'react'
-import { submitContact } from 'lib/req/contact'
-import { useUserContext } from 'context/UserContext'
-import { toast } from 'react-toastify'
-import Image from 'next/image'
+import { useState } from 'react'
 import { IoMdCall } from 'react-icons/io'
 import { MdEmail } from 'react-icons/md'
-import { FaFacebook, FaTwitter, FaInstagram } from 'react-icons/fa'
-import SubHeading from 'components/common/SubHeading'
-
+import { FiChevronDown } from 'react-icons/fi'
+import { HiOutlineSparkles } from 'react-icons/hi2'
 import styles from './contact-us.module.css'
 
+const contacts = [
+	{
+		name: 'Subramanya Shenoy B',
+		phone: '+91 9037176188',
+		email: 'subramanya@tathva.org',
+		role: 'Convener',
+	},
+	{
+		name: 'Sabin Binu',
+		phone: '+91 9446978544',
+		email: 'sabin@tathva.org',
+		role: 'Coordinator',
+	},
+	{
+		name: 'Anandhakrishnan P S',
+		phone: '+91 9995933017',
+		email: 'anandhakrishnan@tathva.org',
+		role: 'Coordinator',
+	},
+	{
+		name: 'Mohamed Adhil',
+		phone: '+91 6282896005',
+		email: 'adhil@tathva.org',
+		role: 'Coordinator',
+	},
+	{
+		name: 'Athulya C',
+		phone: '+91 8606774798',
+		email: 'athulya@tathva.org',
+		role: 'Coordinator',
+	},
+]
+
 export default function ContactUs() {
-	const { user } = useUserContext()
-	const formElement = useRef()
+	// Accordion open state: null or index of the open item
+	const [openIndex, setOpenIndex] = useState(0)
 
-	const [form, setForm] = useState({ name: '', email: '', message: '' })
-
-	useEffect(() => {
-		setForm({ name: user?.name || '', email: user?.email || '', message: '' })
-	}, [user])
-
-	const handleChange = (e) => {
-		setForm({ ...form, [e.target.name]: e.target.value })
-	}
-
-	function handleSubmit(e) {
-		e.preventDefault()
-		toast
-			.promise(submitContact(new FormData(formElement.current)), {
-				pending: 'Sending message',
-				success: 'Message sent',
-				error: 'Failed to send message',
-			})
-			.then(() => setForm({ name: user?.name || '', email: user?.email || '', message: '' }))
-			.catch((err) => {
-				console.error(err)
-				toast.error('Failed to send message')
-			})
+	const toggleAccordion = (index) => {
+		setOpenIndex((prev) => (prev === index ? null : index))
 	}
 
 	return (
-		<div className='container'>
-			<div className={styles['contact-us']}>
-				<div className={styles['contact-us-left']}>
-					<div>
-						<SubHeading title='Get in touch' />
-						<div className={styles['git-content']}>
-							<div className={styles['contact']}>
-								<div className={styles['contact-icon-wrapper']}>
-									<IoMdCall className={styles['contact-icon']} />
-								</div>
-								<div className={styles['contact-details']}>
-									<h5>Subramanya Shenoy B</h5>
-									<p>+91 9037176188</p>
-								</div>
-							</div>
+		<section className='w-full py-1 sm:py-2 px-4 sm:px-6 relative z-10'>
+			<div className='max-w-4xl mx-auto'>
+				{/* Main Card Container */}
+				<div className={styles['contact-card']}>
+					{/* Top ambient glow decoration */}
+					<div className={styles['card-glow']} />
 
-							<div className={styles['contact']}>
-								<div className={styles['contact-icon-wrapper']}>
-									<IoMdCall className={styles['contact-icon']} />
-								</div>
-								<div className={styles['contact-details']}>
-									<h5>Sabin Binu</h5>
-									<p>+91 9446978544</p>
-								</div>
-							</div>
+					{/* Card Header */}
+					<div className={styles['card-header']}>
 
-							<div className={styles['contact']}>
-								<div className={styles['contact-icon-wrapper']}>
-									<IoMdCall className={styles['contact-icon']} />
-								</div>
-								<div className={styles['contact-details']}>
-									<h5>Anandhakrishnan P S </h5>
-									<p>+91 9995933017</p>
-								</div>
-							</div>
-							<div className={styles['contact']}>
-								<div className={styles['contact-icon-wrapper']}>
-									<IoMdCall className={styles['contact-icon']} />
-								</div>
-								<div className={styles['contact-details']}>
-									<h5>Mohamed Adhil</h5>
-									<p>+91 6282896005</p>
-								</div>
-							</div>
-							<div className={styles['contact']}>
-								<div className={styles['contact-icon-wrapper']}>
-									<IoMdCall className={styles['contact-icon']} />
-								</div>
-								<div className={styles['contact-details']}>
-									<h5>Athulya C</h5>
-									<p>+91 8606774798</p>
-								</div>
-							</div>
-							<div className={styles['contact']}>
-								<div className={styles['contact-icon-wrapper']}>
-									<MdEmail className={styles['contact-icon']} />
-								</div>
-								<div className={styles['contact-details']}>
-									<h5>Email</h5>
-									<p>ca@tathva.org</p>
-								</div>
-							</div>
+						<h2 className={styles['card-title']}>Contact Us</h2>
+
+
+						{/* General inquiries bar */}
+						<div className={styles['general-inquiry']}>
+							<span className={styles['inquiry-label']}>General Inquiries:</span>
+							<a
+								href='mailto:ca@tathva.org'
+								className={styles['inquiry-email']}
+								title='Email general inquiries'
+							>
+								<MdEmail className='text-amber-400 text-lg' />
+								<span>ca@tathva.org</span>
+							</a>
 						</div>
 					</div>
 
-					{/* <div className={styles['social']}>
-						<SubHeading title='Social' icon='/images/earth.png' />
-						<div className={styles['social-icons-wrapper']}>
-							<a
-								href='https://www.instagram.com/tathva_nitcalicut/'
-								target='_blank'
-								rel='noreferrer noopener'
-							>
-								<div className={`${styles['contact-icon-wrapper']} ${styles['social-icon']}`}>
-									<FaInstagram className={styles['contact-icon']} />
+					{/* Accordion List */}
+					<div className={styles['accordion-list']}>
+						{contacts.map((contact, index) => {
+							const isOpen = openIndex === index
+							const sanitizedPhone = contact.phone.replace(/\s+/g, '')
+
+							return (
+								<div
+									key={contact.name}
+									className={`${styles['accordion-item']} ${isOpen ? styles['item-open'] : ''}`}
+								>
+									{/* Accordion Header / Trigger */}
+									<button
+										type='button'
+										onClick={() => toggleAccordion(index)}
+										className={styles['accordion-trigger']}
+										aria-expanded={isOpen}
+										aria-controls={`contact-panel-${index}`}
+										id={`contact-header-${index}`}
+									>
+										<div className={styles['trigger-left']}>
+											<div className={styles['avatar-icon']}>
+												<span>{contact.name.charAt(0)}</span>
+											</div>
+											<div className={styles['contact-identity']}>
+												<h3 className={styles['contact-name']}>{contact.name}</h3>
+											</div>
+										</div>
+
+										<div className={styles['trigger-right']}>
+											<span className={styles['status-hint']}>
+												{isOpen ? 'Close' : 'Details'}
+											</span>
+											<div className={`${styles['chevron-wrapper']} ${isOpen ? styles['rotate'] : ''}`}>
+												<FiChevronDown className={styles['chevron-icon']} />
+											</div>
+										</div>
+									</button>
+
+									{/* Smooth Expandable Content */}
+									<div
+										id={`contact-panel-${index}`}
+										role='region'
+										aria-labelledby={`contact-header-${index}`}
+										className={`${styles['accordion-panel']} ${isOpen ? styles['panel-open'] : ''}`}
+									>
+										<div className={styles['panel-inner']}>
+											<div className={styles['contact-actions-grid']}>
+												{/* Phone Link */}
+												<a
+													href={`tel:${sanitizedPhone}`}
+													className={styles['action-card']}
+													title={`Call ${contact.name}`}
+												>
+													<div className={styles['action-icon-wrapper']}>
+														<IoMdCall className={styles['action-icon']} />
+													</div>
+													<div className={styles['action-info']}>
+														<span className={styles['action-label']}>Phone Number</span>
+														<span className={styles['action-value']}>{contact.phone}</span>
+													</div>
+													<span className={styles['action-tag']}>Copy</span>
+
+													<CopyToClipboard
+														text={generateDescription(writeup, registerLink, refCode)}
+														onCopy={() => toast('Copied!')}
+													>
+														<button className='btn-outline'>Copy</button>
+													</CopyToClipboard>
+
+												</a>
+
+												{/* Email Link */}
+												<a
+													href={`mailto:${contact.email}`}
+													className={styles['action-card']}
+													title={`Email ${contact.name}`}
+												>
+													<div className={styles['action-icon-wrapper']}>
+														<MdEmail className={styles['action-icon']} />
+													</div>
+													<div className={styles['action-info']}>
+														<span className={styles['action-label']}>Email Address</span>
+														<span className={styles['action-value']}>{contact.email}</span>
+													</div>
+													<span className={styles['action-tag']}>Send Email</span>
+												</a>
+											</div>
+										</div>
+									</div>
 								</div>
-							</a>
-							<a href='https://www.facebook.com/tathva' target='_blank' rel='noreferrer noopener'>
-								<div className={`${styles['contact-icon-wrapper']} ${styles['social-icon']}`}>
-									<FaFacebook className={styles['contact-icon']} />
-								</div>
-							</a>
-							<a href='https://twitter.com/tathva' target='_blank' rel='noreferrer noopener'>
-								<div className={`${styles['contact-icon-wrapper']} ${styles['social-icon']}`}>
-									<FaTwitter className={styles['contact-icon']} />
-								</div>
-							</a>
-						</div>
-					</div> */}
+							)
+						})}
+					</div>
 				</div>
-
-				{/* <form className={styles['contact-us-right']} onSubmit={handleSubmit} ref={formElement}>
-					<SubHeading title='Message' icon='/images/message.png' />
-
-					<fieldset>
-						<label>Name</label>
-						<input
-							type='text'
-							name='name'
-							placeholder='Enter your name'
-							autoComplete='off'
-							required
-							value={form.name}
-							onChange={handleChange}
-						/>
-					</fieldset>
-					<fieldset>
-						<label>Email</label>
-						<input
-							type='email'
-							name='email'
-							placeholder='Enter your email'
-							autoComplete='off'
-							value={form.email}
-							onChange={handleChange}
-							required
-						/>
-					</fieldset>
-					<fieldset>
-						<label>Message</label>
-						<textarea
-							placeholder='Enter message'
-							name='message'
-							value={form.message}
-							onChange={handleChange}
-							required
-						></textarea>
-					</fieldset>
-					<button type='submit' className='btn-secondary'>
-						Submit
-					</button>
-				</form> */}
 			</div>
-		</div>
+		</section>
 	)
 }
