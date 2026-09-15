@@ -160,7 +160,11 @@ export default function UserContextWrapper({ children }) {
 	// /auth/google/callback with a `?token=` JWT.
 	const loginWithGoogle = async () => {
 		try {
-			const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/google`)
+			const redirect = encodeURIComponent(`${window.location.origin}/profile`)
+
+			const { data } = await axios.get(
+			`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/ca/google?redirect=${redirect}`
+			)
 			if (!data?.url) throw new Error('Missing Google auth URL in response')
 
 			window.location.href = data.url
