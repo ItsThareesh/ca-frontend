@@ -14,8 +14,8 @@ export default function Hero() {
 			{/* Vacancy Banner floating at bottom center */}
 			<div className='vacancy-banner-container'>
 				<div className='vacancy-banner'>
-					<span className='vacancy-number'>6 7</span>
-					<span className='vacancy-label'>SEATS LEFT</span>
+					<span className='vacancy-number'>7</span>
+					<span className='vacancy-label'>DAYS LEFT</span>
 				</div>
 			</div>
 
