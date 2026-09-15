@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useRef } from 'react'
+import { useState, useEffect, useMemo } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
@@ -15,15 +15,13 @@ import {
 	FiChevronLeft,
 	FiChevronRight,
 	FiEdit2,
-	FiCamera,
 	FiX,
 	FiBookOpen,
 	FiAward,
-	FiCheckCircle,
-	FiTrash2,
+	FiMapPin,
+	FiCalendar,
 } from 'react-icons/fi'
 import axios from 'axios'
-import { getGlyphsAvatarUrl } from 'lib/dicebear'
 
 import s from '../styles/hub-profile.module.css'
 
@@ -36,18 +34,12 @@ export function generateRandomReferralCode(length = 7) {
 	return result
 }
 
-export function getDefaultAvatar(name = 'Hamood Habibi') {
-	return getGlyphsAvatarUrl(name)
-}
-
 /* ═════════════════════════════════════════════════════════════
    MOCK DATA — remove this block and set USE_MOCK = false
    when connecting to the real backend
    ═════════════════════════════════════════════════════════════ */
 const USE_MOCK = false
 
-// MOCK_PROFILE intentionally has no avatarUrl — the avatar is always
-// generated dynamically from the user's name via DiceBear glyphs.
 const MOCK_PROFILE = {
 	name: 'Hamood Habibi',
 	email: 'hamood.habibi@iitm.ac.in',
@@ -59,7 +51,6 @@ const MOCK_PROFILE = {
 	tathvaId: 'TVA-2025-0042',
 	ref_code: 'K7N9W2X',
 	total_points: 345,
-	experience: true,
 }
 
 const MOCK_NAMES = [
@@ -265,13 +256,12 @@ export default function ProfilePage() {
 		name: '',
 		phone: '',
 		college: '',
+		district: '',
+		state: '',
+		semester: '',
 		branch: '',
-		year: '1',
-		experience: false,
-		avatarUrl: '',
+		year: '',
 	})
-
-	const fileInputRef = useRef(null)
 
 	// mock testing state
 	const [mockPoints, setMockPoints] = useState(USE_MOCK ? MOCK_PROFILE.total_points : 0)
@@ -367,12 +357,6 @@ export default function ProfilePage() {
 		  )}&size=320x320&bgcolor=09090b&color=e5b842&format=png&qzone=2&ecc=H`
 		: ''
 	const firstName = (profile?.name || 'Ambassador').split(' ')[0]
-	// avatarSrc: only use a stored avatarUrl when the user has uploaded a real image
-	// (data URL). DiceBear CDN URLs stored in profile are seeded from the original
-	// name and won't update — always recompute them from the current name.
-	const storedAvatar = profile?.avatarUrl || profile?.imageUrl || ''
-	const isUserUploadedAvatar = storedAvatar.startsWith('data:')
-	const avatarSrc = isUserUploadedAvatar ? storedAvatar : getDefaultAvatar(profile?.name)
 
 	/* Badges criteria:
 	   - Leaderboard badge: unlocked at 25% of 50 referrals (≥ 13 refs)
@@ -454,61 +438,17 @@ export default function ProfilePage() {
 		}
 	}
 
-	/* ── profile image handlers ── */
-	function handleImageChange(e) {
-		const file = e.target.files?.[0]
-		if (!file) return
-
-		if (!file.type.startsWith('image/')) {
-			toast.error('Please select a valid image file (PNG, JPG, WEBP)')
-			return
-		}
-
-		if (file.size > 5 * 1024 * 1024) {
-			toast.error('Image size must be less than 5MB')
-			return
-		}
-
-		const reader = new FileReader()
-		reader.onload = () => {
-			const result = reader.result
-			setEditFormData((prev) => ({ ...prev, avatarUrl: result }))
-
-			if (!isEditing) {
-				const updated = { ...profile, avatarUrl: result }
-				setProfile(updated)
-				if (USE_MOCK) {
-					localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
-				}
-				toast.success('Profile picture updated!')
-			}
-		}
-		reader.readAsDataURL(file)
-	}
-
-	function handleRemoveImage() {
-		const fallback = getDefaultAvatar(profile?.name)
-		setEditFormData((prev) => ({ ...prev, avatarUrl: fallback }))
-		if (!isEditing) {
-			const updated = { ...profile, avatarUrl: fallback }
-			setProfile(updated)
-			if (USE_MOCK) {
-				localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
-			}
-			toast.success('Profile picture reset to default')
-		}
-	}
-
 	/* ── edit form handlers ── */
 	function startEditing() {
 		setEditFormData({
 			name: profile?.name || '',
 			phone: profile?.phone || '',
 			college: profile?.college || '',
+			district: profile?.district || '',
+			state: profile?.state || '',
+			semester: profile?.semester ? String(profile.semester) : '',
 			branch: profile?.branch || '',
-			year: profile?.year ? String(profile.year) : '1',
-			experience: profile?.experience !== undefined ? profile.experience : false,
-			avatarUrl: avatarSrc,
+			year: profile?.year ? String(profile.year) : '',
 		})
 		setIsEditing(true)
 	}
@@ -524,10 +464,7 @@ export default function ProfilePage() {
 			return
 		}
 
-		// If the user hasn't uploaded a real image, clear the stored avatarUrl so the
-		// avatar recomputes from the (possibly new) name via DiceBear.
-		const avatarUrl = editFormData.avatarUrl?.startsWith('data:') ? editFormData.avatarUrl : ''
-		const updated = { ...profile, ...editFormData, year: Number(editFormData.year), avatarUrl }
+		const updated = { ...profile, ...editFormData }
 
 		if (USE_MOCK) {
 			localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
@@ -543,17 +480,16 @@ export default function ProfilePage() {
 			return
 		}
 
-		// Send only the fields the form actually edits — not the full merged
-		// profile object (which carries backend-only fields like id/email/points
-		// straight through from the GET response). A strict backend schema will
-		// reject unrecognized keys in the body, so keep this payload minimal.
+		// Exactly the fields the backend's PUT /api/user/ accepts
 		const payload = {
 			name: editFormData.name,
 			phone: editFormData.phone,
 			college: editFormData.college,
+			district: editFormData.district,
+			state: editFormData.state,
+			semester: editFormData.semester,
 			branch: editFormData.branch,
-			year: Number(editFormData.year),
-			experience: editFormData.experience,
+			year: editFormData.year,
 		}
 
 		setSaving(true)
@@ -599,15 +535,6 @@ export default function ProfilePage() {
 				/>
 			</Head>
 
-			{/* Hidden file input for photo upload */}
-			<input
-				type='file'
-				ref={fileInputRef}
-				onChange={handleImageChange}
-				accept='image/*'
-				className={s.hiddenFileInput}
-			/>
-
 			<div className={s.hubContainer}>
 				{/* ── WELCOME ── */}
 				<section className={s.welcomeSection}>
@@ -643,15 +570,7 @@ export default function ProfilePage() {
 									<div className={s.detailsAvatarGroup}>
 										<div className={s.detailsAvatarWrapperStatic}>
 											<div className={s.detailsAvatar}>
-												{avatarSrc ? (
-													<img
-														src={avatarSrc}
-														alt={profile?.name || 'Avatar'}
-														className={s.avatarImg}
-													/>
-												) : (
-													<FiUser size={34} strokeWidth={1.5} />
-												)}
+												<FiUser size={34} strokeWidth={1.5} />
 											</div>
 										</div>
 
@@ -826,25 +745,36 @@ export default function ProfilePage() {
 
 									<div className={s.detailRow}>
 										<div className={s.detailIcon}>
-											<FiAward size={16} />
+											<FiMapPin size={16} />
 										</div>
 										<div className={s.detailContent}>
-											<span className={s.detailLabel}>Branch & Year</span>
+											<span className={s.detailLabel}>District & State</span>
 											<span className={s.detailText}>
-												{profile?.branch ? profile.branch : 'Branch N/A'} ·{' '}
-												{profile?.year ? `Year ${profile.year}` : 'Year N/A'}
+												{[profile?.district, profile?.state].filter(Boolean).join(', ') ||
+													'Not provided'}
 											</span>
 										</div>
 									</div>
 
 									<div className={s.detailRow}>
 										<div className={s.detailIcon}>
-											<FiCheckCircle size={16} />
+											<FiAward size={16} />
 										</div>
 										<div className={s.detailContent}>
-											<span className={s.detailLabel}>Prior CA Experience</span>
+											<span className={s.detailLabel}>Branch</span>
+											<span className={s.detailText}>{profile?.branch || 'Not provided'}</span>
+										</div>
+									</div>
+
+									<div className={s.detailRow}>
+										<div className={s.detailIcon}>
+											<FiCalendar size={16} />
+										</div>
+										<div className={s.detailContent}>
+											<span className={s.detailLabel}>Year & Semester</span>
 											<span className={s.detailText}>
-												{profile?.experience ? 'Experienced CA' : 'First-time CA'}
+												{profile?.year ? `Year ${profile.year}` : 'Year N/A'} ·{' '}
+												{profile?.semester ? `Semester ${profile.semester}` : 'Semester N/A'}
 											</span>
 										</div>
 									</div>
@@ -865,41 +795,6 @@ export default function ProfilePage() {
 									</button>
 								</div>
 
-								{/* Avatar Upload in Edit Mode */}
-								<div className={s.avatarEditSection}>
-									<div
-										className={s.detailsAvatarWrapper}
-										onClick={() => fileInputRef.current?.click()}
-										title='Hover and click to upload or change photo'
-									>
-										<div className={s.detailsAvatar}>
-											{editFormData.avatarUrl ? (
-												<img src={editFormData.avatarUrl} alt='Preview' className={s.avatarImg} />
-											) : (
-												<FiUser size={34} strokeWidth={1.5} />
-											)}
-										</div>
-										<div className={s.avatarUploadOverlay}>
-											<FiCamera size={15} />
-											<span>Upload</span>
-										</div>
-									</div>
-
-									<div className={s.avatarEditInfo}>
-										<p className={s.avatarInstruction}></p>
-										{editFormData.avatarUrl && (
-											<button
-												type='button'
-												className={s.removePhotoBtn}
-												onClick={handleRemoveImage}
-											>
-												<FiTrash2 size={12} />
-												<span>Remove photo</span>
-											</button>
-										)}
-									</div>
-								</div>
-
 								{/* Form Fields */}
 								<form className={s.editForm} onSubmit={handleSaveProfile}>
 									<div className={s.formGrid}>
@@ -916,7 +811,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>WhatsApp / Phone</label>
+											<label className={s.formLabel}>WhatsApp / Phone *</label>
 											<input
 												type='tel'
 												className={s.formInput}
@@ -924,17 +819,20 @@ export default function ProfilePage() {
 												onChange={(e) =>
 													setEditFormData({ ...editFormData, phone: e.target.value })
 												}
-												placeholder='+91 98765 43210'
+												placeholder='10-digit number'
+												required
 											/>
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Year of Study</label>
+											<label className={s.formLabel}>Year of Study *</label>
 											<select
 												className={s.formSelect}
 												value={editFormData.year}
 												onChange={(e) => setEditFormData({ ...editFormData, year: e.target.value })}
+												required
 											>
+												<option value=''>Choose year</option>
 												<option value='1'>Year 1</option>
 												<option value='2'>Year 2</option>
 												<option value='3'>Year 3</option>
@@ -944,7 +842,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
-											<label className={s.formLabel}>Institute / College</label>
+											<label className={s.formLabel}>Institute / College *</label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -953,11 +851,12 @@ export default function ProfilePage() {
 													setEditFormData({ ...editFormData, college: e.target.value })
 												}
 												placeholder='e.g. NIT Calicut'
+												required
 											/>
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Branch / Department</label>
+											<label className={s.formLabel}>Branch / Department *</label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -966,24 +865,52 @@ export default function ProfilePage() {
 													setEditFormData({ ...editFormData, branch: e.target.value })
 												}
 												placeholder='e.g. Computer Science'
+												required
 											/>
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Prior CA Experience</label>
-											<select
-												className={s.formSelect}
-												value={editFormData.experience ? 'true' : 'false'}
+											<label className={s.formLabel}>Semester *</label>
+											<input
+												type='number'
+												className={s.formInput}
+												value={editFormData.semester}
 												onChange={(e) =>
-													setEditFormData({
-														...editFormData,
-														experience: e.target.value === 'true',
-													})
+													setEditFormData({ ...editFormData, semester: e.target.value })
 												}
-											>
-												<option value='false'>No (First time)</option>
-												<option value='true'>Yes (Experienced)</option>
-											</select>
+												placeholder='1–8'
+												min='1'
+												max='8'
+												required
+											/>
+										</div>
+
+										<div className={s.formGroup}>
+											<label className={s.formLabel}>District *</label>
+											<input
+												type='text'
+												className={s.formInput}
+												value={editFormData.district}
+												onChange={(e) =>
+													setEditFormData({ ...editFormData, district: e.target.value })
+												}
+												placeholder='e.g. Kozhikode'
+												required
+											/>
+										</div>
+
+										<div className={s.formGroup}>
+											<label className={s.formLabel}>State *</label>
+											<input
+												type='text'
+												className={s.formInput}
+												value={editFormData.state}
+												onChange={(e) =>
+													setEditFormData({ ...editFormData, state: e.target.value })
+												}
+												placeholder='e.g. Kerala'
+												required
+											/>
 										</div>
 									</div>
 

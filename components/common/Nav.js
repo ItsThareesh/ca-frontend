@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import Link from 'next/link'
 import { BiMenu } from 'react-icons/bi'
+import { FiUser } from 'react-icons/fi'
 import { useUserContext } from 'context/UserContext'
 import Menu from 'components/common/Menu'
 import styles from './nav.module.css'
@@ -52,10 +53,9 @@ export default function Nav() {
 							</div>
 						) : (
 							<div className={styles['sign-out-desktop']} onClick={handleSignInOrDashboard}>
-								<div
-									className={styles.avatar}
-									style={{ backgroundImage: `url(${user?.imageUrl})` }}
-								/>
+								<div className={styles.avatar}>
+									<FiUser size={18} />
+								</div>
 							</div>
 						)}
 					</li>
