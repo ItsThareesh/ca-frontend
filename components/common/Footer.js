@@ -5,9 +5,9 @@ import { HiOutlineExternalLink } from 'react-icons/hi'
 
 import styles from './footer.module.css'
 
-export default function Footer() {
+export default function Footer({ className = '' }) {
 	return (
-		<footer className={styles['footer']}>
+		<footer className={`${styles['footer']} ${className}`}>
 			<div className='container'>
 				<div className={styles['footer-top']}>
 					<Link href='/'>
