@@ -344,8 +344,7 @@
    INFO PANEL  — "How points are earned"
    ═══════════════════════════════════════ */
 .benefits-v2__info-panel {
-	max-width: 520px;
-	margin: 0 auto;
+	width: 100%;
 	background: var(--bv2-card-bg);
 	border: 1.5px solid var(--bv2-card-border);
 	border-radius: 0;
@@ -404,7 +403,7 @@
    ═══════════════════════════════════════ */
 .benefits-v2__columns {
 	display: grid;
-	grid-template-columns: 1fr 380px;
+	grid-template-columns: 1fr 1fr;
 	gap: 2rem;
 	position: relative;
 	z-index: 1;
@@ -418,6 +417,18 @@
 .benefits-v2__col-right {
 	display: flex;
 	flex-direction: column;
+}
+
+/* Desktop only: Referral Rewards on the left, "How points are earned" on the
+   right. At 1100px and below the columns stack in source order (points first). */
+@media (min-width: 1101px) {
+	.benefits-v2__col-right {
+		order: -1;
+	}
+	/* vertically centre the points panel against the taller Referral Rewards panel */
+	.benefits-v2__col-left {
+		justify-content: center;
+	}
 }
 
 /* Add entrance animation for columns */
