@@ -1,88 +1,48 @@
+/* Layout, card and button styles come from styles/login.module.css —
+   this file only adapts the sign-in card to hold the profile form. */
+
 .register-form {
-	margin: 0 auto;
-	background: var(--card-bg);
-	width: 100%;
-	max-width: 480px;
-	border-radius: 0.75rem;
-	padding: 3.5rem;
-}
-
-.register-form-avatar-wrapper {
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-direction: column;
-	gap: 1.5rem;
-	margin-bottom: 1.5rem;
-}
-
-.register-form-email-wrapper {
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	gap: 0.25rem;
+	width: min(480px, 90vw);
 }
 
 .register-form-email {
-	width: 100%;
-	text-align: center;
 	overflow: hidden;
 	text-overflow: ellipsis;
-	color: rgba(255, 255, 255, 0.6);
+	white-space: nowrap;
 }
 
-.register-form-email-tag {
-	font-weight: 600;
+.register-form fieldset {
+	margin: 0 0 1.25rem 0;
+	padding: 0;
 }
 
-.register-form-avatar {
-	width: 100px;
-	height: 100px;
-	background-size: cover;
-	background-position: center;
-	background-repeat: no-repeat;
-	background-color: rgba(255, 255, 255, 0.1);
-	outline: 0.4rem solid rgba(255, 255, 255, 0.8);
-	border-radius: 50%;
-	margin: 0 auto;
+.register-form input[type='text'],
+.register-form select {
+	border: 1px solid rgba(212, 175, 55, 0.15);
+	border-radius: 0;
+	background-color: #0a0a0a;
+	transition: border-color 0.2s ease;
 }
 
-.register-form-submit {
-	margin-top: 0.5rem;
+.register-form input[type='text']:hover,
+.register-form select:hover {
+	border-color: rgba(212, 175, 55, 0.35);
 }
 
-.register-form-google-btn {
-	width: 100%;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	gap: 10px;
-	padding: 12px;
-	background: #ffffff;
-	color: #1a1a1a;
-	border: none;
-	border-radius: 8px;
-	font-size: 15px;
-	font-weight: 600;
-	cursor: pointer;
-	transition: all 0.2s;
+.register-form input[type='text']:focus,
+.register-form select:focus {
+	border-color: rgba(212, 175, 55, 0.6);
+	outline: none;
 }
 
-.register-form-google-btn:hover {
-	background: #f1f1f1;
-	transform: translateY(-1px);
+.register-form .register-form-submit {
+	margin-top: 1.5rem;
 }
 
-@media (max-width: 768px) {
-}
-
-@media (max-width: 500px) {
-	.register-form {
-		padding: 1.5rem;
-	}
-	.register-form-avatar {
-		width: 80px;
-		height: 80px;
-		margin: 1rem 0;
-	}
+.register-form .register-form-submit:disabled {
+	opacity: 0.6;
+	cursor: not-allowed;
+	transform: none;
+	background: #0a0a0a;
+	border-color: rgba(212, 175, 55, 0.35);
 }

@@ -97,13 +97,15 @@ export default function MyApp({ Component, pageProps }) {
 			<UserContextWrapper>
 				<Nav />
 
-				{router?.pathname?.includes('/dashboard') ? (
-					<DashboardLayout>
+				<main className='page-content'>
+					{router?.pathname?.includes('/dashboard') ? (
+						<DashboardLayout>
+							<Component {...pageProps} />
+						</DashboardLayout>
+					) : (
 						<Component {...pageProps} />
-					</DashboardLayout>
-				) : (
-					<Component {...pageProps} />
-				)}
+					)}
+				</main>
 				<Footer />
 			</UserContextWrapper>
 			<ToastContainer />

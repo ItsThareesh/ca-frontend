@@ -99,19 +99,19 @@
 .hero-cta-wrapper {
 	display: flex;
 	align-items: center;
+	gap: 0.75rem;
 }
 
 .hero-cta-wrapper button {
 	font-family: 'Clash Display', sans-serif;
 	font-weight: 500;
 	font-size: 1.25rem;
-	margin-right: 0.75rem;
-	/* animation: de-wobble 5s both; */
+	/* Same box for both buttons — .btn-outline otherwise adds a border and extra
+	   bottom padding that .btn-primary doesn't have, so they render different sizes */
+	padding: 1rem 1.5rem;
+	border: 1px solid transparent;
 }
-
-.hero-cta-wrapper button:last-child {
-	margin-right: 0;
-	animation: none;
+.hero-cta-wrapper .btn-outline {
 	border-color: #fff;
 }
 
@@ -147,136 +147,18 @@
 	color: rgba(255, 255, 255, 0.5);
 }
 
-@media (max-width: 1024px) {
-	.hero-text {
-		margin: 0;
-	}
-
-	.deadline-timer {
-		padding: 10px 20px;
-	}
-
-	.hero::before {
-		background-image: url('/images/hero-desktop.png');
-		background-size: 500px auto;
-		background-position: right center;
-	}
-
-	.hero-heading {
-		font-size: 4rem;
-	}
-}
-
-@media (max-width: 768px) {
-	.hero::before {
-		background-image: none;
-	}
-
-	.hero-text {
-		margin-left: 2.5rem;
-	}
-}
-
-@media (max-width: 550px) {
-	.hero::before {
-		background-image: url('/images/hero-desktop.png');
-		background-size: 100% auto;
-		background-position: center 100px;
-		/* was 50px — pushes image further down */
-		-webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 60%);
-		mask-image: linear-gradient(to bottom, #000 0%, #000 30%, transparent 60%);
-	}
-
-	.hero {
-		justify-content: flex-end;
-		line-height: 4;
-		padding-bottom: 12vh;
-		/* increased from 8vh — pushes text further up */
-	}
-
-	.hero-text container {
-		line-height: 3;
-	}
-
-	.hero-tagline {
-		font-size: 1.1rem;
-		margin: 0.5rem 0 0.75rem 0;
-	}
-
-	.hero-heading {
-		font-size: 2.75rem;
-	}
-
-	.hero-sponsors-wrapper,
-	.hero-stats {
-		display: none;
-	}
-
-	.deadline-timer {
-		padding: 3px 6px;
-	}
-
-	.hero-arrow {
-		display: inline-block;
-		width: 40px;
-		margin: 0 auto;
-		margin-bottom: 0 rem;
-	}
-}
-
-@media (max-width: 380px) {
-	.hero-text {
-		margin-bottom: 2rem;
-		/* reduced from 3.75rem so text sits higher on small phones */
-	}
-}
-
-.deadline-timer {
-	margin: 24px 0;
-	border-radius: 8px;
-	background: rgba(255, 255, 255, 0.05);
-	border: 1px solid rgba(255, 255, 255, 0.1);
-	color: #fff;
-	font-size: 1rem;
-	text-align: center;
-	font-weight: 500;
-	transition: all 0.3s ease;
-	cursor: pointer;
-
-	width: fit-content;
-	max-width: 100%;
-	text-align: left;
-	margin-left: 0;
-}
-
-.deadline-timer:hover {
-	background: #ffffff;
-	border-color: #ffffff;
-	color: #000000;
-}
-
-.deadline-timer:hover span,
-.deadline-timer:hover strong {
-	color: #000000;
-}
-
-.deadline-timer strong {
-	color: #a855f7;
-	font-weight: 700;
-	letter-spacing: 1px;
-	font-size: 1.1rem;
-	transition: color 0.3s ease;
-}
-
 /* ================================================== */
 /* VACANCY BANNER SECTION */
 /* ================================================== */
 .vacancy-banner-container {
 	position: absolute;
-	bottom: 100px;
-	left: 50%;
-	transform: translateX(-50%);
+	bottom: 80px;
+	left: 0;
+	right: 0;
+	display: flex;
+	justify-content: center;
 	z-index: 10;
+	pointer-events: none;
 	/* entrance animation */
 	animation: bannerEntrance 1.2s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
 	opacity: 0;
@@ -288,13 +170,14 @@
 }
 
 .vacancy-banner {
-	width: clamp(320px, 35vw, 280px);
+	width: 320px;
 	aspect-ratio: 1192 / 450;
 	background: url('/newbg.png') center/contain no-repeat;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
 	justify-content: center;
+	pointer-events: auto;
 	/* floating animation after entrance */
 	animation: bannerFloat 4s ease-in-out infinite;
 	transition: transform 0.3s ease;
@@ -338,17 +221,16 @@
 @keyframes bannerEntrance {
 	0% {
 		opacity: 0;
-		transform: translateX(-50%) translateY(40px) scale(0.85);
+		transform: translateY(40px) scale(0.85);
 	}
 
 	100% {
 		opacity: 1;
-		transform: translateX(-50%) translateY(0) scale(1);
+		transform: translateY(0) scale(1);
 	}
 }
 
 @keyframes bannerFloat {
-
 	0%,
 	100% {
 		transform: translateY(0) scale(1);
@@ -359,13 +241,132 @@
 	}
 }
 
+/* ================================================== */
+/* RESPONSIVE — kept after the base rules so they actually override them */
+/* ================================================== */
+@media (max-width: 1024px) {
+	.hero-text {
+		margin: 0;
+	}
+	.hero::before {
+		background-image: url('/images/hero-desktop.png');
+		background-size: 500px auto;
+		background-position: right center;
+	}
+	.hero-heading {
+		font-size: 4rem;
+	}
+}
+
+@media (max-width: 768px) {
+	.hero::before {
+		background-image: none;
+	}
+	.hero-text {
+		margin-left: 2.5rem;
+	}
+}
+
 @media (max-width: 550px) {
+	.hero::before {
+		background-image: url('/images/hero-desktop.png');
+		background-size: 100% auto;
+		background-position: center 100px;
+		/* fade the image out before it gets under the heading */
+		-webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 25%, transparent 50%);
+		mask-image: linear-gradient(to bottom, #000 0%, #000 25%, transparent 50%);
+	}
+	/* Size to the content and to the *visible* viewport (svh excludes the mobile
+	   browser toolbars), instead of a fixed 768px-tall 100vh box whose bottom
+	   ends up hidden behind the toolbar on most phones */
+	.hero {
+		height: auto;
+		min-height: 100vh;
+		min-height: 100svh;
+		max-height: none;
+		justify-content: flex-end;
+		padding-bottom: 1.5rem;
+	}
+	.hero > .spacerv-lg {
+		height: 1.5rem;
+	}
+	/* clears the fixed nav when the content is taller than the screen */
+	.hero > .spacerv-lg:first-child {
+		height: 5rem;
+	}
+	.hero .hero-text {
+		width: 100%;
+		margin: 0;
+		padding: 0 1.5rem;
+	}
+	.hero-heading {
+		font-size: 2.75rem;
+		text-shadow: 0 2px 16px rgba(0, 0, 0, 0.9);
+	}
+	.hero-tagline {
+		font-size: 1.1rem;
+		margin: 0.5rem 0 0.75rem 0;
+	}
+	.deadline-timer {
+		margin: 0.75rem 0 1.25rem;
+		padding: 8px 12px;
+		font-size: 0.875rem;
+	}
+	.deadline-timer strong {
+		font-size: 0.95rem;
+	}
+	/* Equal-width buttons sharing the row. A grid rather than flex: 1 1 0 — with
+	   flex, the bare <button> keeps its padding as a minimum basis but the <a>
+	   wrapping Explore has none, so the two ended up 34px apart */
+	.hero-cta-wrapper {
+		display: grid;
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+	.hero-cta-wrapper button {
+		width: 100%;
+		font-size: 1.1rem;
+		padding: 0.9rem 1rem;
+	}
+	.hero-stats {
+		justify-content: space-between;
+		margin-top: 2rem;
+	}
+	.stat-wrapper {
+		margin-right: 0;
+	}
+	.stat-num {
+		font-size: 1.75rem;
+	}
+	.stat-wrapper p {
+		font-size: 0.85rem;
+	}
+	.hero-sponsors-wrapper {
+		display: none;
+	}
+	/* in the normal flow on phones so it can't overlap the text or the arrow */
 	.vacancy-banner-container {
-		bottom: 35px;
-		/* Shifted up from 15px */
+		position: relative;
+		bottom: auto;
 	}
 
 	.vacancy-banner {
 		width: clamp(200px, 60vw, 240px);
+	}
+	.hero-arrow {
+		display: block;
+		width: 40px;
+		margin: 1rem auto 0;
+	}
+}
+
+@media (max-width: 380px) {
+	.hero-heading {
+		font-size: 2.4rem;
+	}
+	.hero .hero-text {
+		padding: 0 1rem;
+	}
+	.hero-cta-wrapper button {
+		font-size: 1rem;
 	}
 }

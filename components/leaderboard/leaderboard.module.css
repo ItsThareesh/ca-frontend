@@ -23,6 +23,16 @@
 	width: 100% !important;
 }
 
+/* _app wraps every page in <main class="page-content">. Let it fill the space
+   between the nav and the footer and shrink like a flex child, so
+   .leaderboard-page-wrapper (flex: 1 1 0) still fills the locked viewport. */
+:global(body.leaderboard-page .page-content) {
+	flex: 1 1 0;
+	min-height: 0;
+	display: flex;
+	flex-direction: column;
+}
+
 /* Neutralize rogue global styles on leaderboard page */
 :global(body.leaderboard-page .flex) {
 	margin-left: 0 !important;
@@ -98,9 +108,7 @@
 	backdrop-filter: blur(16px);
 	-webkit-backdrop-filter: blur(16px);
 	border: 1px solid rgba(230, 191, 64, 0.22);
-	border-radius: 0.875rem;
-	box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.7),
-		0 0 24px -6px rgba(230, 191, 64, 0.18);
+	box-shadow: 0 8px 32px -4px rgba(0, 0, 0, 0.7), 0 0 24px -6px rgba(230, 191, 64, 0.18);
 	display: flex;
 	flex-direction: column;
 	overflow: hidden;

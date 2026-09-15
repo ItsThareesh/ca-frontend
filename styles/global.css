@@ -19,6 +19,20 @@ body.leaderboard-page {
 	background-image: none;
 }
 
+/* Sticky footer: the app root is at least one screen tall and the page area
+   between the nav and the footer grows to fill it, so the footer sits at the
+   bottom of short pages and simply follows the content on long ones. */
+#__next {
+	display: flex;
+	flex-direction: column;
+	min-height: 100vh;
+	min-height: 100dvh;
+}
+
+.page-content {
+	flex: 1 0 auto;
+}
+
 .container {
 	width: 100%;
 	padding: 0 4rem;

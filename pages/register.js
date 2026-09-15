@@ -1,17 +1,18 @@
+import { useEffect } from 'react'
 import { useRouter } from 'next/router'
-import PageHeader from 'components/common/PageHeader'
 import RegisterForm from 'components/register/RegisterForm'
+import styles from '../styles/login.module.css'
 
 export default function Register() {
 	const router = useRouter()
 
-	return (
-		<>
-			<PageHeader
-				title={router?.query?.editprofile === 'true' ? 'Edit profile' : 'Register'}
-				icon='/images/pen.png'
-			/>
-			<RegisterForm editProfile={router?.query?.editprofile === 'true'} />
-		</>
-	)
+	useEffect(() => {
+		const nextRoot = document.getElementById('__next')
+		nextRoot?.classList.add(styles.loginPage)
+		return () => {
+			nextRoot?.classList.remove(styles.loginPage)
+		}
+	}, [])
+
+	return <RegisterForm editProfile={router?.query?.editprofile === 'true'} />
 }
