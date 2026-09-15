@@ -5,6 +5,7 @@ import { FcGoogle } from 'react-icons/fc'
 import { completeProfile } from 'lib/req/register'
 import { useUserContext } from 'context/UserContext'
 
+import authStyles from 'styles/login.module.css'
 import styles from './register-form.module.css'
 
 export default function RegisterForm({ editProfile }) {
@@ -53,45 +54,48 @@ export default function RegisterForm({ editProfile }) {
 		}
 	}
 
-	// Still restoring a possibly-existing session — avoid flashing the wrong state
-	if (authLoading) return null
+	// Still restoring a possibly-existing session — avoid flashing the wrong state.
+	// Render the empty container so the footer stays pinned to the bottom.
+	if (authLoading) return <div className={authStyles.container} />
 
 	// Guest with no Google session yet — this is the "sign up" entry point itself
 	if (!isLoggedIn) {
 		return (
-			<div className='container'>
-				<div className={styles['register-form']}>
-					<div className={styles['register-form-avatar-wrapper']}>
-						<div className={styles['register-form-email-wrapper']}>
-							<span className={styles['register-form-email']}>
-								Sign up with your Google account to get started as a Campus Ambassador.
-							</span>
-						</div>
+			<div className={authStyles.container}>
+				<div className={authStyles.loginBox}>
+					<div className={authStyles.logoSection}>
+						<h1 className={authStyles.title}>Create your account</h1>
+						<p className={authStyles.subtitle}>
+							Sign up with Google to get started as a Campus Ambassador
+						</p>
 					</div>
 
-					<button
-						type='button'
-						className={styles['register-form-google-btn']}
-						onClick={loginWithGoogle}
-					>
+					<button type='button' className={authStyles.googleButton} onClick={loginWithGoogle}>
 						<FcGoogle size={20} />
 						Sign up with Google
 					</button>
+
+					<p className={authStyles.disclaimer}>
+						By continuing, you agree to Tathva&apos;s terms and privacy policy.
+					</p>
 				</div>
 			</div>
 		)
 	}
 
 	// Authenticated, profile not hydrated from context yet
-	if (!form) return null
+	if (!form) return <div className={authStyles.container} />
 
 	return (
-		<div className='container'>
-			<form className={styles['register-form']} onSubmit={handleSubmit}>
-				<div className={styles['register-form-avatar-wrapper']}>
-					<div className={styles['register-form-email-wrapper']}>
-						<span className={styles['register-form-email']}>{user?.email}</span>
-					</div>
+		<div className={authStyles.container}>
+			<form className={`${authStyles.loginBox} ${styles['register-form']}`} onSubmit={handleSubmit}>
+				<div className={authStyles.logoSection}>
+					<h1 className={authStyles.title}>
+						{editProfile ? 'Edit profile' : 'Complete your profile'}
+					</h1>
+					<p className={`${authStyles.subtitle} ${styles['register-form-email']}`}>
+						{user?.email}
+					</p>
 				</div>
 
 				<fieldset>
@@ -166,14 +170,13 @@ export default function RegisterForm({ editProfile }) {
 				</fieldset>
 
 				<button
-					className={`btn-secondary ${styles['register-form-submit']}`}
+					type='submit'
+					className={`${authStyles.googleButton} ${styles['register-form-submit']}`}
 					disabled={submitting}
 				>
 					{submitting ? 'Saving...' : editProfile ? 'Save' : 'Complete Sign Up'}
 				</button>
 			</form>
-			<div className='spacerv-md'></div>
-			<div className='spacerv-sm'></div>
 		</div>
 	)
 }

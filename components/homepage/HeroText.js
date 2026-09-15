@@ -2,11 +2,14 @@ import { useUserContext } from 'context/UserContext'
 import { useRouter } from 'next/router'
 import CountUp from 'react-countup'
 import { useEffect, useState } from 'react'
+import { REGISTRATION_END } from 'lib/registration'
 
 const HeroText = () => {
 	const router = useRouter()
 	const { isLoggedIn } = useUserContext()
-	const [timeLeft, setTimeLeft] = useState(0)
+	// null until the first client-side tick, so the server render and the
+	// first client render match and we don't flash "closed" on load
+	const [timeLeft, setTimeLeft] = useState(null)
 	const [displayedTagline, setDisplayedTagline] = useState('')
 	const fullTagline = 'Be the emissary of Tathva 2026'
 
@@ -44,14 +47,10 @@ const HeroText = () => {
 	}, [])
 
 	useEffect(() => {
-		// Set the target date to the end of today (Oct 4, 2025, 23:59:59)
-		const targetDate = new Date('2025-10-05T19:30:59')
+		const update = () => setTimeLeft(Math.max(0, REGISTRATION_END.getTime() - Date.now()))
 
-		const interval = setInterval(() => {
-			const now = new Date()
-			const difference = targetDate.getTime() - now.getTime()
-			setTimeLeft(difference > 0 ? difference : 0)
-		}, 1000)
+		update()
+		const interval = setInterval(update, 1000)
 
 		// Cleanup interval on component unmount
 		return () => clearInterval(interval)
@@ -59,12 +58,12 @@ const HeroText = () => {
 
 	const formatTime = (ms) => {
 		const totalSeconds = Math.floor(ms / 1000)
-		const hours = String(Math.floor(totalSeconds / 3600)).padStart(2, '0')
+		const days = Math.floor(totalSeconds / 86400)
+		const hours = String(Math.floor((totalSeconds % 86400) / 3600)).padStart(2, '0')
 		const minutes = String(Math.floor((totalSeconds % 3600) / 60)).padStart(2, '0')
 		const seconds = String(totalSeconds % 60).padStart(2, '0')
-		return `${hours}:${minutes}:${seconds}`
+		return days > 0 ? `${days}d ${hours}:${minutes}:${seconds}` : `${hours}:${minutes}:${seconds}`
 	}
-	// --- END: Added logic for registration deadline countdown ---
 
 	const handleSignUp = () => {
 		if (isLoggedIn) {
@@ -85,20 +84,7 @@ const HeroText = () => {
 				<span className='typewriter-cursor'>|</span>
 			</p>
 
-			{/* --- START: New countdown element --- */}
-			<div className='deadline-timer'>
-				{timeLeft > 0 ? (
-					<>
-						🔥 Registrations close in: <strong>{formatTime(timeLeft)}</strong>
-					</>
-				) : (
-					<span>Registrations are now closed.</span>
-				)}
-			</div>
-			{/* --- END: New countdown element --- */}
-
 			<div className='hero-cta-wrapper'>
-				{/* Conditionally disable button if registrations are closed */}
 				<button onClick={handleSignUp} className='btn-primary'>
 					{isLoggedIn ? 'Go to Dashboard' : 'Sign up'}
 				</button>

@@ -56,9 +56,10 @@ export default function UserContextWrapper({ children }) {
 				branch: data?.branch || '',
 				year: data?.year || '',
 				experience: data?.experience || false,
-				refCode: data?.refCode || data?.ref_code || '',
+				refCode: data?.referralCode || data?.ref_code || '',
 				totalPoints: data?.totalPoints || data?.total_points || 0,
-				imageUrl: data?.avatarUrl || data?.imageUrl || getGlyphsAvatarUrl(data?.name || 'Hamood Habibi'),
+				imageUrl:
+					data?.avatarUrl || data?.imageUrl || getGlyphsAvatarUrl(data?.name || 'Hamood Habibi'),
 			}
 
 			setUser(currentUser)
