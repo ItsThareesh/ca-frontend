@@ -343,7 +343,7 @@ export default function ProfilePage() {
 	}
 
 	/* derived */
-	const refCode = profile?.ref_code || profile?.refCode || ''
+	const refCode = profile?.referralCode || profile?.ref_code || ''
 	const totalPoints = USE_MOCK ? mockPoints : profile?.total_points || profile?.totalPoints || 0
 	const activeReferrals = useMemo(() => {
 		return USE_MOCK ? generateMockReferrals(mockReferralCount) : referrals
@@ -502,8 +502,14 @@ export default function ProfilePage() {
 			setIsEditing(false)
 			toast.success('CA details updated successfully!')
 		} catch (err) {
-			console.error('Failed to update profile:', err.response?.status, err.response?.data || err.message)
-			toast.error(err.response?.data?.message || err.response?.data?.error || 'Failed to update CA details')
+			console.error(
+				'Failed to update profile:',
+				err.response?.status,
+				err.response?.data || err.message
+			)
+			toast.error(
+				err.response?.data?.message || err.response?.data?.error || 'Failed to update CA details'
+			)
 		} finally {
 			setSaving(false)
 		}
@@ -575,7 +581,6 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.detailsInfo}>
-											<p className={s.detailsCaId}>CA ID · {profile?.tathvaId || '—'}</p>
 											<h2 className={s.detailsName}>{profile?.name || 'Campus Ambassador'}</h2>
 											{/* Icon Badges — Leaderboard & Top 20 */}
 											{(isInLeaderboard || isInTop20) && (

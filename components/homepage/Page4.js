@@ -79,7 +79,7 @@ export default function Page4() {
 					</p>
 
 					<aside
-						className='preference-card rounded-2xl p-5 sm:p-6 mt-2 transition-all duration-300 hover:border-gold-400/60 cursor-pointer'
+						className='preference-card rounded-2xl p-5 sm:p-6 mt-2 '
 						data-purpose='preference-callout'
 					>
 						<div className='flex items-center gap-4 sm:gap-5'>

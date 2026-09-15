@@ -235,15 +235,17 @@ export default function UserContextWrapper({ children }) {
 	}, [router.isReady, router.query.token])
 
 	// Logout user
-	function logout() {
+	async function logout() {
+		localStorage.removeItem('access_token')
+		localStorage.removeItem('refresh_token')
+		// Leave the page before clearing the user — otherwise guarded pages like
+		// /profile see user = null first and redirect to /login instead of home.
+		await router.push('/')
 		setUser(null)
 		setIsLoggedIn(false)
 		setAccessToken(null)
 		setRefreshToken(null)
-		localStorage.removeItem('access_token')
-		localStorage.removeItem('refresh_token')
 		toast.success('Signed out successfully')
-		router.push('/')
 	}
 
 	// Get current user (async)

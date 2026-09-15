@@ -395,96 +395,14 @@ export default function Benefits() {
 			{/* ── Header ── */}
 			<div className='benefits-v2__header'>
 				<div className='benefits-v2__header-left'>
-					<h2 className='benefits-v2__title'>
-						Benefits
-						<span className='benefits-v2__title-dash'>&mdash;</span>
-						<span className='benefits-v2__title-sub'>Prizes worth ₹25,000</span>
-					</h2>
-				</div>
-				<div className='benefits-v2__preference-card'>
-					<div className='benefits-v2__preference-icon'>
-						<svg
-							width='28'
-							height='28'
-							viewBox='0 0 24 24'
-							fill='none'
-							stroke='currentColor'
-							strokeWidth='1.4'
-							strokeLinecap='round'
-							strokeLinejoin='round'
-						>
-							<path d='M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2' />
-							<circle cx='9' cy='7' r='4' />
-							<path d='M22 21v-2a4 4 0 0 0-3-3.87' />
-							<path d='M16 3.13a4 4 0 0 1 0 7.75' />
-						</svg>
-					</div>
-					<div className='benefits-v2__preference-divider' />
-					<p className='benefits-v2__preference-text'>
-						A Minimum of 299 points needed to be eligible for rewards.
-					</p>
+					<h2 className='benefits-v2__title'>Benefits</h2>
 				</div>
 			</div>
 
-			{/* ── Two-Column Layout: Prizes + Referral Rewards ── */}
+			{/* ── Two-Column Layout: Points + Referral Rewards ── */}
 			<div className='benefits-v2__columns'>
-				{/* ── LEFT: Prize Content ── */}
+				{/* ── LEFT: How Points Are Earned ── */}
 				<div className='benefits-v2__col-left'>
-					{/* Podium Row */}
-					<div className='benefits-v2__podium'>
-						{/* 2nd Place */}
-						<div className='benefits-v2__card benefits-v2__card--silver benefits-v2__card--side'>
-							<div className='benefits-v2__card-rank'>2nd</div>
-							<div className='benefits-v2__trophy-3d benefits-v2__trophy-3d--silver'>
-								<SilverTrophy size={64} className='benefits-v2__card-icon' />
-							</div>
-							<div className='benefits-v2__card-amount'>₹5,000</div>
-							<div className='benefits-v2__card-label'>Runner Up</div>
-						</div>
-
-						{/* 1st Place (center, largest) */}
-						<div className='benefits-v2__card benefits-v2__card--gold benefits-v2__card--center mb-5'>
-							<div className='benefits-v2__card-rank'>1st</div>
-							<div className='benefits-v2__trophy-3d benefits-v2__trophy-3d--gold'>
-								<GoldTrophy size={80} className='benefits-v2__card-icon' />
-							</div>
-							<div className='benefits-v2__card-amount'>₹10,000</div>
-							<div className='benefits-v2__card-label'>Grand Champion</div>
-						</div>
-
-						{/* 3rd Place */}
-						<div className='benefits-v2__card benefits-v2__card--bronze benefits-v2__card--side'>
-							<div className='benefits-v2__card-rank'>3rd</div>
-							<div className='benefits-v2__trophy-3d benefits-v2__trophy-3d--bronze'>
-								<BronzeTrophy size={64} className='benefits-v2__card-icon' />
-							</div>
-							<div className='benefits-v2__card-amount'>₹3,000</div>
-							<div className='benefits-v2__card-label'>Second Runner Up</div>
-						</div>
-					</div>
-
-					{/* Lower Tier Prizes */}
-					<div className='benefits-v2__lower'>
-						<div className='benefits-v2__lower-card'>
-							<div className='benefits-v2__lower-icon-wrap'>
-								<GiftIcon size={22} className='benefits-v2__lower-icon' />
-							</div>
-							<div>
-								<div className='benefits-v2__lower-range'>4th &ndash; 10th</div>
-								<div className='benefits-v2__lower-prize'>₹1,000 + Goodies</div>
-							</div>
-						</div>
-						<div className='benefits-v2__lower-card'>
-							<div className='benefits-v2__lower-icon-wrap'>
-								<GiftIcon size={22} className='benefits-v2__lower-icon' />
-							</div>
-							<div>
-								<div className='benefits-v2__lower-range'>11th &ndash; 15th</div>
-								<div className='benefits-v2__lower-prize'>Goodies &amp; Gifts</div>
-							</div>
-						</div>
-					</div>
-
 					{/* How Points Are Earned Panel */}
 					<div className='benefits-v2__info-panel'>
 						<h3 className='benefits-v2__info-title'>How points are earned</h3>
