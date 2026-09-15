@@ -192,7 +192,7 @@ export default function RegisterForm({ editProfile }) {
 						value={form.semester}
 						onChange={handleChange}
 						min='1'
-						max='10'
+						max='8'
 						required
 					/>
 				</fieldset>
