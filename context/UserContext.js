@@ -55,6 +55,8 @@ export default function UserContextWrapper({ children }) {
 				college: data?.college || '',
 				branch: data?.branch || '',
 				year: data?.year || '',
+				district: data?.district || '',
+				state: data?.state || '',
 				experience: data?.experience || false,
 				refCode: data?.referralCode || data?.ref_code || '',
 				totalPoints: data?.totalPoints || data?.total_points || 0,
