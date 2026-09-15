@@ -1,74 +1,88 @@
-import { MdEmail } from 'react-icons/md'
+import { useState } from 'react'
+import { MdEmail, MdContentCopy, MdCheck } from 'react-icons/md'
 import styles from './contact-us.module.css'
 
 const contacts = [
-	{
-		name: 'Abu Muhammed',
-		phone: '+91 8848629668',
-	},
-	{
-		name: 'Adhil Biju',
-		phone: '+91 9037959025',
-	},
-	{
-		name: 'Adila Isha',
-		phone: '+91 9947492065',
-	},
-	{
-		name: 'Gowribala A Nair',
-		phone: '+91 9037765046',
-	},
+  { name: 'Abu Muhammed', phone: '+91 8848629668' },
+  { name: 'Adhil Biju', phone: '+91 9037959025' },
+  { name: 'Adila Isha', phone: '+91 9947492065' },
+  { name: 'Gowribala A Nair', phone: '+91 9037765046' },
 ]
 
 export default function ContactUs() {
-	return (
-		<section className='w-full py-1 sm:py-2 px-4 sm:px-6 relative z-10'>
-			<div className='max-w-4xl mx-auto'>
-				<div className={styles['contact-card']}>
-					<div className={styles['card-glow']} />
+  const [copiedId, setCopiedId] = useState(null)
 
-					<div className={styles['card-header']}>
-						<h2 className={styles['card-title']}>Contact Us</h2>
+  const handleCopy = (text, id) => {
+    navigator.clipboard.writeText(text)
+    setCopiedId(id)
+    // Reset the icon back to 'copy' after 2 seconds
+    setTimeout(() => setCopiedId(null), 2000)
+  }
 
-						<div className={styles['general-inquiry']}>
-							<span className={styles['inquiry-label']}>General Inquiries:</span>
+  return (
+    <section className='w-full py-8 px-4 sm:px-6 relative z-10'>
+      {/* Changed max-w-xl to max-w-3xl for a wider, better laptop view */}
+      <div className='max-w-3xl mx-auto'>
+        
+        <div className={styles.contactCard}>
+          <div className={styles.cardGlow} />
 
-							<a
-								href='mailto:ca@tathva.org'
-								className={styles['inquiry-email']}
-								title='Email general inquiries'
-							>
-								<MdEmail className='text-amber-400 text-lg' />
-								<span>ca@tathva.org</span>
-							</a>
-						</div>
-					</div>
+          {/* Header */}
+          <div className={styles.cardHeader}>
+            <h2 className={styles.cardTitle}>Contact Us</h2>
+            <div className={styles.generalInquiry}>
+              <span className={styles.inquiryLabel}>General Inquiries:</span>
+              
+              <div className={styles.contactAction}>
+                <a href='mailto:ca@tathva.org' className={styles.inquiryEmail}>
+                  <MdEmail className='text-amber-400 text-lg' />
+                  <span>ca@tathva.org</span>
+                </a>
+                <button
+                  onClick={() => handleCopy('ca@tathva.org', 'email')}
+                  className={`${styles.copyBtn} ${copiedId === 'email' ? styles.copied : ''}`}
+                  title='Copy email'
+                  aria-label='Copy email to clipboard'
+                >
+                  {copiedId === 'email' ? <MdCheck className="text-green-500" /> : <MdContentCopy />}
+                </button>
+              </div>
 
-					<div className={styles['accordion-list']}>
-						{contacts.map((contact) => {
-							const sanitizedPhone = contact.phone.replace(/\s+/g, '')
+            </div>
+          </div>
 
-							return (
-								<div key={contact.name} className={styles['accordion-item']}>
-									<div className={styles['accordion-trigger']}>
-										<div className={styles['trigger-left']}>
-											<h3 className={styles['contact-name']}>{contact.name}</h3>
-										</div>
+          {/* List of Contacts */}
+          <div className={styles.contactList}>
+            {contacts.map((contact, index) => (
+              <div key={contact.name} className={styles.contactItem}>
+                
+                <h3 className={styles.contactName}>
+                  {contact.name}
+                </h3>
 
-										<a
-											href={`tel:${sanitizedPhone}`}
-											className={styles['inquiry-email']}
-											title={`Call ${contact.name}`}
-										>
-											<span>{contact.phone}</span>
-										</a>
-									</div>
-								</div>
-							)
-						})}
-					</div>
-				</div>
-			</div>
-		</section>
-	)
+                <div className={styles.contactAction}>
+                  <a 
+                    href={`tel:${contact.phone.replace(/\s+/g, '')}`} 
+                    className={styles.contactPhone}
+                  >
+                    {contact.phone}
+                  </a>
+                  <button
+                    onClick={() => handleCopy(contact.phone, index)}
+                    className={`${styles.copyBtn} ${copiedId === index ? styles.copied : ''}`}
+                    title='Copy phone number'
+                    aria-label='Copy phone number to clipboard'
+                  >
+                    {copiedId === index ? <MdCheck className="text-green-500" /> : <MdContentCopy />}
+                  </button>
+                </div>
+
+              </div>
+            ))}
+          </div>
+
+        </div>
+      </div>
+    </section>
+  )
 }

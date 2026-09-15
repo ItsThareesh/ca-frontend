@@ -4,7 +4,39 @@ import SpaceBackground from 'components/common/SpaceBackground'
 import styles from 'components/leaderboard/leaderboard.module.css'
 import { FaCrown, FaMedal } from 'react-icons/fa'
 
-const MOCK_PARTICIPANTS = []
+const MOCK_PARTICIPANTS = [
+	{ rank: 1, name: 'Arjun Nair', points: 2450 },
+	{ rank: 2, name: 'Rahul Menon', points: 2180 },
+	{ rank: 3, name: 'Aditya Sharma', points: 1950 },
+	{ rank: 4, name: 'Rohan Kumar', points: 1820 },
+	{ rank: 5, name: 'Vishnu Prasad', points: 1740 },
+	{ rank: 6, name: 'Akhil Raj', points: 1650 },
+	{ rank: 7, name: 'Nikhil Das', points: 1580 },
+	{ rank: 8, name: 'Siddharth Singh', points: 1490 },
+	{ rank: 9, name: 'Karthik S', points: 1420 },
+	{ rank: 10, name: 'Abhinav Menon', points: 1360 },
+	{ rank: 11, name: 'Dev Sharma', points: 1290 },
+	{ rank: 12, name: 'Anand Krishnan', points: 1210 },
+	{ rank: 13, name: 'Varun R', points: 1150 },
+	{ rank: 14, name: 'Akshay Kumar', points: 1090 },
+	{ rank: 15, name: 'Neeraj P', points: 1030 },
+	{ rank: 16, name: 'Sanjay Nair', points: 970 },
+	{ rank: 17, name: 'Manu Thomas', points: 920 },
+	{ rank: 18, name: 'Vivek Raj', points: 870 },
+	{ rank: 19, name: 'Rishi Menon', points: 820 },
+	{ rank: 20, name: 'Ishan Gupta', points: 780 },
+	{ rank: 21, name: 'Aman Verma', points: 740 },
+	{ rank: 22, name: 'Joel Joseph', points: 710 },
+	{ rank: 23, name: 'Hari Krishnan', points: 690 },
+	{ rank: 24, name: 'Prashant Raj', points: 680 },
+	{ rank: 25, name: 'Vimal Das', points: 650 },
+	{ rank: 26, name: 'Sreehari M', points: 620 },
+	{ rank: 27, name: 'Yash Raj', points: 590 },
+	{ rank: 28, name: 'Rohit Sharma', points: 560 },
+	{ rank: 29, name: 'Amal Joseph', points: 530 },
+	{ rank: 30, name: 'Mohit Kumar', points: 500 },
+]
+
 
 const ITEMS_PER_PAGE = 10
 const TOTAL_PAGES = Math.ceil(MOCK_PARTICIPANTS.length / ITEMS_PER_PAGE)
