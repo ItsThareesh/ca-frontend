@@ -3,7 +3,6 @@ import { useContext, createContext } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
-import { getGlyphsAvatarUrl } from 'lib/dicebear'
 
 const UserContext = createContext()
 
@@ -57,12 +56,10 @@ export default function UserContextWrapper({ children }) {
 				year: data?.year || '',
 				district: data?.district || '',
 				state: data?.state || '',
-				experience: data?.experience || false,
 				refCode: data?.referralCode || data?.ref_code || '',
 				totalPoints: data?.totalPoints || data?.total_points || 0,
-				imageUrl:
-					data?.avatarUrl || data?.imageUrl || getGlyphsAvatarUrl(data?.name || 'Hamood Habibi'),
 			}
+			console.log(data)
 
 			setUser(currentUser)
 			setIsLoggedIn(true)
@@ -165,7 +162,7 @@ export default function UserContextWrapper({ children }) {
 			const redirect = encodeURIComponent(`${window.location.origin}/profile`)
 
 			const { data } = await axios.get(
-			`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/ca/google?redirect=${redirect}`
+				`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/ca/google?redirect=${redirect}`
 			)
 			if (!data?.url) throw new Error('Missing Google auth URL in response')
 

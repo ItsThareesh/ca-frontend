@@ -5,17 +5,15 @@ import { signOut } from 'lib/firebase'
 import { toast } from 'react-toastify'
 import { useEffect, useState } from 'react'
 import { useUserContext } from 'context/UserContext'
-import { getGlyphsAvatarUrl } from 'lib/dicebear'
+import { FiUser } from 'react-icons/fi'
 
 export default function SideNav({ userDb, points, onClose }) {
 	const router = useRouter()
 	const { user, logout } = useUserContext()
 
-	const MOCK_IMAGE_URL = getGlyphsAvatarUrl('Hamood Habibi')
 	const displayUser = user || {
 		name: 'Hamood Habibi',
 		email: 'hamood.habibi@iitm.ac.in',
-		imageUrl: MOCK_IMAGE_URL
 	}
 
 	return (
@@ -24,7 +22,9 @@ export default function SideNav({ userDb, points, onClose }) {
 				<IoMdClose className='dashboard-menu-icon' onClick={onClose} />
 			</div>
 			<div className='user-wrapper'>
-				<div className='user-avatar' style={{ backgroundImage: `url(${displayUser?.imageUrl})` }}></div>
+				<div className='user-avatar'>
+					<FiUser size={40} />
+				</div>
 				<h3 className='user-name'>{displayUser?.name || '--'}</h3>
 				<span className='user-email'>{displayUser?.email}</span>
 				{/* <p className='user-points'>
