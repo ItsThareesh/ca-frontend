@@ -65,6 +65,22 @@ export default function Leaderboard() {
 	const [currentPage, setCurrentPage] = useState(1)
 
 	useEffect(() => {
+		/*
+		// Leaderboard API temporarily disabled
+
+		fetch('https://api.tathva.org/api/leaderboard')
+			.then((res) => res.json())
+			.then((data) => {
+				const sorted = data
+					.sort((a, b) => b.count - a.count)
+					.slice(0, 50)
+
+				setLeaderboard(sorted)
+			})
+			.catch((err) => console.error('Error fetching leaderboard:', err))
+			.finally(() => setLoading(false))
+		*/
+
 		document.body.classList.add('leaderboard-page')
 		return () => {
 			document.body.classList.remove('leaderboard-page')
