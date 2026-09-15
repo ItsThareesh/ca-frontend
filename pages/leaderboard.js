@@ -5,45 +5,67 @@ import styles from 'components/leaderboard/leaderboard.module.css'
 import { FaCrown, FaMedal } from 'react-icons/fa'
 
 const MOCK_PARTICIPANTS = [
-	{ rank: 1, name: 'Arjun Nair', points: 2450 },
-	{ rank: 2, name: 'Rahul Menon', points: 2180 },
-	{ rank: 3, name: 'Aditya Sharma', points: 1950 },
-	{ rank: 4, name: 'Rohan Kumar', points: 1820 },
-	{ rank: 5, name: 'Vishnu Prasad', points: 1740 },
-	{ rank: 6, name: 'Akhil Raj', points: 1650 },
-	{ rank: 7, name: 'Nikhil Das', points: 1580 },
-	{ rank: 8, name: 'Siddharth Singh', points: 1490 },
-	{ rank: 9, name: 'Karthik S', points: 1420 },
-	{ rank: 10, name: 'Abhinav Menon', points: 1360 },
-	{ rank: 11, name: 'Dev Sharma', points: 1290 },
-	{ rank: 12, name: 'Anand Krishnan', points: 1210 },
-	{ rank: 13, name: 'Varun R', points: 1150 },
-	{ rank: 14, name: 'Akshay Kumar', points: 1090 },
-	{ rank: 15, name: 'Neeraj P', points: 1030 },
-	{ rank: 16, name: 'Sanjay Nair', points: 970 },
-	{ rank: 17, name: 'Manu Thomas', points: 920 },
-	{ rank: 18, name: 'Vivek Raj', points: 870 },
-	{ rank: 19, name: 'Rishi Menon', points: 820 },
-	{ rank: 20, name: 'Ishan Gupta', points: 780 },
-	{ rank: 21, name: 'Aman Verma', points: 740 },
-	{ rank: 22, name: 'Joel Joseph', points: 710 },
-	{ rank: 23, name: 'Hari Krishnan', points: 690 },
-	{ rank: 24, name: 'Prashant Raj', points: 680 },
-	{ rank: 25, name: 'Vimal Das', points: 650 },
-	{ rank: 26, name: 'Sreehari M', points: 620 },
-	{ rank: 27, name: 'Yash Raj', points: 590 },
-	{ rank: 28, name: 'Rohit Sharma', points: 560 },
-	{ rank: 29, name: 'Amal Joseph', points: 530 },
-	{ rank: 30, name: 'Mohit Kumar', points: 500 },
+	{ rank: 1, name: 'Alex Chen', points: 1450 },
+	{ rank: 2, name: 'Sarah Jenkins', points: 1380 },
+	{ rank: 3, name: 'Rahul Sharma', points: 1320 },
+	{ rank: 4, name: 'Elena Rostova', points: 1260 },
+	{ rank: 5, name: 'Marcus Vance', points: 1190 },
+	{ rank: 6, name: 'Priya Patel', points: 1140 },
+	{ rank: 7, name: 'David Kim', points: 1080 },
+	{ rank: 8, name: 'Aisha Al-Mansoor', points: 1040 },
+	{ rank: 9, name: 'Lucas Silva', points: 990 },
+	{ rank: 10, name: 'Zoe Washington', points: 950 },
+	{ rank: 11, name: 'Vikram Malhotra', points: 920 },
+	{ rank: 12, name: 'Emma Watson', points: 890 },
+	{ rank: 13, name: 'Arjun Nair', points: 870 },
+	{ rank: 14, name: 'Chloe Dubois', points: 850 },
+	{ rank: 15, name: 'Rohan Gupta', points: 830 },
+	{ rank: 16, name: 'Sophia Martinez', points: 810 },
+	{ rank: 17, name: 'Karthik Rao', points: 790 },
+	{ rank: 18, name: 'Liam O’Connor', points: 780 },
+	{ rank: 19, name: 'Ananya Iyer', points: 760 },
+	{ rank: 20, name: 'Noah Miller', points: 750 },
+	{ rank: 21, name: 'Meera Nambiar', points: 730 },
+	{ rank: 22, name: 'Oliver Brown', points: 710 },
+	{ rank: 23, name: 'Siddharth Varma', points: 700 },
+	{ rank: 24, name: 'You (Ambassador)', points: 680, isCurrentUser: true },
+	{ rank: 25, name: 'Isabella Garcia', points: 670 },
+	{ rank: 26, name: 'Aditya Menon', points: 650 },
+	{ rank: 27, name: 'Mia Tanaka', points: 640 },
+	{ rank: 28, name: 'Gautam Pillai', points: 620 },
+	{ rank: 29, name: 'Benjamin Scott', points: 610 },
+	{ rank: 30, name: 'Diya Krishnan', points: 590 },
+	{ rank: 31, name: 'Ethan Hunt', points: 580 },
+	{ rank: 32, name: 'Sneha Reddy', points: 560 },
+	{ rank: 33, name: 'Alexander Wright', points: 550 },
+	{ rank: 34, name: 'Tanvi Joshi', points: 530 },
+	{ rank: 35, name: 'Daniel Craig', points: 520 },
+	{ rank: 36, name: 'Rhea Kurien', points: 500 },
+	{ rank: 37, name: 'William Turner', points: 490 },
+	{ rank: 38, name: 'Naveen George', points: 470 },
+	{ rank: 39, name: 'Charlotte Evans', points: 460 },
+	{ rank: 40, name: 'Harish Kumar', points: 440 },
+	{ rank: 41, name: 'Amelia Jones', points: 430 },
+	{ rank: 42, name: 'Varun Das', points: 410 },
+	{ rank: 43, name: 'Grace Hopper', points: 400 },
+	{ rank: 44, name: 'Tarun Mathur', points: 380 },
+	{ rank: 45, name: 'Hannah Abbott', points: 360 },
+	{ rank: 46, name: 'Abhishek Roy', points: 350 },
+	{ rank: 47, name: 'Victoria Thorne', points: 330 },
+	{ rank: 48, name: 'Deepak Chopra', points: 310 },
+	{ rank: 49, name: 'Natalie Portman', points: 290 },
+	{ rank: 50, name: 'Samir Sheikh', points: 270 },
 ]
-
 
 const ITEMS_PER_PAGE = 10
 const TOTAL_PAGES = Math.ceil(MOCK_PARTICIPANTS.length / ITEMS_PER_PAGE)
 
 export default function Leaderboard() {
-	const { user, isLoggedIn } = useUserContext()
+	const { user, isLoggedIn, createAuthAxios } = useUserContext()
 	const [currentPage, setCurrentPage] = useState(1)
+	const [ourRank, setOurRank] = useState(null)
+	const [ourPoints, setOurPoints] = useState(null)
+	const [loadingRank, setLoadingRank] = useState(false)
 
 	useEffect(() => {
 		/*
@@ -68,10 +90,64 @@ export default function Leaderboard() {
 		}
 	}, [])
 
+	// Fetch current user's actual points and rank from backend
+	useEffect(() => {
+		if (!isLoggedIn) {
+			setOurRank(null)
+			setOurPoints(null)
+			return
+		}
+
+		// Pre-fill from existing user context if available
+		const initialPts = user?.totalPoints ?? user?.total_points
+		if (initialPts !== undefined && initialPts !== null) {
+			setOurPoints(initialPts)
+			const calcRank = user?.rank ?? (MOCK_PARTICIPANTS.filter((p) => p.points > initialPts).length + 1)
+			setOurRank(calcRank)
+		}
+
+		setLoadingRank(true)
+
+		// Fetch fresh profile from backend
+		const authAxios = createAuthAxios ? createAuthAxios() : null
+		const fetchPromise = authAxios
+			? authAxios.get('/api/user/')
+			: fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, {
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+					},
+			  }).then((r) => r.json().then((data) => ({ data })))
+
+		fetchPromise
+			.then((res) => {
+				const data = res?.data
+				if (data) {
+					const pts = data.totalPoints ?? data.total_points ?? 0
+					setOurPoints(pts)
+
+					const rk = data.rank ?? data.user_rank ?? data.leaderboard_rank
+					if (rk !== undefined && rk !== null) {
+						setOurRank(rk)
+					} else {
+						// Calculate dynamic rank based on backend points against leaderboard
+						const calcRank = MOCK_PARTICIPANTS.filter((p) => p.points > pts).length + 1
+						setOurRank(calcRank)
+					}
+				}
+			})
+			.catch((err) => {
+				console.error('Failed to fetch user rank from backend:', err)
+			})
+			.finally(() => {
+				setLoadingRank(false)
+			})
+	}, [isLoggedIn, user?.totalPoints, user?.total_points, user?.rank])
+
 	// Determine current user's profile info
 	const currentUserName = useMemo(() => {
 		if (isLoggedIn && user?.name) return user.name
-		return 'You (Ambassador)'
+		if (isLoggedIn) return 'You'
+		return 'You (Sign in to view rank)'
 	}, [isLoggedIn, user])
 
 	// Current page items (strictly 10 items)
@@ -144,14 +220,22 @@ export default function Leaderboard() {
 						{/* Current User's Rank ("Our Rank") Pinned Section */}
 						<div className={styles['user-rank-section']}>
 							<div className={`${styles['grid-row']} ${styles['user-rank-row']}`}>
-								<span className={styles['col-rank']}>24</span>
+								<span className={styles['col-rank']}>
+									{loadingRank ? '...' : ourRank !== null ? ourRank : '—'}
+								</span>
 								<span className={styles['col-name']}>
 									<span>{currentUserName}</span>
 									<span className={styles['you-badge']}>YOU</span>
 								</span>
 								<span className={styles['col-points']}>
-									680
-									<span className={styles['points-unit']}>pts</span>
+									{loadingRank
+										? '...'
+										: ourPoints !== null
+										? ourPoints.toLocaleString()
+										: '—'}
+									{ourPoints !== null && (
+										<span className={styles['points-unit']}>pts</span>
+									)}
 								</span>
 							</div>
 						</div>
