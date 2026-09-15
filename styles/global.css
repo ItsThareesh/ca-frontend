@@ -15,7 +15,8 @@ body {
 	overflow-x: hidden;
 }
 
-body.leaderboard-page {
+body.leaderboard-page,
+body.contact-page {
 	background-image: none;
 }
 
