@@ -287,7 +287,8 @@ function validateTextField(value, label, { min = 2, max = 100, placesOnly = fals
 	if (!value) return `${label} is required`
 	if (value.length < min) return `${label} must be at least ${min} characters`
 	if (value.length > max) return `${label} must be at most ${max} characters`
-	if (placesOnly && !PLACE_NAME_RE.test(value)) return `${label} can only contain letters and spaces`
+	if (placesOnly && !PLACE_NAME_RE.test(value))
+		return `${label} can only contain letters and spaces`
 	if (!HAS_LETTER_RE.test(value)) return `Enter a valid ${label.toLowerCase()}`
 	return null
 }
@@ -297,10 +298,18 @@ function validateTextField(value, label, { min = 2, max = 100, placesOnly = fals
 export function validateProfileForm(form) {
 	const values = {
 		phone: String(form.phone || '').trim(),
-		college: String(form.college || '').trim().replace(/\s+/g, ' '),
-		branch: String(form.branch || '').trim().replace(/\s+/g, ' '),
-		district: String(form.district || '').trim().replace(/\s+/g, ' '),
-		state: String(form.state || '').trim().replace(/\s+/g, ' '),
+		college: String(form.college || '')
+			.trim()
+			.replace(/\s+/g, ' '),
+		branch: String(form.branch || '')
+			.trim()
+			.replace(/\s+/g, ' '),
+		district: String(form.district || '')
+			.trim()
+			.replace(/\s+/g, ' '),
+		state: String(form.state || '')
+			.trim()
+			.replace(/\s+/g, ' '),
 		semester: String(form.semester || '').trim(),
 		year: String(form.year || '').trim(),
 	}
@@ -316,7 +325,8 @@ export function validateProfileForm(form) {
 	if (!/^[1-5]$/.test(values.year)) errors.year = 'Select your year of study'
 
 	if (!values.semester) errors.semester = 'Semester is required'
-	else if (!/^[1-8]$/.test(values.semester)) errors.semester = 'Semester must be a whole number from 1 to 8'
+	else if (!/^[1-8]$/.test(values.semester))
+		errors.semester = 'Semester must be a whole number from 1 to 8'
 
 	const textErrors = {
 		college: validateTextField(values.college, 'College', { max: 150 }),
@@ -655,6 +665,7 @@ export default function ProfilePage() {
 		}
 
 		setSaving(true)
+
 		try {
 			await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, payload, {
 				headers: { Authorization: `Bearer ${token}` },
@@ -675,6 +686,7 @@ export default function ProfilePage() {
 			)
 		} finally {
 			setSaving(false)
+			location.reload()
 		}
 	}
 
@@ -1139,7 +1151,9 @@ export default function ProfilePage() {
 												placeholder='e.g. NIT Calicut'
 												required
 											/>
-											{formErrors.college && <span className={s.formError}>{formErrors.college}</span>}
+											{formErrors.college && (
+												<span className={s.formError}>{formErrors.college}</span>
+											)}
 										</div>
 
 										<div className={s.formGroup}>
@@ -1155,7 +1169,9 @@ export default function ProfilePage() {
 												placeholder='e.g. Computer Science'
 												required
 											/>
-											{formErrors.branch && <span className={s.formError}>{formErrors.branch}</span>}
+											{formErrors.branch && (
+												<span className={s.formError}>{formErrors.branch}</span>
+											)}
 										</div>
 
 										<div className={s.formGroup}>
@@ -1173,7 +1189,9 @@ export default function ProfilePage() {
 												max='8'
 												required
 											/>
-											{formErrors.semester && <span className={s.formError}>{formErrors.semester}</span>}
+											{formErrors.semester && (
+												<span className={s.formError}>{formErrors.semester}</span>
+											)}
 										</div>
 
 										<div className={s.formGroup}>
@@ -1189,7 +1207,9 @@ export default function ProfilePage() {
 												placeholder='e.g. Kozhikode'
 												required
 											/>
-											{formErrors.district && <span className={s.formError}>{formErrors.district}</span>}
+											{formErrors.district && (
+												<span className={s.formError}>{formErrors.district}</span>
+											)}
 										</div>
 
 										<div className={s.formGroup}>
