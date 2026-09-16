@@ -1009,13 +1009,13 @@ export default function ProfilePage() {
 												disabled
 												aria-readonly='true'
 											/>
-											<span className={s.formLockedHint}>
-												Your name can&apos;t be changed here — contact the CA team if it&apos;s wrong.
-											</span>
+											<span className={s.formLockedHint}>Your name can&apos;t be changed.</span>
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>WhatsApp / Phone <span className={s.formAsterisk}>*</span></label>
+											<label className={s.formLabel}>
+												WhatsApp / Phone <span className={s.formAsterisk}>*</span>
+											</label>
 											<input
 												type='tel'
 												className={s.formInput}
@@ -1029,7 +1029,9 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Year of Study <span className={s.formAsterisk}>*</span></label>
+											<label className={s.formLabel}>
+												Year of Study <span className={s.formAsterisk}>*</span>
+											</label>
 											<select
 												className={s.formSelect}
 												value={editFormData.year}
@@ -1046,7 +1048,9 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
-											<label className={s.formLabel}>Institute / College <span className={s.formAsterisk}>*</span></label>
+											<label className={s.formLabel}>
+												Institute / College <span className={s.formAsterisk}>*</span>
+											</label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -1060,7 +1064,9 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Branch / Department <span className={s.formAsterisk}>*</span></label>
+											<label className={s.formLabel}>
+												Branch / Department <span className={s.formAsterisk}>*</span>
+											</label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -1074,7 +1080,9 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Semester <span className={s.formAsterisk}>*</span></label>
+											<label className={s.formLabel}>
+												Semester <span className={s.formAsterisk}>*</span>
+											</label>
 											<input
 												type='number'
 												className={s.formInput}
@@ -1090,7 +1098,9 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>District <span className={s.formAsterisk}>*</span></label>
+											<label className={s.formLabel}>
+												District <span className={s.formAsterisk}>*</span>
+											</label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -1104,7 +1114,9 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>State <span className={s.formAsterisk}>*</span></label>
+											<label className={s.formLabel}>
+												State <span className={s.formAsterisk}>*</span>
+											</label>
 											<input
 												type='text'
 												className={s.formInput}
