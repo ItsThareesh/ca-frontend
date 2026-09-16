@@ -64,6 +64,7 @@
 .hero-heading {
 	font-family: 'Clash Display', sans-serif;
 	font-size: 4.5rem;
+	font-weight: 450;
 	margin-bottom: 0;
 	line-height: 1;
 	text-shadow: 0 0.25rem 0.25rem rgba(0, 0, 0, 0.25);
@@ -79,7 +80,7 @@
 .typewriter-cursor {
 	display: inline-block;
 	margin-left: 4px;
-	color: #a855f7;
+	color: #dbd402;
 	font-weight: 400;
 	animation: typewriter-blink 0.8s infinite;
 }
