@@ -573,6 +573,20 @@
 	color: var(--hub-muted-fg);
 }
 
+.formInputError,
+.formInputError:focus {
+	border-color: #f87171;
+	box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4), 0 0 0 3px rgba(248, 113, 113, 0.2);
+}
+
+.formError {
+	display: block;
+	margin-top: 0.35rem;
+	font-size: 0.72rem;
+	line-height: 1.4;
+	color: #f87171;
+}
+
 .formActions {
 	display: flex;
 	align-items: center;

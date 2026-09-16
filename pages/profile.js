@@ -270,6 +270,65 @@ const REQUIRED_PROFILE_FIELDS = [
 	{ key: 'semester', label: 'Semester' },
 ]
 
+/* ── edit form validation ── */
+// Letters (incl. accented), spaces and common name punctuation only
+const PLACE_NAME_RE = /^[\p{L}][\p{L}\s.'-]*$/u
+const HAS_LETTER_RE = /\p{L}/u
+
+// Accepts a 10-digit Indian mobile number, optionally prefixed with +91 / 91 / 0
+// and separated by spaces or dashes. Returns the bare 10 digits, or null.
+export function normalizePhone(raw) {
+	const digits = String(raw || '').replace(/[\s-]/g, '')
+	const match = digits.match(/^(?:\+?91|0)?([6-9]\d{9})$/)
+	return match ? match[1] : null
+}
+
+function validateTextField(value, label, { min = 2, max = 100, placesOnly = false } = {}) {
+	if (!value) return `${label} is required`
+	if (value.length < min) return `${label} must be at least ${min} characters`
+	if (value.length > max) return `${label} must be at most ${max} characters`
+	if (placesOnly && !PLACE_NAME_RE.test(value)) return `${label} can only contain letters and spaces`
+	if (!HAS_LETTER_RE.test(value)) return `Enter a valid ${label.toLowerCase()}`
+	return null
+}
+
+// Trims every field, validates it, and returns { values, errors }.
+// `values` is only safe to submit when `errors` is empty.
+export function validateProfileForm(form) {
+	const values = {
+		phone: String(form.phone || '').trim(),
+		college: String(form.college || '').trim().replace(/\s+/g, ' '),
+		branch: String(form.branch || '').trim().replace(/\s+/g, ' '),
+		district: String(form.district || '').trim().replace(/\s+/g, ' '),
+		state: String(form.state || '').trim().replace(/\s+/g, ' '),
+		semester: String(form.semester || '').trim(),
+		year: String(form.year || '').trim(),
+	}
+	const errors = {}
+
+	if (!values.phone) errors.phone = 'Phone number is required'
+	else {
+		const phone = normalizePhone(values.phone)
+		if (!phone) errors.phone = 'Enter a valid 10-digit mobile number'
+		else values.phone = phone
+	}
+
+	if (!/^[1-5]$/.test(values.year)) errors.year = 'Select your year of study'
+
+	if (!values.semester) errors.semester = 'Semester is required'
+	else if (!/^[1-8]$/.test(values.semester)) errors.semester = 'Semester must be a whole number from 1 to 8'
+
+	const textErrors = {
+		college: validateTextField(values.college, 'College', { max: 150 }),
+		branch: validateTextField(values.branch, 'Branch'),
+		district: validateTextField(values.district, 'District', { placesOnly: true }),
+		state: validateTextField(values.state, 'State', { placesOnly: true }),
+	}
+	for (const [key, msg] of Object.entries(textErrors)) if (msg) errors[key] = msg
+
+	return { values, errors }
+}
+
 export default function ProfilePage() {
 	const { user, accessToken, authLoading, logout } = useUserContext()
 	const router = useRouter()
@@ -282,6 +341,7 @@ export default function ProfilePage() {
 	// edit state
 	const [isEditing, setIsEditing] = useState(false)
 	const [saving, setSaving] = useState(false)
+	const [formErrors, setFormErrors] = useState({})
 	const [editFormData, setEditFormData] = useState({
 		name: '',
 		phone: '',
@@ -538,20 +598,35 @@ export default function ProfilePage() {
 			branch: profile?.branch || '',
 			year: profile?.year ? String(profile.year) : '',
 		})
+		setFormErrors({})
 		setIsEditing(true)
 	}
 
 	function cancelEditing() {
+		setFormErrors({})
 		setIsEditing(false)
+	}
+
+	function updateEditField(key, value) {
+		setEditFormData((prev) => ({ ...prev, [key]: value }))
+		if (formErrors[key]) setFormErrors((prev) => ({ ...prev, [key]: undefined }))
 	}
 
 	async function handleSaveProfile(e) {
 		e?.preventDefault()
 
+		const { values, errors } = validateProfileForm(editFormData)
+		if (Object.keys(errors).length > 0) {
+			setFormErrors(errors)
+			toast.error(Object.values(errors)[0])
+			return
+		}
+		setFormErrors({})
+		setEditFormData((prev) => ({ ...prev, ...values }))
+
 		// `name` is intentionally excluded — the backend drops it from PUT
 		// /api/user, so merging it locally would show a change that was never saved.
-		const { name: _ignoredName, ...editableFields } = editFormData
-		const updated = { ...profile, ...editableFields }
+		const updated = { ...profile, ...values }
 
 		if (USE_MOCK) {
 			localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
@@ -570,13 +645,13 @@ export default function ProfilePage() {
 		// Exactly the fields the backend's PUT /api/user/ accepts. `name` was
 		// removed from its allowed list, so sending it is silently ignored.
 		const payload = {
-			phone: editFormData.phone,
-			college: editFormData.college,
-			district: editFormData.district,
-			state: editFormData.state,
-			semester: editFormData.semester,
-			branch: editFormData.branch,
-			year: editFormData.year,
+			phone: values.phone,
+			college: values.college,
+			district: values.district,
+			state: values.state,
+			semester: values.semester,
+			branch: values.branch,
+			year: values.year,
 		}
 
 		setSaving(true)
@@ -995,7 +1070,7 @@ export default function ProfilePage() {
 								</div>
 
 								{/* Form Fields */}
-								<form className={s.editForm} onSubmit={handleSaveProfile}>
+								<form className={s.editForm} onSubmit={handleSaveProfile} noValidate>
 									<div className={s.formGrid}>
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
 											<label className={s.formLabel}>Full Name</label>
@@ -1018,14 +1093,16 @@ export default function ProfilePage() {
 											</label>
 											<input
 												type='tel'
-												className={s.formInput}
+												className={`${s.formInput} ${formErrors.phone ? s.formInputError : ''}`}
 												value={editFormData.phone}
-												onChange={(e) =>
-													setEditFormData({ ...editFormData, phone: e.target.value })
-												}
+												onChange={(e) => updateEditField('phone', e.target.value)}
+												aria-invalid={Boolean(formErrors.phone)}
 												placeholder='10-digit number'
+												inputMode='tel'
+												maxLength={16}
 												required
 											/>
+											{formErrors.phone && <span className={s.formError}>{formErrors.phone}</span>}
 										</div>
 
 										<div className={s.formGroup}>
@@ -1033,9 +1110,10 @@ export default function ProfilePage() {
 												Year of Study <span className={s.formAsterisk}>*</span>
 											</label>
 											<select
-												className={s.formSelect}
+												className={`${s.formSelect} ${formErrors.year ? s.formInputError : ''}`}
 												value={editFormData.year}
-												onChange={(e) => setEditFormData({ ...editFormData, year: e.target.value })}
+												onChange={(e) => updateEditField('year', e.target.value)}
+												aria-invalid={Boolean(formErrors.year)}
 												required
 											>
 												<option value=''>Choose year</option>
@@ -1045,6 +1123,7 @@ export default function ProfilePage() {
 												<option value='4'>Year 4</option>
 												<option value='5'>Year 5</option>
 											</select>
+											{formErrors.year && <span className={s.formError}>{formErrors.year}</span>}
 										</div>
 
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
@@ -1053,14 +1132,14 @@ export default function ProfilePage() {
 											</label>
 											<input
 												type='text'
-												className={s.formInput}
+												className={`${s.formInput} ${formErrors.college ? s.formInputError : ''}`}
 												value={editFormData.college}
-												onChange={(e) =>
-													setEditFormData({ ...editFormData, college: e.target.value })
-												}
+												onChange={(e) => updateEditField('college', e.target.value)}
+												aria-invalid={Boolean(formErrors.college)}
 												placeholder='e.g. NIT Calicut'
 												required
 											/>
+											{formErrors.college && <span className={s.formError}>{formErrors.college}</span>}
 										</div>
 
 										<div className={s.formGroup}>
@@ -1069,14 +1148,14 @@ export default function ProfilePage() {
 											</label>
 											<input
 												type='text'
-												className={s.formInput}
+												className={`${s.formInput} ${formErrors.branch ? s.formInputError : ''}`}
 												value={editFormData.branch}
-												onChange={(e) =>
-													setEditFormData({ ...editFormData, branch: e.target.value })
-												}
+												onChange={(e) => updateEditField('branch', e.target.value)}
+												aria-invalid={Boolean(formErrors.branch)}
 												placeholder='e.g. Computer Science'
 												required
 											/>
+											{formErrors.branch && <span className={s.formError}>{formErrors.branch}</span>}
 										</div>
 
 										<div className={s.formGroup}>
@@ -1085,16 +1164,16 @@ export default function ProfilePage() {
 											</label>
 											<input
 												type='number'
-												className={s.formInput}
+												className={`${s.formInput} ${formErrors.semester ? s.formInputError : ''}`}
 												value={editFormData.semester}
-												onChange={(e) =>
-													setEditFormData({ ...editFormData, semester: e.target.value })
-												}
+												onChange={(e) => updateEditField('semester', e.target.value)}
+												aria-invalid={Boolean(formErrors.semester)}
 												placeholder='1–8'
 												min='1'
 												max='8'
 												required
 											/>
+											{formErrors.semester && <span className={s.formError}>{formErrors.semester}</span>}
 										</div>
 
 										<div className={s.formGroup}>
@@ -1103,14 +1182,14 @@ export default function ProfilePage() {
 											</label>
 											<input
 												type='text'
-												className={s.formInput}
+												className={`${s.formInput} ${formErrors.district ? s.formInputError : ''}`}
 												value={editFormData.district}
-												onChange={(e) =>
-													setEditFormData({ ...editFormData, district: e.target.value })
-												}
+												onChange={(e) => updateEditField('district', e.target.value)}
+												aria-invalid={Boolean(formErrors.district)}
 												placeholder='e.g. Kozhikode'
 												required
 											/>
+											{formErrors.district && <span className={s.formError}>{formErrors.district}</span>}
 										</div>
 
 										<div className={s.formGroup}>
@@ -1119,14 +1198,14 @@ export default function ProfilePage() {
 											</label>
 											<input
 												type='text'
-												className={s.formInput}
+												className={`${s.formInput} ${formErrors.state ? s.formInputError : ''}`}
 												value={editFormData.state}
-												onChange={(e) =>
-													setEditFormData({ ...editFormData, state: e.target.value })
-												}
+												onChange={(e) => updateEditField('state', e.target.value)}
+												aria-invalid={Boolean(formErrors.state)}
 												placeholder='e.g. Kerala'
 												required
 											/>
+											{formErrors.state && <span className={s.formError}>{formErrors.state}</span>}
 										</div>
 									</div>
 
