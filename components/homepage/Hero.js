@@ -10,7 +10,8 @@ export default function Hero() {
 	useEffect(() => {
 		async function fetchSeatCount() {
 			try {
-				const response = await axios.get('/api/seat_count')
+				const response = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/seat_count`)
+
 				setSeats(response.data.count)
 			} catch (error) {
 				console.error('Failed to fetch seat count:', error)
@@ -30,7 +31,7 @@ export default function Hero() {
 
 			<div className='spacerv-lg' />
 
-			{(seats !== null || seats !== 0) && (
+			{seats !== null && seats !== 0 && (
 				<div className='vacancy-banner-container'>
 					<div className='vacancy-banner'>
 						<span className='vacancy-number'>{seats}</span>
