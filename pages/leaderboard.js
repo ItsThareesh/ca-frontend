@@ -37,13 +37,15 @@ const MOCK_PARTICIPANTS = [
 	{ rank: 30, name: 'Mohit Kumar', points: 500 },
 ]
 
-
 const ITEMS_PER_PAGE = 10
 const TOTAL_PAGES = Math.ceil(MOCK_PARTICIPANTS.length / ITEMS_PER_PAGE)
 
 export default function Leaderboard() {
-	const { user, isLoggedIn } = useUserContext()
+	const { user, isLoggedIn, createAuthAxios } = useUserContext()
 	const [currentPage, setCurrentPage] = useState(1)
+	const [ourRank, setOurRank] = useState(null)
+	const [ourPoints, setOurPoints] = useState(null)
+	const [loadingRank, setLoadingRank] = useState(false)
 
 	useEffect(() => {
 		/*
@@ -68,10 +70,64 @@ export default function Leaderboard() {
 		}
 	}, [])
 
+	// Fetch current user's actual points and rank from backend
+	useEffect(() => {
+		if (!isLoggedIn) {
+			setOurRank(null)
+			setOurPoints(null)
+			return
+		}
+
+		// Pre-fill from existing user context if available
+		const initialPts = user?.totalPoints ?? user?.total_points
+		if (initialPts !== undefined && initialPts !== null) {
+			setOurPoints(initialPts)
+			const calcRank = user?.rank ?? (MOCK_PARTICIPANTS.filter((p) => p.points > initialPts).length + 1)
+			setOurRank(calcRank)
+		}
+
+		setLoadingRank(true)
+
+		// Fetch fresh profile from backend
+		const authAxios = createAuthAxios ? createAuthAxios() : null
+		const fetchPromise = authAxios
+			? authAxios.get('/api/user/')
+			: fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, {
+					headers: {
+						Authorization: `Bearer ${localStorage.getItem('access_token')}`,
+					},
+			  }).then((r) => r.json().then((data) => ({ data })))
+
+		fetchPromise
+			.then((res) => {
+				const data = res?.data
+				if (data) {
+					const pts = data.totalPoints ?? data.total_points ?? 0
+					setOurPoints(pts)
+
+					const rk = data.rank ?? data.user_rank ?? data.leaderboard_rank
+					if (rk !== undefined && rk !== null) {
+						setOurRank(rk)
+					} else {
+						// Calculate dynamic rank based on backend points against leaderboard
+						const calcRank = MOCK_PARTICIPANTS.filter((p) => p.points > pts).length + 1
+						setOurRank(calcRank)
+					}
+				}
+			})
+			.catch((err) => {
+				console.error('Failed to fetch user rank from backend:', err)
+			})
+			.finally(() => {
+				setLoadingRank(false)
+			})
+	}, [isLoggedIn, user?.totalPoints, user?.total_points, user?.rank])
+
 	// Determine current user's profile info
 	const currentUserName = useMemo(() => {
 		if (isLoggedIn && user?.name) return user.name
-		return 'You (Ambassador)'
+		if (isLoggedIn) return 'You'
+		return 'You (Sign in to view rank)'
 	}, [isLoggedIn, user])
 
 	// Current page items (strictly 10 items)
@@ -144,14 +200,22 @@ export default function Leaderboard() {
 						{/* Current User's Rank ("Our Rank") Pinned Section */}
 						<div className={styles['user-rank-section']}>
 							<div className={`${styles['grid-row']} ${styles['user-rank-row']}`}>
-								<span className={styles['col-rank']}>24</span>
+								<span className={styles['col-rank']}>
+									{loadingRank ? '...' : ourRank !== null ? ourRank : '—'}
+								</span>
 								<span className={styles['col-name']}>
 									<span>{currentUserName}</span>
 									<span className={styles['you-badge']}>YOU</span>
 								</span>
 								<span className={styles['col-points']}>
-									680
-									<span className={styles['points-unit']}>pts</span>
+									{loadingRank
+										? '...'
+										: ourPoints !== null
+										? ourPoints.toLocaleString()
+										: '—'}
+									{ourPoints !== null && (
+										<span className={styles['points-unit']}>pts</span>
+									)}
 								</span>
 							</div>
 						</div>

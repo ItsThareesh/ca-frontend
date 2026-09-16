@@ -13,6 +13,11 @@ export default function RUReady() {
 	const [hoverSpinning, setHoverSpinning] = useState(false)
 	const [hasAnimated, setHasAnimated] = useState(false)
 
+	const handleSignUp = () => {
+		if (isLoggedIn) router.push('/profile')
+		else router.push('/register')
+	}
+
 	useEffect(() => {
 		const el = iconRef.current
 		if (typeof window === 'undefined' || !el) return
@@ -45,7 +50,7 @@ export default function RUReady() {
 		if (isLoggedIn && user) {
 			toast.info('You are already logged in!')
 		} else {
-			toast.info('Registrations are closed.')
+			handleSignUp()
 		}
 	}
 

@@ -1,176 +1,194 @@
-
-.contactCard {
-  position: relative;
-  background: rgba(24, 24, 27, 0.85);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border-radius: 16px;
-  box-shadow: 0 0px 10px gold;
-  display: flex;
-  flex-direction: column;
-  width: 100%;
+/* Page title above the card — same style and phone sizes as the leaderboard heading */
+.pageTitle {
+	margin: 0 0 0.75rem;
+	text-align: center;
+	font-family: 'Clash Display', sans-serif;
+	font-size: clamp(1.75rem, 5vw, 5rem);
+	font-weight: 700;
+	line-height: 1.2;
+	color: #fff;
+	text-shadow: 0 0 12px rgba(230, 191, 64, 0.4);
+	letter-spacing: 0.03em;
 }
 
-.cardGlow {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  border: 1px solid transparent;
-  background: 
-    linear-gradient(rgba(24, 24, 27, 0), rgba(24, 24, 27, 0)) padding-box,
-    linear-gradient(135deg, rgba(229, 184, 66, 0.7), rgba(229, 184, 66, 0.1) 40%, rgba(229, 184, 66, 0.7)) border-box;
-  pointer-events: none;
-  z-index: 1;
+@media (max-width: 768px) {
+	.pageTitle {
+		font-size: 2.75rem;
+	}
+}
+
+@media (max-width: 500px) {
+	.pageTitle {
+		font-size: 2.5rem;
+	}
+}
+
+/* Flat card in the site's black + thin-gold style (matches the login card and
+   benefits panels) — no glass blur, glow or gradient border */
+.contactCard {
+	position: relative;
+	background: #0a0a0a;
+	border: 1px solid rgba(229, 184, 66, 0.25);
+	border-radius: 0;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
 }
 
 .cardHeader {
-  padding: 2rem; 
-  text-align: center;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
-  position: relative;
-  z-index: 2;
+	padding: 2rem;
+	text-align: center;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+	position: relative;
+	z-index: 2;
 }
 
 .cardTitle {
-  font-size: 2.5rem;
-  font-weight: 700;
-  color: #ffffff;
-  margin: 0 0 1rem 0;
-  font-family: 'Clash Display', 'Inter', sans-serif;
+	font-size: 2.5rem;
+	font-weight: 700;
+	color: #ffffff;
+	margin: 0 0 1rem 0;
+	font-family: 'Clash Display', 'Inter', sans-serif;
 }
 
 .generalInquiry {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.5rem 1rem;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 9999px;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.5rem 1rem;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	border-radius: 9999px;
 }
 
 .inquiryLabel {
-  color: #a1a1aa;
-  font-size: 0.875rem;
+	color: #a1a1aa;
+	font-size: 0.875rem;
 }
 
 .inquiryEmail {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  color: #ffffff;
-  font-weight: 500;
-  font-size: 0.875rem;
-  text-decoration: none;
-  transition: color 0.2s ease;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	color: #ffffff;
+	font-weight: 500;
+	font-size: 0.875rem;
+	text-decoration: none;
+	transition: color 0.2s ease;
 }
 
 .inquiryEmail:hover {
-  color: #e5b842;
+	color: #e5b842;
 }
 
 .contactList {
-  display: flex;
-  flex-direction: column;
-  width: 100%;
-  overflow: hidden !important; 
-  position: relative;
-  z-index: 2;
+	display: flex;
+	flex-direction: column;
+	width: 100%;
+	overflow: hidden !important;
+	position: relative;
+	z-index: 2;
 }
 
 .contactItem {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1.25rem 2rem; 
-  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-  box-sizing: border-box;
-  width: 100%;
-  transition: background-color 0.2s ease;
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	padding: 1.25rem 2rem;
+	border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+	box-sizing: border-box;
+	width: 100%;
+	transition: background-color 0.2s ease;
 }
 
 .contactItem:last-child {
-  border-bottom: none;
+	border-bottom: none;
 }
 
 .contactItem:hover {
-  background: rgba(255, 255, 255, 0.03);
+	background: rgba(255, 255, 255, 0.03);
 }
 
 .contactName {
-  font-size: 1.125rem;
-  font-weight: 600;
-  color: #ffffff;
-  margin: 0;
+	font-size: 1.125rem;
+	font-weight: 600;
+	color: #ffffff;
+	margin: 0;
 }
 
 .contactPhone {
-  color: #e5b842;
-  font-weight: 500;
-  text-decoration: none;
-  transition: opacity 0.2s ease;
+	color: #e5b842;
+	font-weight: 500;
+	text-decoration: none;
+	transition: opacity 0.2s ease;
 }
 
 .contactPhone:hover {
-  opacity: 0.8;
+	opacity: 0.8;
 }
-
 
 @media (max-width: 640px) {
-  .cardHeader {
-    padding: 1.5rem;
-  }
-  .contactItem {
-    padding: 1.15rem 1.5rem;
-  }
-  .cardTitle {
-    font-size: 2rem;
-  }
-  .contactName {
-    font-size: 1rem;
-  }
-  .contactPhone {
-    font-size: 0.9rem;
-  }
+	.cardHeader {
+		padding: 1.5rem;
+	}
+	/* keep the inquiry pill inside the card on narrow phones */
+	.generalInquiry {
+		flex-wrap: wrap;
+		justify-content: center;
+		max-width: 100%;
+		border-radius: 12px;
+	}
+	/* stack name over number so rows line up and never run into each other */
+	.contactItem {
+		padding: 1.15rem 1.5rem;
+		flex-direction: column;
+		align-items: flex-start;
+		gap: 0.4rem;
+	}
+	.cardTitle {
+		font-size: 2rem;
+	}
+	.contactName {
+		font-size: 1rem;
+	}
+	.contactPhone {
+		font-size: 0.9rem;
+	}
 }
-
 
 .contactAction {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
+	display: flex;
+	align-items: center;
+	gap: 0.75rem;
 }
-
 
 .copyBtn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  color: #a1a1aa;
-  border-radius: 6px;
-  padding: 0.4rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	background: rgba(255, 255, 255, 0.05);
+	border: 1px solid rgba(255, 255, 255, 0.1);
+	color: #a1a1aa;
+	border-radius: 6px;
+	padding: 0.4rem;
+	font-size: 1rem;
+	cursor: pointer;
+	transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
 
 .copyBtn:hover {
-  color: #e5b842;
-  background: rgba(229, 184, 66, 0.1);
-  border-color: rgba(229, 184, 66, 0.3);
-  transform: translateY(-1px);
+	color: #e5b842;
+	background: rgba(229, 184, 66, 0.1);
+	border-color: rgba(229, 184, 66, 0.3);
+	transform: translateY(-1px);
 }
 
-
 .copyBtn:active {
-  transform: translateY(0);
+	transform: translateY(0);
 }
 
 .copyBtn.copied {
-  color: #10b981; /* Emerald Green */
-  border-color: rgba(16, 185, 129, 0.4);
-  background: rgba(16, 185, 129, 0.1);
+	color: #10b981; /* Emerald Green */
+	border-color: rgba(16, 185, 129, 0.4);
+	background: rgba(16, 185, 129, 0.1);
 }

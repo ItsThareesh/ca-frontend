@@ -4,12 +4,14 @@ import SpaceBackground from 'components/common/SpaceBackground'
 
 export default function Contact() {
   useEffect(() => {
-    // Remove the normal grid background while on the contact page
-    document.body.classList.add('leaderboard-page')
+    // Remove the normal grid background while on the contact page. Uses its own
+    // class — 'leaderboard-page' would also pull in the leaderboard's one-screen
+    // viewport lock (overflow: hidden), which clips this page on short screens.
+    document.body.classList.add('contact-page')
 
     // Put the normal background back when leaving the contact page
     return () => {
-      document.body.classList.remove('leaderboard-page')
+      document.body.classList.remove('contact-page')
     }
   }, [])
 
