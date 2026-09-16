@@ -491,6 +491,13 @@
 	margin: 0;
 }
 
+.formAsterisk {
+	color: #ff3b30;
+	font-size: 0.85rem;
+	margin-left: 0.15rem;
+	vertical-align: middle;
+}
+
 .formInput,
 .formSelect {
 	width: 100%;
