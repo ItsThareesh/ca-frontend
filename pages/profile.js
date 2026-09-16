@@ -256,10 +256,11 @@ const WHATSAPP_POPUP_STORAGE_KEY = 'tathva_ca_whatsapp_popup_dismissed'
 const WHATSAPP_POPUP_DELAY_MS = 1200
 const WHATSAPP_POPUP_DURATION_MS = 12000
 
-/* The backend only issues a referral code once the CA profile is complete,
-   so every one of these has to be filled in before the code shows up. */
+/* The backend only issues a referral code once the CA profile is complete.
+   This mirrors the exact gate in userController.getUser — phone, college,
+   district, state, branch, semester, year. Name is deliberately absent: it is
+   set at sign-up and can no longer be changed, so it can't be "missing" here. */
 const REQUIRED_PROFILE_FIELDS = [
-	{ key: 'name', label: 'Name' },
 	{ key: 'phone', label: 'Phone' },
 	{ key: 'college', label: 'College' },
 	{ key: 'district', label: 'District' },
@@ -389,11 +390,6 @@ export default function ProfilePage() {
 	const totalReferrals = activeReferrals.length
 	const earnedRewards = useMemo(() => calculateReferralRewards(totalReferrals), [totalReferrals])
 	const referralLink = refCode ? `${REFERRAL_BASE_URL}${refCode}` : ''
-	const qrUrl = refCode
-		? `https://api.qrserver.com/v1/create-qr-code/?data=${encodeURIComponent(
-				referralLink
-		  )}&size=320x320&bgcolor=09090b&color=e5b842&format=png&qzone=2&ecc=H`
-		: ''
 	const firstName = (profile?.name || 'Ambassador').split(' ')[0]
 
 	/* Which CA details are still blank — drives the "complete your profile"
@@ -551,12 +547,11 @@ export default function ProfilePage() {
 
 	async function handleSaveProfile(e) {
 		e?.preventDefault()
-		if (!editFormData.name.trim()) {
-			toast.error('Name is required')
-			return
-		}
 
-		const updated = { ...profile, ...editFormData }
+		// `name` is intentionally excluded — the backend drops it from PUT
+		// /api/user, so merging it locally would show a change that was never saved.
+		const { name: _ignoredName, ...editableFields } = editFormData
+		const updated = { ...profile, ...editableFields }
 
 		if (USE_MOCK) {
 			localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
@@ -572,9 +567,9 @@ export default function ProfilePage() {
 			return
 		}
 
-		// Exactly the fields the backend's PUT /api/user/ accepts
+		// Exactly the fields the backend's PUT /api/user/ accepts. `name` was
+		// removed from its allowed list, so sending it is silently ignored.
 		const payload = {
-			name: editFormData.name,
 			phone: editFormData.phone,
 			college: editFormData.college,
 			district: editFormData.district,
@@ -1003,15 +998,20 @@ export default function ProfilePage() {
 								<form className={s.editForm} onSubmit={handleSaveProfile}>
 									<div className={s.formGrid}>
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
-											<label className={s.formLabel}>Full Name <span className={s.formAsterisk}>*</span></label>
+											<label className={s.formLabel}>Full Name</label>
+											{/* Locked: the backend no longer accepts `name` on PUT /api/user,
+											    so this is display-only to avoid showing an edit that won't save. */}
 											<input
 												type='text'
-												className={s.formInput}
-												value={editFormData.name}
-												onChange={(e) => setEditFormData({ ...editFormData, name: e.target.value })}
-												placeholder='Enter your name'
-												required
+												className={`${s.formInput} ${s.formInputLocked}`}
+												value={profile?.name || ''}
+												readOnly
+												disabled
+												aria-readonly='true'
 											/>
+											<span className={s.formLockedHint}>
+												Your name can&apos;t be changed here — contact the CA team if it&apos;s wrong.
+											</span>
 										</div>
 
 										<div className={s.formGroup}>
@@ -1187,17 +1187,6 @@ export default function ProfilePage() {
 									</div>
 								</div>
 							</div>
-							{/* QR Code in Golden Black Theme with center logo */}
-							{qrUrl && (
-								<div className={s.qrWrapper}>
-									<div className={s.qrCodeContainer}>
-										<img src={qrUrl} alt='QR code for referral link' className={s.qrImage} />
-										<div className={s.qrCenterLogo} title="Tathva '26">
-											<img src='/images/tathva26-gold.png' alt='Tathva 26 Logo' />
-										</div>
-									</div>
-								</div>
-							)}
 						</div>
 					</section>
 				</div>
