@@ -33,7 +33,7 @@ function normalizeLeaderboard(raw) {
 }
 
 export default function Leaderboard() {
-	const { user, isLoggedIn } = useUserContext()
+	const { user, isLoggedIn, createAuthAxios } = useUserContext()
 	const [currentPage, setCurrentPage] = useState(1)
 	const [participants, setParticipants] = useState([])
 	const [loading, setLoading] = useState(true)
