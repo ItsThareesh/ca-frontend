@@ -62,6 +62,7 @@
 .welcomeActions {
 	display: flex;
 	align-items: center;
+	flex-wrap: wrap;
 	gap: 0.75rem;
 	padding-top: 0.25rem;
 }
@@ -91,6 +92,36 @@
 	color: #f87171;
 	background: linear-gradient(135deg, rgba(239, 68, 68, 0.18) 0%, rgba(239, 68, 68, 0.06) 100%);
 	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25);
+	transform: translateY(-1px);
+}
+
+/* CA WhatsApp group link — sits beside Sign out at the top of the profile */
+.whatsappBtn {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.55rem 1.15rem;
+	border-radius: 9999px;
+	border: 1px solid rgba(37, 211, 102, 0.4);
+	background: linear-gradient(135deg, rgba(37, 211, 102, 0.18) 0%, rgba(37, 211, 102, 0.05) 100%);
+	backdrop-filter: blur(12px);
+	-webkit-backdrop-filter: blur(12px);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 4px 12px rgba(0, 0, 0, 0.3);
+	color: #4ade80;
+	font-family: 'Inter', sans-serif;
+	font-size: 0.85rem;
+	font-weight: 600;
+	text-decoration: none;
+	white-space: nowrap;
+	cursor: pointer;
+	transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.whatsappBtn:hover {
+	border-color: rgba(37, 211, 102, 0.75);
+	color: #25d366;
+	background: linear-gradient(135deg, rgba(37, 211, 102, 0.3) 0%, rgba(37, 211, 102, 0.1) 100%);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 6px 18px rgba(37, 211, 102, 0.18);
 	transform: translateY(-1px);
 }
 
@@ -1480,7 +1511,8 @@
 		line-height: 1.45;
 	}
 
-	.signOutBtn {
+	.signOutBtn,
+	.whatsappBtn {
 		padding: 0.4rem 0.75rem;
 		font-size: 0.775rem;
 		gap: 0.35rem;
@@ -2236,5 +2268,313 @@
 	.detailsCard,
 	.referralCard {
 		padding: 1rem 0.875rem;
+	}
+}
+
+/* ═════════════════════════════════════════════════════════════
+   INCOMPLETE PROFILE NOTICE
+   Shown above the profile cards until every CA detail is filled in,
+   because the referral code is only issued on a complete profile.
+   ═════════════════════════════════════════════════════════════ */
+.profileAlert {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.875rem;
+	margin-bottom: 1.25rem;
+	padding: 1rem 1.125rem;
+	border: 1px solid rgba(229, 184, 66, 0.35);
+	border-left: 3px solid var(--hub-gold);
+	border-radius: var(--hub-radius);
+	background: linear-gradient(135deg, rgba(229, 184, 66, 0.1) 0%, rgba(255, 255, 255, 0.02) 100%);
+	backdrop-filter: blur(16px);
+	-webkit-backdrop-filter: blur(16px);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 10px 30px rgba(0, 0, 0, 0.35);
+}
+
+.profileAlertIcon {
+	flex-shrink: 0;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	color: var(--hub-gold);
+	background: rgba(229, 184, 66, 0.12);
+	border: 1px solid rgba(229, 184, 66, 0.3);
+	border-radius: 50%;
+}
+
+.profileAlertBody {
+	display: flex;
+	flex-direction: column;
+	gap: 0.3rem;
+	min-width: 0;
+	flex: 1;
+}
+
+.profileAlertTitle {
+	margin: 0;
+	font-size: 0.9rem;
+	font-weight: 600;
+	letter-spacing: 0.01em;
+	color: var(--hub-gold);
+}
+
+.profileAlertText {
+	margin: 0;
+	font-size: 0.8rem;
+	line-height: 1.5;
+	color: var(--hub-muted-fg);
+}
+
+.profileAlertMissing {
+	color: var(--hub-fg);
+	font-weight: 500;
+}
+
+.profileAlertBtn {
+	flex-shrink: 0;
+	align-self: center;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4rem;
+	padding: 0.5rem 0.9rem;
+	font-family: inherit;
+	font-size: 0.78rem;
+	font-weight: 600;
+	letter-spacing: 0.02em;
+	color: var(--hub-primary-fg);
+	background: var(--hub-primary);
+	border: none;
+	border-radius: var(--hub-radius);
+	cursor: pointer;
+	transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.profileAlertBtn:hover {
+	filter: brightness(1.08);
+	transform: translateY(-1px);
+}
+
+@media (max-width: 640px) {
+	.profileAlert {
+		flex-wrap: wrap;
+		gap: 0.75rem;
+		padding: 0.9rem 1rem;
+	}
+
+	.profileAlertBtn {
+		width: 100%;
+		justify-content: center;
+	}
+}
+
+/* ═════════════════════════════════════════════════════════════
+   CA WHATSAPP GROUP POPUP
+   Sits above the nav (z 500) but below the mobile menu (z 9999999).
+   ═════════════════════════════════════════════════════════════ */
+.waPopupOverlay {
+	position: fixed;
+	inset: 0;
+	z-index: 9000;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 1.25rem;
+	background: rgba(4, 4, 6, 0.72);
+	backdrop-filter: blur(6px);
+	-webkit-backdrop-filter: blur(6px);
+	animation: waFadeIn 0.25s ease both;
+}
+
+.waPopupCard {
+	position: relative;
+	width: 100%;
+	max-width: 24rem;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	text-align: center;
+	gap: 0.6rem;
+	padding: 2rem 1.75rem 1.25rem;
+	border: 1px solid rgba(37, 211, 102, 0.28);
+	border-radius: var(--hub-radius);
+	background: linear-gradient(160deg, rgba(24, 30, 26, 0.96) 0%, rgba(12, 12, 15, 0.98) 100%);
+	box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 24px 60px rgba(0, 0, 0, 0.6);
+	overflow: hidden;
+	animation: waPopIn 0.3s cubic-bezier(0.34, 1.3, 0.64, 1) both;
+}
+
+.waPopupClose {
+	position: absolute;
+	top: 0.6rem;
+	right: 0.6rem;
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	/* beats the global `button { padding: 1rem 1.5rem }` in global.css,
+	   which otherwise stretches this into an ellipse and squashes the icon */
+	padding: 0;
+	flex-shrink: 0;
+	width: 1.9rem;
+	height: 1.9rem;
+	border: 1px solid var(--hub-border);
+	border-radius: 50%;
+	background: var(--hub-secondary);
+	color: var(--hub-muted-fg);
+	cursor: pointer;
+	transition: color 0.2s ease, border-color 0.2s ease;
+}
+
+.waPopupClose:hover {
+	color: var(--hub-fg);
+	border-color: rgba(255, 255, 255, 0.3);
+}
+
+.waPopupClose svg {
+	display: block;
+}
+
+.waPopupIcon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 3.75rem;
+	height: 3.75rem;
+	margin-bottom: 0.15rem;
+	border: 1px solid rgba(37, 211, 102, 0.35);
+	border-radius: 50%;
+	background: radial-gradient(circle, rgba(37, 211, 102, 0.22) 0%, rgba(37, 211, 102, 0.04) 70%);
+	color: #25d366;
+}
+
+.waPopupTitle {
+	margin: 0;
+	font-family: 'Clash Display', sans-serif;
+	font-size: 1.15rem;
+	font-weight: 600;
+	color: var(--hub-fg);
+}
+
+.waPopupText {
+	margin: 0 0 0.5rem;
+	font-size: 0.82rem;
+	line-height: 1.55;
+	color: var(--hub-muted-fg);
+}
+
+.waPopupJoinBtn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	width: 100%;
+	padding: 0.7rem 1.25rem;
+	border-radius: 9999px;
+	border: none;
+	background: linear-gradient(135deg, #25d366 0%, #14a850 100%);
+	color: #04170c;
+	font-family: 'Inter', sans-serif;
+	font-size: 0.875rem;
+	font-weight: 700;
+	text-decoration: none;
+	cursor: pointer;
+	transition: filter 0.2s ease, transform 0.2s ease;
+}
+
+.waPopupJoinBtn:hover {
+	filter: brightness(1.08);
+	transform: translateY(-1px);
+}
+
+.waPopupDismissBtn {
+	padding: 0.35rem 0.5rem;
+	border: none;
+	background: none;
+	color: var(--hub-muted-fg);
+	font-family: 'Inter', sans-serif;
+	font-size: 0.75rem;
+	text-decoration: underline;
+	text-underline-offset: 3px;
+	cursor: pointer;
+	transition: color 0.2s ease;
+}
+
+.waPopupDismissBtn:hover {
+	color: var(--hub-fg);
+}
+
+.waPopupTimer {
+	position: absolute;
+	left: 0;
+	bottom: 0;
+	width: 100%;
+	height: 2px;
+	background: rgba(255, 255, 255, 0.07);
+}
+
+.waPopupTimerFill {
+	display: block;
+	height: 100%;
+	width: 100%;
+	transform-origin: left center;
+	background: linear-gradient(90deg, #25d366 0%, rgba(37, 211, 102, 0.35) 100%);
+	animation-name: waTimerDrain;
+	animation-timing-function: linear;
+	animation-fill-mode: forwards;
+}
+
+@keyframes waFadeIn {
+	from {
+		opacity: 0;
+	}
+	to {
+		opacity: 1;
+	}
+}
+
+@keyframes waPopIn {
+	from {
+		opacity: 0;
+		transform: translateY(12px) scale(0.96);
+	}
+	to {
+		opacity: 1;
+		transform: translateY(0) scale(1);
+	}
+}
+
+@keyframes waTimerDrain {
+	from {
+		transform: scaleX(1);
+	}
+	to {
+		transform: scaleX(0);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.waPopupOverlay,
+	.waPopupCard {
+		animation: none;
+	}
+
+	.waPopupTimerFill {
+		animation: none;
+		transform: scaleX(0);
+	}
+}
+
+@media (max-width: 639px) {
+	.waPopupCard {
+		padding: 1.75rem 1.25rem 1.1rem;
+	}
+
+	.waPopupTitle {
+		font-size: 1.05rem;
+	}
+
+	.waPopupText {
+		font-size: 0.78rem;
 	}
 }

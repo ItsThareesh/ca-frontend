@@ -20,7 +20,9 @@ import {
 	FiAward,
 	FiMapPin,
 	FiCalendar,
+	FiAlertCircle,
 } from 'react-icons/fi'
+import { FaWhatsapp } from 'react-icons/fa'
 import axios from 'axios'
 
 import s from '../styles/hub-profile.module.css'
@@ -240,6 +242,33 @@ export function calculateMilestoneProgress(count, milestones = REFERRAL_MILESTON
 const ROWS_PER_PAGE = 10
 const REFERRAL_BASE_URL = 'https://ca.tathva.org/?ref='
 
+/* Invite link for the campus ambassador WhatsApp group, shown at the top of
+   every profile. There's no backend config endpoint for it, so it lives here —
+   swap in a new invite URL when the group is rotated. Left empty, the button
+   simply isn't rendered. */
+const CA_WHATSAPP_GROUP_URL =
+	'https://chat.whatsapp.com/I4dZ6IqAYFnEbPcHpyOSZB?s=sw&p=i&mlu=4&ilr=4'
+
+/* One-time nudge towards the WhatsApp group. It pops up shortly after the
+   profile loads and closes itself again after a few seconds; "Don't show
+   again" persists the opt-out per browser so it never reappears. */
+const WHATSAPP_POPUP_STORAGE_KEY = 'tathva_ca_whatsapp_popup_dismissed'
+const WHATSAPP_POPUP_DELAY_MS = 1200
+const WHATSAPP_POPUP_DURATION_MS = 12000
+
+/* The backend only issues a referral code once the CA profile is complete,
+   so every one of these has to be filled in before the code shows up. */
+const REQUIRED_PROFILE_FIELDS = [
+	{ key: 'name', label: 'Name' },
+	{ key: 'phone', label: 'Phone' },
+	{ key: 'college', label: 'College' },
+	{ key: 'district', label: 'District' },
+	{ key: 'state', label: 'State' },
+	{ key: 'branch', label: 'Branch' },
+	{ key: 'year', label: 'Year' },
+	{ key: 'semester', label: 'Semester' },
+]
+
 export default function ProfilePage() {
 	const { user, accessToken, authLoading, logout } = useUserContext()
 	const router = useRouter()
@@ -266,6 +295,9 @@ export default function ProfilePage() {
 	// mock testing state
 	const [mockPoints, setMockPoints] = useState(USE_MOCK ? MOCK_PROFILE.total_points : 0)
 	const [mockReferralCount, setMockReferralCount] = useState(USE_MOCK ? 14 : 0)
+
+	// whatsapp group popup
+	const [showWhatsappPopup, setShowWhatsappPopup] = useState(false)
 
 	// copy states
 	const [copied, setCopied] = useState(null) // 'code' | 'link' | null
@@ -358,6 +390,18 @@ export default function ProfilePage() {
 		: ''
 	const firstName = (profile?.name || 'Ambassador').split(' ')[0]
 
+	/* Which CA details are still blank — drives the "complete your profile"
+	   notice, which disappears once none of them are left. */
+	const missingFields = useMemo(() => {
+		if (!profile) return []
+		return REQUIRED_PROFILE_FIELDS.filter(({ key }) => {
+			const value = profile[key]
+			return value === null || value === undefined || String(value).trim() === ''
+		}).map(({ label }) => label)
+	}, [profile])
+
+	const isProfileIncomplete = missingFields.length > 0
+
 	/* Badges criteria:
 	   - Leaderboard badge: unlocked at 25% of 50 referrals (≥ 13 refs)
 	   - Top 20 badge: unlocked at 75% of 50 referrals (≥ 38 refs) */
@@ -401,6 +445,48 @@ export default function ProfilePage() {
 			setPage(Math.max(0, totalPages - 1))
 		}
 	}, [totalPages, page])
+
+	/* ── whatsapp group popup ── */
+	// Opens once the profile is on screen, unless this browser opted out before.
+	useEffect(() => {
+		if (loading || !CA_WHATSAPP_GROUP_URL) return
+
+		let optedOut = false
+		try {
+			optedOut = localStorage.getItem(WHATSAPP_POPUP_STORAGE_KEY) === 'true'
+		} catch (err) {
+			// private mode / blocked storage — fall through and show it
+		}
+		if (optedOut) return
+
+		const timer = setTimeout(() => setShowWhatsappPopup(true), WHATSAPP_POPUP_DELAY_MS)
+		return () => clearTimeout(timer)
+	}, [loading])
+
+	// Self-dismisses after a few seconds so it never sits in the way
+	useEffect(() => {
+		if (!showWhatsappPopup) return
+		const timer = setTimeout(() => setShowWhatsappPopup(false), WHATSAPP_POPUP_DURATION_MS)
+		return () => clearTimeout(timer)
+	}, [showWhatsappPopup])
+
+	useEffect(() => {
+		if (!showWhatsappPopup) return
+		function handleEscape(e) {
+			if (e.key === 'Escape') setShowWhatsappPopup(false)
+		}
+		window.addEventListener('keydown', handleEscape)
+		return () => window.removeEventListener('keydown', handleEscape)
+	}, [showWhatsappPopup])
+
+	function dismissWhatsappPopupForever() {
+		try {
+			localStorage.setItem(WHATSAPP_POPUP_STORAGE_KEY, 'true')
+		} catch (err) {
+			console.error('Could not save WhatsApp popup preference:', err)
+		}
+		setShowWhatsappPopup(false)
+	}
 
 	/* copy handler using native clipboard API */
 	function handleCopy(text, kind) {
@@ -553,6 +639,20 @@ export default function ProfilePage() {
 						</p>
 					</div>
 					<div className={s.welcomeActions}>
+						{/* CA WhatsApp group — kept up here so it's the first thing on every profile */}
+						{CA_WHATSAPP_GROUP_URL && (
+							<a
+								href={CA_WHATSAPP_GROUP_URL}
+								target='_blank'
+								rel='noopener noreferrer'
+								className={s.whatsappBtn}
+								title='CA WhatsApp group link'
+								aria-label='Join the CA WhatsApp group'
+							>
+								<FaWhatsapp size={17} />
+								<span>Join CA WhatsApp Group</span>
+							</a>
+						)}
 						<button
 							className={s.signOutBtn}
 							onClick={logout}
@@ -564,6 +664,98 @@ export default function ProfilePage() {
 						</button>
 					</div>
 				</section>
+
+				{/* ── CA WHATSAPP GROUP POPUP ──
+				    Shows once per browser a moment after load, closes itself after a
+				    few seconds, and stays gone for good once dismissed. */}
+				{showWhatsappPopup && (
+					<div
+						className={s.waPopupOverlay}
+						onClick={() => setShowWhatsappPopup(false)}
+						role='presentation'
+					>
+						<div
+							className={s.waPopupCard}
+							role='dialog'
+							aria-modal='true'
+							aria-labelledby='wa-popup-title'
+							onClick={(e) => e.stopPropagation()}
+						>
+							<button
+								type='button'
+								className={s.waPopupClose}
+								onClick={() => setShowWhatsappPopup(false)}
+								aria-label='Close'
+								title='Close'
+							>
+								<FiX size={16} />
+							</button>
+
+							<div className={s.waPopupIcon}>
+								<FaWhatsapp size={30} />
+							</div>
+
+							<h2 id='wa-popup-title' className={s.waPopupTitle}>
+								Join the CA WhatsApp Group
+							</h2>
+							<p className={s.waPopupText}>
+								This is the official campus ambassador WhatsApp group — announcements, tasks and
+								everything you need for Tathva &apos;26 goes out here first.
+							</p>
+
+							<a
+								href={CA_WHATSAPP_GROUP_URL}
+								target='_blank'
+								rel='noopener noreferrer'
+								className={s.waPopupJoinBtn}
+								onClick={() => setShowWhatsappPopup(false)}
+							>
+								<FaWhatsapp size={18} />
+								<span>Join the group</span>
+							</a>
+
+							<button
+								type='button'
+								className={s.waPopupDismissBtn}
+								onClick={dismissWhatsappPopupForever}
+							>
+								Don&apos;t show this again
+							</button>
+
+							{/* drains over WHATSAPP_POPUP_DURATION_MS so the auto-close isn't a surprise */}
+							<div className={s.waPopupTimer}>
+								<span
+									className={s.waPopupTimerFill}
+									style={{ animationDuration: `${WHATSAPP_POPUP_DURATION_MS}ms` }}
+								/>
+							</div>
+						</div>
+					</div>
+				)}
+
+				{/* ── INCOMPLETE PROFILE NOTICE ──
+				    The referral code is only issued once every CA detail is filled in,
+				    so this stays up until nothing is missing. */}
+				{isProfileIncomplete && !isEditing && (
+					<section className={s.profileAlert} role='status'>
+						<div className={s.profileAlertIcon}>
+							<FiAlertCircle size={18} />
+						</div>
+						<div className={s.profileAlertBody}>
+							<h2 className={s.profileAlertTitle}>
+								Complete your profile to get your referral code
+							</h2>
+							<p className={s.profileAlertText}>
+								Your referral code and link stay locked until every detail is filled in. Still
+								missing: <span className={s.profileAlertMissing}>{missingFields.join(', ')}</span>.
+							</p>
+						</div>
+						<button type='button' className={s.profileAlertBtn} onClick={startEditing}>
+							<FiEdit2 size={13} />
+							<span>Complete profile</span>
+						</button>
+					</section>
+				)}
 
 				{/* ── TOP GRID (Details + Referral) ── */}
 				<div className={s.topGrid}>
