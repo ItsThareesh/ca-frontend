@@ -15,6 +15,7 @@ export default function RegisterForm({ editProfile }) {
 
 	const [form, setForm] = useState(null)
 	const [submitting, setSubmitting] = useState(false)
+	const [showReferralModal, setShowReferralModal] = useState(false)
 
 	useEffect(() => {
 		if (!user) return
@@ -48,9 +49,12 @@ export default function RegisterForm({ editProfile }) {
 			await completeProfile(accessToken, form)
 			await fetchUserProfile(accessToken)
 
-			toast.success(editProfile ? 'Profile updated!' : 'Profile completed! Welcome aboard.')
-
-			router.push('/profile')
+			const profileCompleted = localStorage.getItem('tathva_ca_profile_completed')
+			if (profileCompleted) {
+				router.push('/profile?editprofile=true')
+			} else {
+				setShowReferralModal(true)
+			}
 		} catch (err) {
 			console.error(err)
 
@@ -65,6 +69,15 @@ export default function RegisterForm({ editProfile }) {
 		} finally {
 			setSubmitting(false)
 		}
+	}
+
+	function handleModalClick() {
+		setShowReferralModal(false)
+		const profileCompleted = localStorage.getItem('tathva_ca_profile_completed')
+		if (!profileCompleted) {
+			localStorage.setItem('tathva_ca_profile_completed', 'true')
+		}
+		router.push('/profile?editprofile=true')
 	}
 
 	if (authLoading) {
@@ -98,6 +111,22 @@ export default function RegisterForm({ editProfile }) {
 
 	if (!form) {
 		return <div className={authStyles.container} />
+	}
+
+	if (showReferralModal) {
+		return (
+			<div className={authStyles.container}>
+				<div className='modal-overlay' onClick={handleModalClick}>
+					<div className='modal-content' onClick={e => e.stopPropagation()}>
+						<h3>Referral Code</h3>
+						<p>You will only get your referral code after completing your profile details.</p>
+						<button className={authStyles.googleButton} onClick={handleModalClick}>
+							Got it
+						</button>
+					</div>
+				</div>
+			</div>
+		)
 	}
 
 	return (

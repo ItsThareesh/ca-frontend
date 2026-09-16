@@ -281,6 +281,12 @@ export default function ProfilePage() {
 		return () => window.removeEventListener('click', handleGlobalClick)
 	}, [])
 
+	// Read editprofile query param to open profile in edit mode
+	useEffect(() => {
+		const editProfile = router.query?.editprofile === 'true'
+		setIsEditing(editProfile)
+	}, [router.query])
+
 	// Load stored mock data if available
 	useEffect(() => {
 		if (typeof window !== 'undefined' && USE_MOCK) {
@@ -500,6 +506,7 @@ export default function ProfilePage() {
 
 			setProfile(updated)
 			setIsEditing(false)
+			localStorage.setItem('tathva_ca_profile_completed', 'true')
 			toast.success('CA details updated successfully!')
 		} catch (err) {
 			console.error(
@@ -804,7 +811,7 @@ export default function ProfilePage() {
 								<form className={s.editForm} onSubmit={handleSaveProfile}>
 									<div className={s.formGrid}>
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
-											<label className={s.formLabel}>Full Name *</label>
+											<label className={s.formLabel}>Full Name <span className={s.formAsterisk}>*</span></label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -816,7 +823,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>WhatsApp / Phone *</label>
+											<label className={s.formLabel}>WhatsApp / Phone <span className={s.formAsterisk}>*</span></label>
 											<input
 												type='tel'
 												className={s.formInput}
@@ -830,7 +837,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Year of Study *</label>
+											<label className={s.formLabel}>Year of Study <span className={s.formAsterisk}>*</span></label>
 											<select
 												className={s.formSelect}
 												value={editFormData.year}
@@ -847,7 +854,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={`${s.formGroup} ${s.formGroupFull}`}>
-											<label className={s.formLabel}>Institute / College *</label>
+											<label className={s.formLabel}>Institute / College <span className={s.formAsterisk}>*</span></label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -861,7 +868,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Branch / Department *</label>
+											<label className={s.formLabel}>Branch / Department <span className={s.formAsterisk}>*</span></label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -875,7 +882,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>Semester *</label>
+											<label className={s.formLabel}>Semester <span className={s.formAsterisk}>*</span></label>
 											<input
 												type='number'
 												className={s.formInput}
@@ -891,7 +898,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>District *</label>
+											<label className={s.formLabel}>District <span className={s.formAsterisk}>*</span></label>
 											<input
 												type='text'
 												className={s.formInput}
@@ -905,7 +912,7 @@ export default function ProfilePage() {
 										</div>
 
 										<div className={s.formGroup}>
-											<label className={s.formLabel}>State *</label>
+											<label className={s.formLabel}>State <span className={s.formAsterisk}>*</span></label>
 											<input
 												type='text'
 												className={s.formInput}
