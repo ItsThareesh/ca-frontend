@@ -247,8 +247,7 @@ const REFERRAL_BASE_URL = 'https://ca.tathva.org/?ref='
    swap in a new invite URL when the group is rotated. Left empty, the button
    simply isn't rendered. */
 const CA_WHATSAPP_GROUP_URL =
-	'https://chat.whatsapp.com/I4dZ6IqAYFnEbPcHpyOSZB?s=sw&p=i&mlu=4&ilr=4'
-
+	'https://chat.whatsapp.com/DFs33QxuGVR7rEg38ka5rg?s=cl&p=i&mlu=4&ilr=4'
 /* One-time nudge towards the WhatsApp group. It pops up shortly after the
    profile loads and closes itself again after a few seconds; "Don't show
    again" persists the opt-out per browser so it never reappears. */
