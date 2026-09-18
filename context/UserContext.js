@@ -1,8 +1,9 @@
-import { useEffect, useState, useRef } from 'react'
+import { useEffect, useState } from 'react'
 import { useContext, createContext } from 'react'
 import axios from 'axios'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import { getGlyphsAvatarUrl } from 'lib/dicebear'
 
 const UserContext = createContext()
 
@@ -19,29 +20,20 @@ export default function UserContextWrapper({ children }) {
 	// already-authenticated user briefly looks logged-out and bounces them.
 	const [authLoading, setAuthLoading] = useState(true)
 
-	// Initialize user from stored tokens on mount
+	// Initialize session on mount. Cookie-only: the browser sends the httpOnly
+	// `auth` cookie automatically; no token is ever read from JS.
 	useEffect(() => {
-		const storedAccessToken = localStorage.getItem('access_token')
-		const storedRefreshToken = localStorage.getItem('refresh_token')
-
-		// Google sign-in only ever stores an access token (no refresh token),
-		// so only the access token is required to restore a session.
-		if (storedAccessToken) {
-			setAccessToken(storedAccessToken)
-			if (storedRefreshToken) setRefreshToken(storedRefreshToken)
-			fetchUserProfile(storedAccessToken).finally(() => setAuthLoading(false))
-		} else {
-			setAuthLoading(false)
-		}
+		fetchCookieSession()
+			.catch(() => {})
+			.finally(() => setAuthLoading(false))
 	}, [])
 
-	// Fetch user profile
-	const fetchUserProfile = async (token) => {
+	// Fetch user profile. Cookie-only: the httpOnly `auth` cookie authenticates
+	// the request. `withCredentials` must always be set so the browser sends it.
+	const fetchUserProfile = async () => {
 		try {
 			const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, {
-				headers: {
-					Authorization: `Bearer ${token}`,
-				},
+				withCredentials: true,
 			})
 
 			const currentUser = {
@@ -77,93 +69,131 @@ export default function UserContextWrapper({ children }) {
 		}
 	}
 
-	// Refresh access token using refresh token
-	const refreshAccessToken = async () => {
-		try {
-			const storedRefreshToken = localStorage.getItem('refresh_token')
-			if (!storedRefreshToken) return false
+	// Cookie-only session check. No side effects (no refresh attempt, no
+	// logout toast) — returns the user or null. Used on mount and on the
+	// OAuth callback landing page.
+	const fetchCookieSession = async () => {
+		const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, {
+			withCredentials: true,
+		})
 
-			const { data } = await axios.post(
-				`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/token/refresh/`,
-				{ refresh: storedRefreshToken }
-			)
-
-			const newAccessToken = data.access
-			localStorage.setItem('access_token', newAccessToken)
-			setAccessToken(newAccessToken)
-
-			await fetchUserProfile(newAccessToken)
-			return true
-		} catch (err) {
-			console.error('Error refreshing token:', err)
-			return false
+		// A 200 without an identity means "no session" — don't mark logged-in.
+		if (!data?.id && !data?.email) {
+			throw new Error('No active session')
 		}
+
+		const currentUser = {
+			userId: data?.id,
+			tathvaId: data?.tathvaId || data?.tathva_id,
+			is_ca: data?.is_ca || false,
+			name: data?.name,
+			email: data?.email,
+			phone: data?.phone || '',
+			college: data?.college || '',
+			district: data?.district || '',
+			state: data?.state || '',
+			semester: data?.semester || '',
+			branch: data?.branch || '',
+			year: data?.year || '',
+			experience: data?.experience || false,
+			refCode: data?.referralCode || data?.ref_code || data?.refCode || '',
+			totalPoints: data?.totalPoints || data?.total_points || 0,
+			imageUrl: data?.avatarUrl || data?.imageUrl || getGlyphsAvatarUrl(data?.name || 'CA'),
+		}
+
+		setUser(currentUser)
+		setIsLoggedIn(true)
+		return currentUser
 	}
+
+	// Refresh access token using refresh token
+
+	// const refreshAccessToken = async () => {
+	// 	try {
+	// 		const storedRefreshToken = localStorage.getItem('refresh_token')
+	// 		if (!storedRefreshToken) return false
+
+	// 		const { data } = await axios.post(
+	// 			`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/token/refresh/`,
+	// 			{ refresh: storedRefreshToken }
+	// 		)
+
+	// 		const newAccessToken = data.access
+	// 		localStorage.setItem('access_token', newAccessToken)
+	// 		setAccessToken(newAccessToken)
+
+	// 		await fetchUserProfile()
+	// 		return true
+	// 	} catch (err) {
+	// 		console.error('Error refreshing token:', err)
+	// 		return false
+	// 	}
+	// }
 
 	// Sign up new user
-	const signUp = async (userData) => {
-		try {
-			const { data } = await axios.post(
-				`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/`,
-				userData
-			)
+	// const signUp = async (userData) => {
+	// 	try {
+	// 		const { data } = await axios.post(
+	// 			`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/register/`,
+	// 			userData
+	// 		)
 
-			toast.success('Registration successful! Please check your email to verify your account.')
-			return { success: true, data }
-		} catch (err) {
-			const errorMsg =
-				err.response?.data?.message ||
-				err.response?.data?.error ||
-				'Registration failed. Please try again.'
-			toast.error(errorMsg)
-			console.error('Signup error:', err)
-			return { success: false, error: errorMsg }
-		}
-	}
+	// 		toast.success('Registration successful! Please check your email to verify your account.')
+	// 		return { success: true, data }
+	// 	} catch (err) {
+	// 		const errorMsg =
+	// 			err.response?.data?.message ||
+	// 			err.response?.data?.error ||
+	// 			'Registration failed. Please try again.'
+	// 		toast.error(errorMsg)
+	// 		console.error('Signup error:', err)
+	// 		return { success: false, error: errorMsg }
+	// 	}
+	// }
 
 	// Login user
-	const login = async (email, password) => {
-		try {
-			const { data } = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login/`, {
-				email,
-				password,
-			})
+	// const login = async (email, password) => {
+	// 	try {
+	// 		const { data } = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/login/`, {
+	// 			email,
+	// 			password,
+	// 		})
 
-			// Store tokens
-			localStorage.setItem('access_token', data.access)
-			localStorage.setItem('refresh_token', data.refresh)
+	// 		// Store tokens
+	// 		localStorage.setItem('access_token', data.access)
+	// 		localStorage.setItem('refresh_token', data.refresh)
 
-			setAccessToken(data.access)
-			setRefreshToken(data.refresh)
+	// 		setAccessToken(data.access)
+	// 		setRefreshToken(data.refresh)
 
-			// Fetch user profile
-			await fetchUserProfile(data.access)
+	// 		// Fetch user profile (cookie session)
+	// 		await fetchUserProfile()
 
-			toast.success('Logged in successfully!')
-			return { success: true }
-		} catch (err) {
-			const errorMsg =
-				err.response?.data?.message ||
-				err.response?.data?.error ||
-				'Login failed. Please check your credentials.'
-			toast.error(errorMsg)
-			console.error('Login error:', err)
-			return { success: false, error: errorMsg }
-		}
-	}
+	// 		toast.success('Logged in successfully!')
+	// 		return { success: true }
+	// 	} catch (err) {
+	// 		const errorMsg =
+	// 			err.response?.data?.message ||
+	// 			err.response?.data?.error ||
+	// 			'Login failed. Please check your credentials.'
+	// 		toast.error(errorMsg)
+	// 		console.error('Login error:', err)
+	// 		return { success: false, error: errorMsg }
+	// 	}
+	// }
 
 	// Start the Google OAuth flow. GET /api/auth/google returns
 	// { url: <Google consent screen URL> } rather than redirecting itself,
 	// so we fetch it and then navigate the browser there. Google then returns
-	// to the backend's own /api/auth/callback, which redirects back to
-	// /auth/google/callback with a `?token=` JWT.
+	// to the backend's own /api/auth/callback, which sets the httpOnly `auth`
+	// cookie and redirects back to `redirect` (must be allowlisted in the
+	// backend's ALLOWED_ORIGINS). No token ever travels in the URL.
 	const loginWithGoogle = async () => {
 		try {
-			const redirect = encodeURIComponent(`${window.location.origin}/profile`)
-
-			const { data } = await axios.get(
-				`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/ca/google?redirect=${redirect}`
-			)
+			const redirect = `${window.location.origin}/auth/google/callback`
+			const { data } = await axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/google`, {
+				params: { redirect },
+			})
 			if (!data?.url) throw new Error('Missing Google auth URL in response')
 
 			window.location.href = data.url
@@ -173,74 +203,17 @@ export default function UserContextWrapper({ children }) {
 		}
 	}
 
-	// Complete sign-in using the JWT handed back by the Google OAuth callback redirect
-	const loginWithToken = async (token) => {
-		try {
-			localStorage.setItem('access_token', token)
-			localStorage.removeItem('refresh_token')
-
-			setAccessToken(token)
-			setRefreshToken(null)
-
-			const currentUser = await fetchUserProfile(token)
-			if (!currentUser) throw new Error('Failed to fetch user profile')
-
-			return { success: true, user: currentUser }
-		} catch (err) {
-			console.error('Google login error:', err)
-			toast.error('Google sign-in failed. Please try again.')
-			return { success: false }
-		}
-	}
-
-	// Google hands the JWT back as a `?token=` query param after OAuth completes.
-	// Which page the backend redirects to is backend-configured, not something
-	// this app controls — it may land on a dedicated callback route, or on the
-	// site root, or anywhere else. So this has to run globally (every page goes
-	// through UserContextWrapper) rather than living on one specific route.
-	const processedUrlToken = useRef(false)
-	useEffect(() => {
-		if (!router.isReady) return
-		const token = router.query.token
-		if (!token || typeof token !== 'string' || processedUrlToken.current) return
-		processedUrlToken.current = true
-
-		// Strip the token out of the address bar immediately so it never lingers
-		// there or in browser history.
-		const url = new URL(window.location.href)
-		url.searchParams.delete('token')
-		window.history.replaceState({}, '', url.pathname + url.search)
-
-		const completeGoogleLogin = async () => {
-			const result = await loginWithToken(token)
-
-			if (!result.success) {
-				window.location.replace('/login')
-				return
-			}
-
-			toast.success('Logged in successfully!')
-
-			const redirectTo = sessionStorage.getItem('redirectTo') || '/profile'
-			sessionStorage.removeItem('redirectTo')
-
-			if (!result.user?.name) {
-				window.location.replace('/register')
-			} else {
-				window.location.replace(redirectTo)
-			}
-		}
-
-		completeGoogleLogin()
-	}, [router.isReady, router.query.token])
-
-	// Logout user
+	// Logout user — clear the server cookie (best effort), then local state.
 	async function logout() {
-		localStorage.removeItem('access_token')
-		localStorage.removeItem('refresh_token')
-		// Leave the page before clearing the user — otherwise guarded pages like
-		// /profile see user = null first and redirect to /login instead of home.
-		await router.push('/')
+		try {
+			await axios.post(
+				`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/logout`,
+				{},
+				{ withCredentials: true }
+			)
+		} catch (err) {
+			console.error('Server logout failed:', err)
+		}
 		setUser(null)
 		setIsLoggedIn(false)
 		setAccessToken(null)
@@ -248,57 +221,18 @@ export default function UserContextWrapper({ children }) {
 		toast.success('Signed out successfully')
 	}
 
-	// Get current user (async)
+	// Get current user (async, cookie session)
 	function getUser() {
-		return new Promise(async (resolve, reject) => {
-			try {
-				const token = localStorage.getItem('access_token')
-				if (token) {
-					const userData = await fetchUserProfile(token)
-					resolve(userData)
-				} else {
-					resolve(null)
-				}
-			} catch (err) {
-				reject(err)
-			}
-		})
+		return fetchCookieSession().catch(() => null)
 	}
 
-	// Create axios instance with auto token refresh
+	// Authenticated axios instance. Cookie-only: the browser attaches the
+	// session cookie, so no Authorization header is ever set here.
 	const createAuthAxios = () => {
 		const instance = axios.create({
 			baseURL: process.env.NEXT_PUBLIC_BACKEND_URL,
+			withCredentials: true,
 		})
-
-		instance.interceptors.request.use(
-			(config) => {
-				if (accessToken) {
-					config.headers.Authorization = `Bearer ${accessToken}`
-				}
-				return config
-			},
-			(error) => Promise.reject(error)
-		)
-
-		instance.interceptors.response.use(
-			(response) => response,
-			async (error) => {
-				const originalRequest = error.config
-
-				if (error.response?.status === 401 && !originalRequest._retry) {
-					originalRequest._retry = true
-
-					const refreshed = await refreshAccessToken()
-					if (refreshed) {
-						originalRequest.headers.Authorization = `Bearer ${accessToken}`
-						return instance(originalRequest)
-					}
-				}
-
-				return Promise.reject(error)
-			}
-		)
 
 		return instance
 	}
@@ -314,10 +248,10 @@ export default function UserContextWrapper({ children }) {
 				signUp,
 				login,
 				loginWithGoogle,
-				loginWithToken,
 				logout,
 				getUser,
 				fetchUserProfile,
+				fetchCookieSession,
 				refreshAccessToken,
 				createAuthAxios,
 			}}

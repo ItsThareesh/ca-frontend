@@ -8,7 +8,7 @@ import authStyles from 'styles/login.module.css'
 import styles from './register-form.module.css'
 
 export default function RegisterForm({ editProfile }) {
-	const { user, accessToken, isLoggedIn, authLoading, loginWithGoogle, fetchUserProfile } =
+	const { user, isLoggedIn, authLoading, loginWithGoogle, fetchUserProfile } =
 		useUserContext()
 
 	const router = useRouter()
@@ -46,8 +46,8 @@ export default function RegisterForm({ editProfile }) {
 		setSubmitting(true)
 
 		try {
-			await completeProfile(accessToken, form)
-			await fetchUserProfile(accessToken)
+			await completeProfile(form)
+			await fetchUserProfile()
 
 			const profileCompleted = localStorage.getItem('tathva_ca_profile_completed')
 			if (profileCompleted) {

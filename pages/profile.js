@@ -339,7 +339,7 @@ export function validateProfileForm(form) {
 }
 
 export default function ProfilePage() {
-	const { user, accessToken, authLoading, logout } = useUserContext()
+	const { user, authLoading, logout } = useUserContext()
 	const router = useRouter()
 
 	const [profile, setProfile] = useState(USE_MOCK ? MOCK_PROFILE : null)
@@ -425,18 +425,18 @@ export default function ProfilePage() {
 	useEffect(() => {
 		if (USE_MOCK) return
 		if (authLoading) return // wait for context to finish restoring the session
-		if (!user || !accessToken) {
+		if (!user) {
 			router.push('/login')
 			return
 		}
 		loadData()
-	}, [accessToken, user, authLoading])
+	}, [user, authLoading])
 
 	async function loadData() {
 		try {
 			const [profileRes, referralsData] = await Promise.all([
 				axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, {
-					headers: { Authorization: `Bearer ${accessToken}` },
+					withCredentials: true,
 				}),
 				fetchReferrals().catch(() => []),
 			])
@@ -645,29 +645,20 @@ export default function ProfilePage() {
 			return
 		}
 
-		const token = localStorage.getItem('access_token')
-		if (!token) {
-			toast.error('You need to be signed in to update your profile')
-			return
-		}
-
-		// Exactly the fields the backend's PUT /api/user/ accepts. `name` was
-		// removed from its allowed list, so sending it is silently ignored.
-		const payload = {
-			phone: values.phone,
-			college: values.college,
-			district: values.district,
-			state: values.state,
-			semester: values.semester,
-			branch: values.branch,
-			year: values.year,
-		}
-
 		setSaving(true)
 
 		try {
+			// Send only the fields the form actually edits — not the full merged
+			// profile object (which carries backend-only fields like id/email/points
+			// straight through from the GET response).
+			const payload = {
+				phone: editFormData.phone,
+				college: editFormData.college,
+				branch: editFormData.branch,
+				year: Number(editFormData.year),
+			}
 			await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, payload, {
-				headers: { Authorization: `Bearer ${token}` },
+				withCredentials: true,
 			})
 
 			setProfile(updated)
