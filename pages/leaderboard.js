@@ -7,33 +7,20 @@ import { FaCrown, FaMedal } from 'react-icons/fa'
 
 const ITEMS_PER_PAGE = 10
 
-/* The backend's /api/leaderboard/get rows aren't guaranteed to use one set of
-   field names (name/points vs. total_points vs. count), so normalise them into
-   { id, email, name, points, rank } before rendering. Ranks come from the
-   backend when every row carries one; otherwise they're derived from points. */
+/* GET /api/leaderboard/get returns rows already ranked:
+   { rank, name, college, referrals }. Each confirmed referral is one point. */
 function normalizeLeaderboard(raw) {
 	if (!Array.isArray(raw)) return []
-
-	const entries = raw.map((entry) => ({
-		id: entry?.id ?? entry?.userId ?? entry?.user_id ?? null,
-		email: entry?.email ?? entry?.user?.email ?? '',
-		name: entry?.name ?? entry?.user?.name ?? 'Ambassador',
-		points:
-			Number(
-				entry?.points ?? entry?.totalPoints ?? entry?.total_points ?? entry?.count ?? 0
-			) || 0,
-		rank: Number.isFinite(Number(entry?.rank)) ? Number(entry.rank) : null,
+	return raw.map((entry) => ({
+		rank: entry.rank,
+		name: entry.name || 'Ambassador',
+		college: entry.college || '',
+		points: entry.referrals || 0,
 	}))
-
-	const hasBackendRanks = entries.length > 0 && entries.every((e) => e.rank !== null)
-
-	if (hasBackendRanks) return entries.sort((a, b) => a.rank - b.rank)
-
-	return entries.sort((a, b) => b.points - a.points).map((e, i) => ({ ...e, rank: i + 1 }))
 }
 
 export default function Leaderboard() {
-	const { user, isLoggedIn, createAuthAxios } = useUserContext()
+	const { user, isLoggedIn } = useUserContext()
 	const [currentPage, setCurrentPage] = useState(1)
 	const [participants, setParticipants] = useState([])
 	const [loading, setLoading] = useState(true)
@@ -76,21 +63,15 @@ export default function Leaderboard() {
 		return 'You (Sign in to view rank)'
 	}, [isLoggedIn, user])
 
-	/* The signed-in user's own row: taken straight from the leaderboard when
-	   they appear on it, otherwise derived from the points on their profile. */
+	/* The signed-in user's own row: the leaderboard exposes no ids, so match on
+	   name + college. Absent from the list means no confirmed referrals yet. */
 	const currentUserEntry = useMemo(() => {
 		if (!isLoggedIn || !user) return null
 
-		const match = participants.find(
-			(p) =>
-				(user.userId != null && p.id != null && String(p.id) === String(user.userId)) ||
-				(user.email && p.email && p.email.toLowerCase() === user.email.toLowerCase())
-		)
+		const match = participants.find((p) => p.name === user.name && p.college === user.college)
 		if (match) return { rank: match.rank, points: match.points }
 
-		const points = Number(user.totalPoints ?? user.total_points ?? 0) || 0
-		const rank = participants.filter((p) => p.points > points).length + 1
-		return { rank, points }
+		return { rank: participants.length + 1, points: 0 }
 	}, [isLoggedIn, user, participants])
 
 	// Current page items (strictly 10 items)

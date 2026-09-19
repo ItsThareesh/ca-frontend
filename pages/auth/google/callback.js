@@ -1,10 +1,21 @@
+import { useEffect } from 'react'
+import { useUserContext } from 'context/UserContext'
 import Spinner from 'components/common/Spinner'
 
-// The actual `?token=` handling lives in context/UserContext.js (it runs
-// globally, since the backend's OAuth redirect target isn't guaranteed to be
-// this specific route). This page just shows a spinner while that happens,
-// in case the backend does land the user here.
+// OAuth landing page. Google returns to the backend callback, which sets the
+// httpOnly session cookie and redirects here with no token in the URL.
+// better-auth restores the session and this context loads the profile — this
+// page just waits for that and routes: guest -> /login, else /profile (which
+// opens the edit form itself while the profile is incomplete).
 export default function GoogleCallbackPage() {
+	const { isLoggedIn, authLoading } = useUserContext()
+
+	useEffect(() => {
+		if (authLoading) return
+
+		window.location.replace(isLoggedIn ? '/profile' : '/login')
+	}, [authLoading, isLoggedIn])
+
 	return (
 		<div
 			style={{

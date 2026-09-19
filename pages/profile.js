@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, useRef } from 'react'
 import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
@@ -23,129 +23,9 @@ import {
 	FiAlertCircle,
 } from 'react-icons/fi'
 import { FaWhatsapp } from 'react-icons/fa'
-import axios from 'axios'
+import api from 'lib/api'
 
 import s from '../styles/hub-profile.module.css'
-
-export function generateRandomReferralCode(length = 7) {
-	const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789'
-	let result = ''
-	for (let i = 0; i < length; i++) {
-		result += chars.charAt(Math.floor(Math.random() * chars.length))
-	}
-	return result
-}
-
-/* ═════════════════════════════════════════════════════════════
-   MOCK DATA — remove this block and set USE_MOCK = false
-   when connecting to the real backend
-   ═════════════════════════════════════════════════════════════ */
-const USE_MOCK = false
-
-const MOCK_PROFILE = {
-	name: 'Hamood Habibi',
-	email: 'hamood.habibi@iitm.ac.in',
-	phone: '+91 98765 43210',
-	college: 'IIT Madras',
-	branch: 'Mechanical Engg',
-	year: 'Year 3',
-	is_ca: true,
-	tathvaId: 'TVA-2025-0042',
-	ref_code: 'K7N9W2X',
-	total_points: 345,
-}
-
-const MOCK_NAMES = [
-	'Adithya Narayanan',
-	'Sneha Thomas',
-	'Rahul Krishnan',
-	'Karthik Raja',
-	'Meera Pillai',
-	'Ananya Sharma',
-	'Rohan Verma',
-	'Diya Patel',
-	'Kavya Rajesh',
-	'Arun Kumar',
-	'Sidharth M',
-	'Neha Nair',
-	'Vishnu T',
-	'Priya Raj',
-	'Gautam Menon',
-	'Aparna S',
-	'Nikhil Joseph',
-	'Pooja Hegde',
-	'Akash Varma',
-	'Shruti Iyer',
-	'Varun Nambiar',
-	'Devika R',
-	'Harishankar P',
-	'Keerthana M',
-	'Abhishek Das',
-	'Naveen Paul',
-	'Tanvi Desai',
-	'Ajay George',
-	'Lakshmi B',
-	'Ashwin K',
-	'Swathi Suresh',
-	'Deepak Chandran',
-	'Sandhya V',
-	'Midhun Mohan',
-	'Anjali R',
-	'Sanjay Pillai',
-	'Bhavana K',
-	'Pranav Nair',
-	'Divya Unni',
-	'Gokul Krishna',
-	'Vandana M',
-	'Rajesh K',
-	'Nimisha Joy',
-	'Vivek Ram',
-	'Parvathy S',
-	'Sarath Babu',
-	'Arya C',
-	'Manoj Kumar',
-	'Athira T',
-	'Shyam Prasad',
-	'Rhea Sen',
-	'Jithin Mathew',
-	'Gayathri N',
-	'Arvind Swamy',
-	'Sunitha R',
-	'Akhil Das',
-	'Reshma V',
-	'Sreehari K',
-	'Malavika P',
-	'Tony Varghese',
-]
-
-const MOCK_EVENTS = [
-	{ event: 'Robotics Workshop', type: 'Workshop', points: 10 },
-	{ event: 'CodeStorm Hackathon', type: 'Hackathon', points: 15 },
-	{ event: 'AI/ML Masterclass', type: 'Lecture', points: 3 },
-	{ event: 'Drone Racing', type: 'Event', points: 10 },
-	{ event: 'Tathva Registration', type: 'Registration', points: 5 },
-	{ event: 'IoT Bootcamp', type: 'Workshop', points: 10 },
-	{ event: 'CyberSec CTF', type: 'Hackathon', points: 15 },
-	{ event: 'Quantum Computing', type: 'Lecture', points: 3 },
-	{ event: 'Bridge Building', type: 'Event', points: 10 },
-	{ event: '3D Printing Workshop', type: 'Workshop', points: 10 },
-	{ event: 'DataViz Challenge', type: 'Hackathon', points: 15 },
-	{ event: 'Blockchain Seminar', type: 'Lecture', points: 3 },
-]
-
-export function generateMockReferrals(count) {
-	return Array.from({ length: count }, (_, i) => {
-		const name = MOCK_NAMES[i % MOCK_NAMES.length]
-		const ev = MOCK_EVENTS[i % MOCK_EVENTS.length]
-		return {
-			name: i >= MOCK_NAMES.length ? `${name} ${Math.floor(i / MOCK_NAMES.length) + 1}` : name,
-			event: ev.event,
-			type: ev.type,
-			points: ev.points,
-		}
-	})
-}
-/* ═════════════════════════════════════════════════════════════ */
 
 /* ═════════════════════════════════════════════════════════════
    REFERRAL REWARDS & MILESTONES CONFIG
@@ -339,12 +219,11 @@ export function validateProfileForm(form) {
 }
 
 export default function ProfilePage() {
-	const { user, accessToken, authLoading, logout } = useUserContext()
+	const { user: profile, authLoading, logout, refreshProfile } = useUserContext()
 	const router = useRouter()
 
-	const [profile, setProfile] = useState(USE_MOCK ? MOCK_PROFILE : null)
 	const [referrals, setReferrals] = useState([])
-	const [loading, setLoading] = useState(USE_MOCK ? false : true)
+	const loading = authLoading || !profile
 	const [page, setPage] = useState(0)
 
 	// edit state
@@ -361,10 +240,6 @@ export default function ProfilePage() {
 		branch: '',
 		year: '',
 	})
-
-	// mock testing state
-	const [mockPoints, setMockPoints] = useState(USE_MOCK ? MOCK_PROFILE.total_points : 0)
-	const [mockReferralCount, setMockReferralCount] = useState(USE_MOCK ? 14 : 0)
 
 	// whatsapp group popup
 	const [showWhatsappPopup, setShowWhatsappPopup] = useState(false)
@@ -383,79 +258,28 @@ export default function ProfilePage() {
 		return () => window.removeEventListener('click', handleGlobalClick)
 	}, [])
 
-	// Read editprofile query param to open profile in edit mode
+	const openedEditRef = useRef(false)
 	useEffect(() => {
-		const editProfile = router.query?.editprofile === 'true'
-		setIsEditing(editProfile)
-	}, [router.query])
-
-	// Load stored mock data if available
-	useEffect(() => {
-		if (typeof window !== 'undefined' && USE_MOCK) {
-			try {
-				let randomCode = localStorage.getItem('tathva_ca_referral_code')
-				if (!randomCode || randomCode.length !== 7) {
-					randomCode = generateRandomReferralCode(7)
-					localStorage.setItem('tathva_ca_referral_code', randomCode)
-				}
-
-				const saved = localStorage.getItem('tathva_ca_mock_profile')
-				if (saved) {
-					const parsed = JSON.parse(saved)
-					// Ensure ref_code is 7 chars
-					const validRefCode =
-						parsed.ref_code && parsed.ref_code.length === 7 ? parsed.ref_code : randomCode
-					setProfile((prev) => ({
-						...prev,
-						...parsed,
-						ref_code: validRefCode,
-					}))
-					if (parsed.total_points !== undefined) {
-						setMockPoints(parsed.total_points)
-					}
-				} else {
-					setProfile((prev) => ({ ...prev, ref_code: randomCode }))
-				}
-			} catch (e) {
-				console.error(e)
-			}
-		}
-	}, [])
+		if (!profile || !router.isReady || openedEditRef.current) return
+		openedEditRef.current = true
+		if (router.query.editprofile === 'true' || !profile.isComplete) startEditing()
+	}, [profile, router.isReady])
 
 	useEffect(() => {
-		if (USE_MOCK) return
 		if (authLoading) return // wait for context to finish restoring the session
-		if (!user || !accessToken) {
+		if (!profile) {
 			router.push('/login')
 			return
 		}
-		loadData()
-	}, [accessToken, user, authLoading])
-
-	async function loadData() {
-		try {
-			const [profileRes, referralsData] = await Promise.all([
-				axios.get(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, {
-					headers: { Authorization: `Bearer ${accessToken}` },
-				}),
-				fetchReferrals().catch(() => []),
-			])
-			setProfile(profileRes.data)
-			setReferrals(referralsData || [])
-		} catch (err) {
-			console.error(err)
-			toast.error('Failed to load profile')
-		} finally {
-			setLoading(false)
-		}
-	}
+		fetchReferrals()
+			.then((data) => setReferrals(data || []))
+			.catch(() => setReferrals([]))
+	}, [authLoading, profile])
 
 	/* derived */
-	const refCode = profile?.referralCode || profile?.ref_code || ''
-	const totalPoints = USE_MOCK ? mockPoints : profile?.total_points || profile?.totalPoints || 0
-	const activeReferrals = useMemo(() => {
-		return USE_MOCK ? generateMockReferrals(mockReferralCount) : referrals
-	}, [mockReferralCount, referrals])
+	const refCode = profile?.refCode || ''
+	const totalPoints = profile?.totalPoints || 0
+	const activeReferrals = referrals
 	const totalReferrals = activeReferrals.length
 	const earnedRewards = useMemo(() => calculateReferralRewards(totalReferrals), [totalReferrals])
 	const referralLink = refCode ? `${REFERRAL_BASE_URL}${refCode}` : ''
@@ -479,16 +303,8 @@ export default function ProfilePage() {
 	const LEADERBOARD_REF_THRESHOLD = Math.ceil(MAX_MILESTONE_COUNT * 0.25) // 13 referrals (25%)
 	const TOP20_REF_THRESHOLD = Math.ceil(MAX_MILESTONE_COUNT * 0.75) // 38 referrals (75%)
 
-	const isInLeaderboard = Boolean(
-		profile?.is_leaderboard ||
-			profile?.isInLeaderboard ||
-			totalReferrals >= LEADERBOARD_REF_THRESHOLD
-	)
-	const isInTop20 = Boolean(
-		profile?.is_top20 ||
-			profile?.isInTop20 ||
-			(totalReferrals >= TOP20_REF_THRESHOLD && isInLeaderboard)
-	)
+	const isInLeaderboard = totalReferrals >= LEADERBOARD_REF_THRESHOLD
+	const isInTop20 = totalReferrals >= TOP20_REF_THRESHOLD && isInLeaderboard
 
 	/* milestone progress - piecewise segment interpolation to match marker positions */
 	const fillPercent = useMemo(() => {
@@ -633,44 +449,14 @@ export default function ProfilePage() {
 		setFormErrors({})
 		setEditFormData((prev) => ({ ...prev, ...values }))
 
-		// `name` is intentionally excluded — the backend drops it from PUT
-		// /api/user, so merging it locally would show a change that was never saved.
-		const updated = { ...profile, ...values }
-
-		if (USE_MOCK) {
-			localStorage.setItem('tathva_ca_mock_profile', JSON.stringify(updated))
-			setProfile(updated)
-			setIsEditing(false)
-			toast.success('CA details updated successfully!')
-			return
-		}
-
-		const token = localStorage.getItem('access_token')
-		if (!token) {
-			toast.error('You need to be signed in to update your profile')
-			return
-		}
-
-		// Exactly the fields the backend's PUT /api/user/ accepts. `name` was
-		// removed from its allowed list, so sending it is silently ignored.
-		const payload = {
-			phone: values.phone,
-			college: values.college,
-			district: values.district,
-			state: values.state,
-			semester: values.semester,
-			branch: values.branch,
-			year: values.year,
-		}
-
 		setSaving(true)
 
 		try {
-			await axios.put(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/user/`, payload, {
-				headers: { Authorization: `Bearer ${token}` },
-			})
+			// `values` holds exactly the fields PUT /api/user accepts (name is not
+			// editable, so it is not sent).
+			await api.put('/api/user/', values)
+			await refreshProfile()
 
-			setProfile(updated)
 			setIsEditing(false)
 			localStorage.setItem('tathva_ca_profile_completed', 'true')
 			toast.success('CA details updated successfully!')
@@ -685,7 +471,6 @@ export default function ProfilePage() {
 			)
 		} finally {
 			setSaving(false)
-			location.reload()
 		}
 	}
 
