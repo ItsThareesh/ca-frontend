@@ -6,15 +6,13 @@ import styles from '../styles/login.module.css'
 
 export default function Login() {
 	const router = useRouter()
-	const { loginWithGoogle, isLoggedIn } = useUserContext()
+	const { loginWithGoogle, isLoggedIn, authLoading } = useUserContext()
 
 	useEffect(() => {
-		if (isLoggedIn) {
-			const redirectTo = sessionStorage.getItem('redirectTo') || '/profile'
-			sessionStorage.removeItem('redirectTo')
-			router.push(redirectTo)
+		if (!authLoading && isLoggedIn) {
+			router.push('/profile')
 		}
-	}, [isLoggedIn, router])
+	}, [authLoading, isLoggedIn, router])
 
 	useEffect(() => {
 		const nextRoot = document.getElementById('__next')
