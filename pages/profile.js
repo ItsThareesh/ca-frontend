@@ -7,7 +7,6 @@ import { fetchReferralStats, fetchReferralCode } from 'lib/req/referrals'
 import {
 	FiCopy,
 	FiCheck,
-	FiExternalLink,
 	FiLogOut,
 	FiMail,
 	FiPhone,
@@ -116,11 +115,6 @@ export function calculateMilestoneProgress(count, milestones = REFERRAL_MILESTON
 
 	return 100
 }
-
-/* The link has to land on the site where tickets are booked: it picks the code
-   up from `?referral_code=` and sends it with the booking. The CA site is a
-   different origin, so a code carried to it would never reach a booking. */
-const REFERRAL_BASE_URL = 'https://tathva.org/?referral_code='
 
 /* Invite link for the campus ambassador WhatsApp group, shown at the top of
    every profile. There's no backend config endpoint for it, so it lives here —
@@ -245,7 +239,7 @@ export default function ProfilePage() {
 	const [showWhatsappPopup, setShowWhatsappPopup] = useState(false)
 
 	// copy states
-	const [copied, setCopied] = useState(null) // 'code' | 'link' | null
+	const [copied, setCopied] = useState(null) // 'code' | null
 
 	// mobile tooltip toggle state
 	const [activeBadgeTooltip, setActiveBadgeTooltip] = useState(null)
@@ -309,7 +303,6 @@ export default function ProfilePage() {
 	// Tickets the provider counts as sold through this CA's code, not people.
 	const totalReferrals = referralStats?.ticketCount ?? 0
 	const earnedRewards = useMemo(() => calculateReferralRewards(totalReferrals), [totalReferrals])
-	const referralLink = refCode ? `${REFERRAL_BASE_URL}${refCode}` : ''
 	const firstName = (profile?.name || 'Ambassador').split(' ')[0]
 
 	/* Which CA details are still blank — drives the "complete your profile"
@@ -399,7 +392,7 @@ export default function ProfilePage() {
 				.writeText(text)
 				.then(() => {
 					setCopied(kind)
-					toast.success(kind === 'code' ? 'Referral code copied!' : 'Referral link copied!')
+					toast.success('Referral code copied!')
 					setTimeout(() => setCopied(null), 1600)
 				})
 				.catch(() => fallbackCopy(text, kind))
@@ -419,7 +412,7 @@ export default function ProfilePage() {
 			document.execCommand('copy')
 			document.body.removeChild(textArea)
 			setCopied(kind)
-			toast.success(kind === 'code' ? 'Referral code copied!' : 'Referral link copied!')
+			toast.success('Referral code copied!')
 			setTimeout(() => setCopied(null), 1600)
 		} catch (err) {
 			console.error(err)
@@ -635,7 +628,7 @@ export default function ProfilePage() {
 								Complete your profile to get your referral code
 							</h2>
 							<p className={s.profileAlertText}>
-								Your referral code and link stay locked until every detail is filled in. Still
+								Your referral code stays locked until every detail is filled in. Still
 								missing: <span className={s.profileAlertMissing}>{missingFields.join(', ')}</span>.
 							</p>
 						</div>
@@ -1066,35 +1059,6 @@ export default function ProfilePage() {
 										>
 											{copied === 'code' ? <FiCheck size={17} /> : <FiCopy size={17} />}
 										</button>
-									</div>
-								</div>
-								{/* Link */}
-								<div>
-									<p className={s.fieldLabel}>Referral link</p>
-									<div className={s.fieldRow}>
-										<div className={s.linkBox}>{referralLink || '——'}</div>
-										<button
-											type='button'
-											className={s.iconBtn}
-											aria-label='Copy referral link'
-											title='Copy referral link'
-											disabled={!refCode}
-											onClick={() => handleCopy(referralLink, 'link')}
-										>
-											{copied === 'link' ? <FiCheck size={17} /> : <FiCopy size={17} />}
-										</button>
-										{referralLink && (
-											<a
-												href={referralLink}
-												target='_blank'
-												rel='noreferrer'
-												className={s.anchorBtn}
-												aria-label='Open referral link'
-												title='Open referral link'
-											>
-												<FiExternalLink size={17} />
-											</a>
-										)}
 									</div>
 								</div>
 							</div>
