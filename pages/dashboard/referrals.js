@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useUserContext } from 'context/UserContext'
-import { fetchReferrals } from 'lib/req/referrals'
+import { fetchReferralStats, fetchReferralCode } from 'lib/req/referrals'
 import { toast } from 'react-toastify'
 
 import NotActive from 'components/dashboard/NotActive'
@@ -11,20 +11,40 @@ export default function Referals() {
 	const { user, sectionsConfig } = useUserContext()
 
 	const [loading, setLoading] = useState(true)
-	const [referrals, setReferrals] = useState([])
+	const [stats, setStats] = useState(null)
 
 	useEffect(() => {
-		if (!sectionsConfig?.referrals) return
-		fetchReferrals()
-			.then((data) => {
-				setReferrals(data)
-				setLoading(false)
+		// The stats call needs the signed-in CA, so wait for the profile.
+		if (!sectionsConfig?.referrals || !user) return
+		let cancelled = false
+
+		fetchReferralStats()
+			.then(async (next) => {
+				// The backend issues the code when the profile is completed. This is
+				// the fallback for a CA it could not issue one for, kept behind the
+				// same completeness gate the code is shown under.
+				if (!next.referralCode && user?.isComplete) {
+					try {
+						next.referralCode = await fetchReferralCode()
+						next.registered = true
+					} catch (err) {
+						console.error('Failed to issue a referral code:', err)
+					}
+				}
+				if (!cancelled) setStats(next)
 			})
 			.catch((err) => {
 				console.error(err)
 				toast.error('Failed to load referrals')
 			})
-	}, [sectionsConfig])
+			.finally(() => {
+				if (!cancelled) setLoading(false)
+			})
+
+		return () => {
+			cancelled = true
+		}
+	}, [sectionsConfig, user])
 
 	if (!sectionsConfig?.referrals) return <NotActive />
 	else if (loading) return <DashboardLoading />
@@ -33,7 +53,7 @@ export default function Referals() {
 			<div className='dashboard-main-content'>
 				<div className='referral-code'>
 					<div className='code'>REF</div>
-					<div>{user?.refCode || '--'}</div>
+					<div>{user?.refCode || (user?.isComplete && stats?.referralCode) || '--'}</div>
 				</div>
 
 				<div className='spacerv-sm'></div>
@@ -85,7 +105,7 @@ export default function Referals() {
 					</table>
 				</div>
 				<div className='spacerv-sm'></div>
-				<YourReferrals referrals={referrals} />
+				<YourReferrals ticketCount={stats?.ticketCount ?? 0} />
 			</div>
 		)
 }

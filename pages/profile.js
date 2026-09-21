@@ -3,7 +3,7 @@ import { useRouter } from 'next/router'
 import Head from 'next/head'
 import { toast } from 'react-toastify'
 import { useUserContext } from 'context/UserContext'
-import { fetchReferrals } from 'lib/req/referrals'
+import { fetchReferralStats, fetchReferralCode } from 'lib/req/referrals'
 import {
 	FiCopy,
 	FiCheck,
@@ -12,8 +12,6 @@ import {
 	FiMail,
 	FiPhone,
 	FiUser,
-	FiChevronLeft,
-	FiChevronRight,
 	FiEdit2,
 	FiX,
 	FiBookOpen,
@@ -119,8 +117,10 @@ export function calculateMilestoneProgress(count, milestones = REFERRAL_MILESTON
 	return 100
 }
 
-const ROWS_PER_PAGE = 10
-const REFERRAL_BASE_URL = 'https://ca.tathva.org/?ref='
+/* The link has to land on the site where tickets are booked: it picks the code
+   up from `?referral_code=` and sends it with the booking. The CA site is a
+   different origin, so a code carried to it would never reach a booking. */
+const REFERRAL_BASE_URL = 'https://tathva.org/?referral_code='
 
 /* Invite link for the campus ambassador WhatsApp group, shown at the top of
    every profile. There's no backend config endpoint for it, so it lives here —
@@ -221,9 +221,10 @@ export default function ProfilePage() {
 	const { user: profile, authLoading, logout, refreshProfile } = useUserContext()
 	const router = useRouter()
 
-	const [referrals, setReferrals] = useState([])
+	// null until loaded; `error` means the ticketing provider could not be reached
+	const [referralStats, setReferralStats] = useState(null)
+	const [referralError, setReferralError] = useState(false)
 	const loading = authLoading || !profile
-	const [page, setPage] = useState(0)
 
 	// edit state
 	const [isEditing, setIsEditing] = useState(false)
@@ -270,16 +271,43 @@ export default function ProfilePage() {
 			router.push('/login')
 			return
 		}
-		fetchReferrals()
-			.then((data) => setReferrals(data || []))
-			.catch(() => setReferrals([]))
+		let cancelled = false
+
+		fetchReferralStats()
+			.then(async (stats) => {
+				// The backend issues the code when the profile is completed. This
+				// is the fallback for a CA it could not issue one for, and it stays
+				// behind the same completeness gate the code is shown under.
+				if (!stats.referralCode && profile.isComplete) {
+					try {
+						stats.referralCode = await fetchReferralCode()
+						stats.registered = true
+					} catch (err) {
+						console.error('Failed to issue a referral code:', err)
+					}
+				}
+				if (!cancelled) {
+					setReferralStats(stats)
+					setReferralError(false)
+				}
+			})
+			.catch((err) => {
+				console.error('Failed to load referrals:', err)
+				if (!cancelled) setReferralError(true)
+			})
+
+		return () => {
+			cancelled = true
+		}
 	}, [authLoading, profile])
 
 	/* derived */
-	const refCode = profile?.refCode || ''
+	// `profile.refCode` is already blank until the profile is complete; the
+	// provider's copy is only trusted under the same gate.
+	const refCode = profile?.refCode || (profile?.isComplete && referralStats?.referralCode) || ''
 	const totalPoints = profile?.totalPoints || 0
-	const activeReferrals = referrals
-	const totalReferrals = activeReferrals.length
+	// Tickets the provider counts as sold through this CA's code, not people.
+	const totalReferrals = referralStats?.ticketCount ?? 0
 	const earnedRewards = useMemo(() => calculateReferralRewards(totalReferrals), [totalReferrals])
 	const referralLink = refCode ? `${REFERRAL_BASE_URL}${refCode}` : ''
 	const firstName = (profile?.name || 'Ambassador').split(' ')[0]
@@ -320,17 +348,6 @@ export default function ProfilePage() {
 		}, 150)
 		return () => clearTimeout(timer)
 	}, [fillPercent, loading])
-
-	/* pagination */
-	const totalPages = Math.max(1, Math.ceil(activeReferrals.length / ROWS_PER_PAGE))
-	const paginatedReferrals = activeReferrals.slice(page * ROWS_PER_PAGE, (page + 1) * ROWS_PER_PAGE)
-
-	// Keep page within bounds when referral count changes
-	useEffect(() => {
-		if (page >= totalPages && totalPages > 0) {
-			setPage(Math.max(0, totalPages - 1))
-		}
-	}, [totalPages, page])
 
 	/* ── whatsapp group popup ── */
 	// Opens once the profile is on screen, unless this browser opted out before.
@@ -1239,69 +1256,22 @@ export default function ProfilePage() {
 						</div>
 						<div className={s.tableCount}>
 							<p className={s.tableCountNum}>{totalReferrals}</p>
-							<p className={s.tableCountLabel}>Total referrals</p>
+							<p className={s.tableCountLabel}>Tickets booked</p>
 						</div>
 					</div>
 
-					{activeReferrals.length > 0 ? (
-						<>
-							<div className={s.tableScroll}>
-								<table className={s.refTable}>
-									<thead>
-										<tr>
-											<th>Name</th>
-											<th>Event</th>
-											<th>Type</th>
-											<th>Points</th>
-										</tr>
-									</thead>
-									<tbody>
-										{paginatedReferrals.map((r, i) => (
-											<tr key={i}>
-												<td className={s.tdName}>{r.name}</td>
-												<td className={s.tdEvent}>{r.event}</td>
-												<td>
-													<span className={s.typeBadge}>{r.type}</span>
-												</td>
-												<td className={s.tdPoints}>+{r.points}</td>
-											</tr>
-										))}
-									</tbody>
-								</table>
-							</div>
-
-							{/* Pagination */}
-							<div className={s.pagination}>
-								<span className={s.paginationInfo}>
-									Showing {page * ROWS_PER_PAGE + 1}–
-									{Math.min((page + 1) * ROWS_PER_PAGE, totalReferrals)} of {totalReferrals}
-								</span>
-								<div className={s.paginationBtns}>
-									<button
-										className={s.pageBtn}
-										disabled={page === 0}
-										onClick={() => setPage((p) => p - 1)}
-									>
-										<FiChevronLeft /> Prev
-									</button>
-									<button
-										className={s.pageBtn}
-										disabled={page >= totalPages - 1}
-										onClick={() => setPage((p) => p + 1)}
-									>
-										Next <FiChevronRight />
-									</button>
-								</div>
-							</div>
-						</>
-					) : (
-						<div className={s.emptyState}>
-							<span className={s.emptyIcon}>📭</span>
-							<span className={s.emptyText}>
-								No referrals yet! Share your referral code to get started!
-							</span>
-						</div>
-					)}
+					{/* The ticketing provider reports totals only, not who booked, so
+					    there is no per-referral table to show. */}
+					<div className={s.emptyState}>
+						<span className={s.emptyIcon}>{referralError ? '⚠️' : totalReferrals > 0 ? '🎟️' : '📭'}</span>
+						<span className={s.emptyText}>
+							{referralError
+								? 'Could not load your referral count. Please try again later.'
+								: totalReferrals > 0
+									? 'Bookings made with your code are counted after payment is confirmed. Individual bookings are not listed.'
+									: 'No referrals yet! Share your referral code to get started!'}
+						</span>
+					</div>
 				</section>
 			</div>
 		</div>
