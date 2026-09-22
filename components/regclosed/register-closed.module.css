@@ -29,3 +29,19 @@
 	text-align: center;
 	color: rgba(255, 255, 255, 0.74);
 }
+.regclosed-logout {
+	margin-top: 2rem;
+	padding: 0.6rem 1.75rem;
+	border: 1px solid rgba(255, 255, 255, 0.25);
+	border-radius: 999px;
+	background: transparent;
+	color: white;
+	font-size: 0.9rem;
+	cursor: pointer;
+}
+.regclosed-logout:hover {
+	background: rgba(255, 255, 255, 0.1);
+}
+.regclosed-logout:active {
+	transform: translateY(1px);
+}
