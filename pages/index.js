@@ -46,9 +46,7 @@ export default function Home() {
 				<div className='animate-section'>
 					<Page4 />
 				</div>
-				<div className='animate-section'>
-					{NEW_REGISTRATIONS_ENABLED && <RUReady />}
-				</div>
+				<div className='animate-section'>{NEW_REGISTRATIONS_ENABLED && <RUReady />}</div>
 			</div>
 		</>
 	)
