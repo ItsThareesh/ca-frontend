@@ -85,7 +85,7 @@ export default function RegisterForm({ editProfile }) {
 		return <div className={authStyles.container} />
 	}
 
-	if (!isLoggedIn && !NEW_REGISTRATIONS_ENABLED) {
+	if (!NEW_REGISTRATIONS_ENABLED && (!isLoggedIn || !user?.isComplete)) {
 		return <RegisterClosed />
 	}
 
