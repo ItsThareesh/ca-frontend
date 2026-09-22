@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react'
 import { useUserContext } from 'context/UserContext'
 import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
+import { REGISTRATION_ROUTE } from 'lib/registration'
 
 import styles from './r-u-ready.module.css'
 
@@ -15,7 +16,7 @@ export default function RUReady() {
 
 	const handleSignUp = () => {
 		if (isLoggedIn) router.push('/profile')
-		else router.push('/register')
+		else router.push(REGISTRATION_ROUTE)
 	}
 
 	useEffect(() => {

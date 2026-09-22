@@ -2,7 +2,7 @@ import { useUserContext } from 'context/UserContext'
 import { useRouter } from 'next/router'
 import CountUp from 'react-countup'
 import { useEffect, useState } from 'react'
-import { REGISTRATION_END } from 'lib/registration'
+import { REGISTRATION_END, REGISTRATION_ROUTE } from 'lib/registration'
 
 const HeroText = () => {
 	const router = useRouter()
@@ -69,7 +69,7 @@ const HeroText = () => {
 		if (isLoggedIn) {
 			router.push('/profile')
 		} else {
-			router.push('/register')
+			router.push(REGISTRATION_ROUTE)
 		}
 	}
 

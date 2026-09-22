@@ -4,6 +4,7 @@ import { useRouter } from 'next/router'
 import CountUp from 'react-countup'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
+import { REGISTRATION_ROUTE } from 'lib/registration'
 
 const HeroText = () => {
   const router = useRouter()
@@ -50,7 +51,7 @@ const HeroText = () => {
       router.push('/dashboard/posters')
     } else {
       // If not logged in, go to signup page
-      router.push('/register')
+      router.push(REGISTRATION_ROUTE)
     }
   }
 
