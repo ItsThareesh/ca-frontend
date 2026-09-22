@@ -4,7 +4,7 @@ import { useRouter } from 'next/router'
 import CountUp from 'react-countup'
 import { toast, ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { REGISTRATION_ROUTE } from 'lib/registration'
+import { NEW_REGISTRATIONS_ENABLED, REGISTRATION_ROUTE } from 'lib/registration'
 
 const HeroText = () => {
 	const router = useRouter()
@@ -66,9 +66,11 @@ const HeroText = () => {
 				<span className='typewriter-cursor'>|</span>
 			</p>
 			<div className='hero-cta-wrapper'>
-				<button onClick={handleSignUp} className='btn-primary'>
-					{isLoggedIn ? 'Go to Dashboard' : 'Sign up'}
-				</button>
+				{(isLoggedIn || NEW_REGISTRATIONS_ENABLED) && (
+					<button onClick={handleSignUp} className='btn-primary'>
+						{isLoggedIn ? 'Go to Dashboard' : 'Sign up'}
+					</button>
+				)}
 				<a href='#explore'>
 					<button className='btn-outline'>Explore</button>
 				</a>
