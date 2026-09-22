@@ -10,8 +10,7 @@ import styles from './register-form.module.css'
 import RegisterClosed from 'components/regclosed/RegisterClosed'
 
 export default function RegisterForm({ editProfile }) {
-	const { user, isLoggedIn, authLoading, loginWithGoogle, refreshProfile } =
-		useUserContext()
+	const { user, isLoggedIn, authLoading, loginWithGoogle, refreshProfile } = useUserContext()
 
 	const router = useRouter()
 
@@ -123,7 +122,7 @@ export default function RegisterForm({ editProfile }) {
 		return (
 			<div className={authStyles.container}>
 				<div className='modal-overlay' onClick={handleModalClick}>
-					<div className='modal-content' onClick={e => e.stopPropagation()}>
+					<div className='modal-content' onClick={(e) => e.stopPropagation()}>
 						<h3>Referral Code</h3>
 						<p>You will only get your referral code after completing your profile details.</p>
 						<button className={authStyles.googleButton} onClick={handleModalClick}>
