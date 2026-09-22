@@ -3,13 +3,14 @@ import { useRouter } from 'next/router'
 import { toast } from 'react-toastify'
 import { FcGoogle } from 'react-icons/fc'
 import { completeProfile } from 'lib/req/register'
+import { NEW_REGISTRATIONS_ENABLED } from 'lib/registration'
 import { useUserContext } from 'context/UserContext'
 import authStyles from 'styles/login.module.css'
 import styles from './register-form.module.css'
+import RegisterClosed from 'components/regclosed/RegisterClosed'
 
 export default function RegisterForm({ editProfile }) {
-	const { user, isLoggedIn, authLoading, loginWithGoogle, refreshProfile } =
-		useUserContext()
+	const { user, isLoggedIn, authLoading, loginWithGoogle, refreshProfile } = useUserContext()
 
 	const router = useRouter()
 
@@ -84,6 +85,10 @@ export default function RegisterForm({ editProfile }) {
 		return <div className={authStyles.container} />
 	}
 
+	if (!isLoggedIn && !NEW_REGISTRATIONS_ENABLED) {
+		return <RegisterClosed />
+	}
+
 	if (!isLoggedIn) {
 		return (
 			<div className={authStyles.container}>
@@ -117,7 +122,7 @@ export default function RegisterForm({ editProfile }) {
 		return (
 			<div className={authStyles.container}>
 				<div className='modal-overlay' onClick={handleModalClick}>
-					<div className='modal-content' onClick={e => e.stopPropagation()}>
+					<div className='modal-content' onClick={(e) => e.stopPropagation()}>
 						<h3>Referral Code</h3>
 						<p>You will only get your referral code after completing your profile details.</p>
 						<button className={authStyles.googleButton} onClick={handleModalClick}>
