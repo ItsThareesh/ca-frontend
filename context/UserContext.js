@@ -94,6 +94,7 @@ export default function UserContextWrapper({ children }) {
 			const { error } = await signIn.social({
 				provider: 'google',
 				callbackURL: `${window.location.origin}/auth/google/callback`,
+				errorCallbackURL: `${window.location.origin}/auth/google/callback`,
 				additionalData: { role: 'CA' },
 			})
 			if (error) throw new Error(error.message || error.statusText)
